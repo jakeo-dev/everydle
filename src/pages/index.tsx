@@ -4,7 +4,7 @@ import Letter from "@/components/letter";
 import { useEffect, useState } from "react";
 
 type Game = {
-  solved: false;
+  solved: boolean;
   answer: string;
 };
 
@@ -52,6 +52,8 @@ export default function Home() {
   const [currentEnteredWord, setCurrentEnteredWord] = useState<string>("");
 
   const [enterPressed, setEnterPressed] = useState(false);
+
+  const [answersVisible, setAnswersVisible] = useState(false);
 
   const [size, setSize] = useState(4);
 
@@ -175,6 +177,24 @@ export default function Home() {
             +
           </button>
         </div>
+        <div className="">
+          <button
+            onClick={() => {
+              if (answersVisible) setAnswersVisible(false);
+              else setAnswersVisible(true);
+            }}
+            className="flex items-center"
+          >
+            <div
+              className={`${
+                answersVisible
+                  ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
+                  : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
+              } w-8 h-8 rounded-md cursor-pointer transition`}
+            ></div>
+            <label className="pl-2 text-sm cursor-pointer">Show answers</label>
+          </button>
+        </div>
       </div>
 
       <h1 className="text-7xl font-black">Everydle</h1>
@@ -220,9 +240,16 @@ export default function Home() {
               )}
             </div>
 
-            {/* <span>{game.answer}</span>  */}
-          </div>
-        ))}
+              <span
+                className={`${
+                  answersVisible ? "block mt-2" : "hidden"
+                } text-sm tracking-wider text-gray-700 italic`}
+              >
+                {game.answer}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
