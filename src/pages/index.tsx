@@ -15,6 +15,8 @@ export default function Home() {
   const [games, setGames] = useState<Game[]>([]);
   const [possibleGuesses, setPossibleGuesses] = useState<string[]>([]);
 
+  const [subtitle, setSubtitle] = useState<string>("");
+
   useEffect(() => {
     const fetchAnswers = async () => {
       const res = await fetch("/answers.txt");
@@ -31,6 +33,16 @@ export default function Home() {
       }));
 
       setGames(shuffle(gameArray));
+
+      setSubtitle(
+        randomElement([
+          `Win every time`,
+          `Always win on the first guess`,
+          `Save ${gameArray.length} days of your time`,
+          `Play ${gameArray.length} games at once`,
+          `Every wordle everywhere all at once`,
+        ])
+      );
     };
 
     const fetchGuesses = async () => {
@@ -167,6 +179,10 @@ export default function Home() {
     console.log("Current word updated:", currentEnteredWord);
   }, [currentEnteredWord]); */
 
+  function randomElement<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
   return (
     <>
       <div className="absolute top-4 right-4 justify-end items-end">
@@ -224,21 +240,16 @@ export default function Home() {
       </div>
 
       <div className="px-8 py-28 md:py-16">
-        <h1 className="text-7xl font-black">Everydle</h1>
-        <h2 className="text-xl font-medium mt-2">
-          Save 2000+ days of your time
+        <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
+        <h2 className="text-lg md:text-xl font-medium italic text-pretty mt-2">
+          {subtitle}
         </h2>
-        {/* Win every time
-        Always win on the first guess
-        It's much more efficient
-        Save 2000 days of your time
-        Play 2000+ games at once */}
 
-        <div className="w-full flex gap-5 items-center justify-center mt-6 mb-16">
-          <h4 className="">
+        <div className="w-full flex gap-6 items-center justify-center mt-6 mb-16">
+          <h4>
             {guessedWords.length} / {MAX_GUESSES} guesses
           </h4>
-          <h4 className="">
+          <h4>
             {games.filter((game) => game.solved).length} / {games.length} solved
           </h4>
         </div>
