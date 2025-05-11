@@ -1,115 +1,229 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+"use client";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import Letter from "@/components/letter";
+import { useEffect, useState } from "react";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+type Game = {
+  solved: false;
+  answer: string;
+};
 
 export default function Home() {
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+    const fetchGuesses = async () => {
+      const res = await fetch("/answers.txt");
+      const text = await res.text();
+
+      const lines = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line !== "");
+
+      const gameArray: Game[] = lines.map((answer) => ({
+        solved: false,
+        answer: answer.toUpperCase(),
+      }));
+
+      setGames(shuffle(gameArray));
+    };
+
+    fetchGuesses();
+  }, []);
+
+  function shuffle<T>(array: T[]): T[] {
+    let currentIndex = array.length;
+
+    while (currentIndex != 0) {
+      const randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  }
+
+  const [guessedWords, setGuessedWords] = useState<string[]>([]);
+  const [currentEnteredWord, setCurrentEnteredWord] = useState<string>("");
+
+  const [enterPressed, setEnterPressed] = useState(false);
+
+  const [size, setSize] = useState(4);
+
+  let sizeClass: string;
+  switch (size) {
+    case 1:
+      sizeClass =
+        "grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10";
+      break;
+    case 2:
+      sizeClass =
+        "grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8";
+      break;
+    case 3:
+      sizeClass =
+        "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7";
+      break;
+    case 4:
+      sizeClass =
+        "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
+      break;
+    case 5:
+      sizeClass =
+        "grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+      break;
+    default:
+      sizeClass =
+        "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
+  }
+
+  const MAX_GUESSES = games.length + 5;
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+        setCurrentEnteredWord((prev) => {
+          if (prev.length < 5) {
+            return (prev + event.key).toUpperCase();
+          }
+          return prev;
+        });
+      }
+
+      if (event.key === "Backspace") {
+        setCurrentEnteredWord((prev) => prev.slice(0, -1));
+        console.log("Backspace pressed");
+      }
+
+      if (event.key === "Enter") {
+        console.log("Enter pressed");
+        setEnterPressed(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (enterPressed) {
+      if (currentEnteredWord.length != 5) {
+        console.log("Word must be five letters long");
+      } else {
+        setGuessedWords((prev) => {
+          if (prev.length < MAX_GUESSES) {
+            return [...prev, currentEnteredWord];
+          }
+          return prev;
+        });
+        setCurrentEnteredWord("");
+      }
+
+      setEnterPressed(false);
+    }
+  }, [enterPressed, currentEnteredWord]);
+
+  useEffect(() => {
+    console.log("Guessed words updated:", guessedWords);
+  }, [guessedWords]);
+
+  useEffect(() => {
+    console.log("Current word updated:", currentEnteredWord);
+  }, [currentEnteredWord]);
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <div className="absolute top-4 right-4">
+        <div className="flex justify-between items-center mb-4">
+          <button
+            className={`text-xl ${
+              size != 1
+                ? "bg-gray-400/40 hover:bg-gray-400/50 active:hover:bg-gray-400/60"
+                : "bg-gray-500/10 text-gray-600"
+            } w-8 h-8 rounded-md transition ${
+              size != 1 ? "cursor-pointer" : "cursor-not-allowed"
+            }`}
+            onClick={() => {
+              setSize((prev) => (prev == 1 ? prev : prev - 1));
+            }}
+            disabled={size == 1}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            -
+          </button>
+          <span className="text-sm px-2">Change size</span>
+          <button
+            className={`text-xl ${
+              size != 5
+                ? "bg-gray-400/40 hover:bg-gray-400/50 active:hover:bg-gray-400/60"
+                : "bg-gray-500/10 text-gray-600"
+            } w-8 h-8 rounded-md transition ${
+              size != 5 ? "cursor-pointer" : "cursor-not-allowed"
+            }`}
+            onClick={() => {
+              setSize((prev) => (prev == 5 ? prev : prev + 1));
+            }}
+            disabled={size == 5}
           >
-            Read our docs
-          </a>
+            +
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+
+      <h1 className="text-7xl font-black">Everydle</h1>
+      <h2 className="text-xl font-medium mt-2">Always win in one guess</h2>
+      <h2 className="text-sm text-gray-700 italic mt-3 mb-16">
+        * Not all rows are shown for each game. If they were, the website would
+        crash.
+      </h2>
+
+      <div
+        className={`grid ${sizeClass} justify-items-center align-items-center`}
+      >
+        {games.map((game, i) => (
+          <div key={i} className="bg-gray-300/20 p-3 gap-3 rounded-md mb-6">
+            {/* entered words rows */}
+            {guessedWords.slice(0, guessedWords.length).map((word, j) => (
+              <div className="flex gap-x-1 mb-1 " key={j}>
+                {[...word].slice(0, 5).map((char, k) => (
+                  <Letter
+                    key={k}
+                    letter={char}
+                    className={
+                      char == game.answer[k]
+                        ? "bg-green-500/60"
+                        : game.answer.includes(char)
+                        ? "bg-yellow-500/60"
+                        : "bg-gray-400/60"
+                    }
+                    size={size}
+                  />
+                ))}
+              </div>
+            ))}
+            {/* current word row */}
+            <div className="flex gap-x-1 mb-1">
+              {[...currentEnteredWord].slice(0, 5).map((char, k) => (
+                <Letter key={k} letter={char} className="" size={size} />
+              ))}
+              {Array.from({ length: 5 - currentEnteredWord.length }).map(
+                (_, k) => (
+                  <Letter key={k} letter="" className="" size={size} />
+                )
+              )}
+            </div>
+
+            {/* <span>{game.answer}</span>  */}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
