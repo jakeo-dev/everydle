@@ -223,7 +223,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-8 py-24 md:py-16">
+      <div className="px-8 py-28 md:py-16">
         <h1 className="text-7xl font-black">Everydle</h1>
         <h2 className="text-xl font-medium mt-2">
           Save 2000+ days of your time
@@ -272,7 +272,24 @@ export default function Home() {
                         className={
                           char == game.answer[k]
                             ? "bg-green-500/60"
-                            : game.answer.includes(char)
+                            : game.answer.includes(char) && // character is in answer
+                              char != game.answer[k] && // character is not in the same position as character is in answer
+                              !word.slice(0, k).includes(char) && // entered word does NOT contain the character BEFORE this character's position
+                              Array.from({ length: 5 }).filter(
+                                // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
+                                (_, i) =>
+                                  word[i] === char && game.answer[i] === char
+                              ).length < 1
+                            ? "bg-yellow-500/60"
+                            : game.answer.includes(char) && // character is in answer
+                              char != game.answer[k] && // character is not in the same position as character is in answer
+                              (!word.slice(0, k).includes(char) ||
+                                word.slice(k, 5).includes(char)) && // entered word does NOT contain the character BEFORE this character's position OR entered word DOES contain the character AFTER this character's position
+                              game.answer.replaceAll(
+                                // character appears more than once in the answer
+                                new RegExp(`[^${char}]`, "gi"),
+                                ""
+                              ).length > 1
                             ? "bg-yellow-500/60"
                             : "bg-gray-400/60"
                         }
