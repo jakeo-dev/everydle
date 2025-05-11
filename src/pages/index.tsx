@@ -13,9 +13,10 @@ type Game = {
 
 export default function Home() {
   const [games, setGames] = useState<Game[]>([]);
+  const [possibleGuesses, setPossibleGuesses] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchGuesses = async () => {
+    const fetchAnswers = async () => {
       const res = await fetch("/answers.txt");
       const text = await res.text();
 
@@ -32,6 +33,19 @@ export default function Home() {
       setGames(shuffle(gameArray));
     };
 
+    const fetchGuesses = async () => {
+      const res = await fetch("/guesses.txt");
+      const text = await res.text();
+
+      const guessesArray = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line !== "");
+
+      setPossibleGuesses(guessesArray);
+    };
+
+    fetchAnswers();
     fetchGuesses();
   }, []);
 
@@ -100,15 +114,10 @@ export default function Home() {
         });
       }
 
-      if (event.key === "Backspace") {
+      if (event.key === "Backspace")
         setCurrentEnteredWord((prev) => prev.slice(0, -1));
-        console.log("Backspace pressed");
-      }
 
-      if (event.key === "Enter") {
-        console.log("Enter pressed");
-        setEnterPressed(true);
-      }
+      if (event.key === "Enter") setEnterPressed(true);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -121,7 +130,9 @@ export default function Home() {
   useEffect(() => {
     if (enterPressed) {
       if (currentEnteredWord.length != 5) {
-        console.log("Word must be five letters long");
+        alert("Entered word must be five letters long");
+      } else if (!possibleGuesses.includes(currentEnteredWord)) {
+        alert("Entered word is not in word list");
       } else {
         setGuessedWords((prev) => {
           if (prev.length < MAX_GUESSES) {
@@ -148,13 +159,13 @@ export default function Home() {
     }
   }, [enterPressed, currentEnteredWord]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("Guessed words updated:", guessedWords);
   }, [guessedWords]);
 
   useEffect(() => {
     console.log("Current word updated:", currentEnteredWord);
-  }, [currentEnteredWord]);
+  }, [currentEnteredWord]); */
 
   return (
     <>
@@ -212,7 +223,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-8 py-16">
+      <div className="px-8 py-24 md:py-16">
         <h1 className="text-7xl font-black">Everydle</h1>
         <h2 className="text-xl font-medium mt-2">
           Save 2000+ days of your time
