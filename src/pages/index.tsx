@@ -23,7 +23,7 @@ export default function Home() {
 
       const gameArray: Game[] = lines.map((answer) => ({
         solved: false,
-        answer: answer.toUpperCase(),
+        answer: answer,
       }));
 
       setGames(shuffle(gameArray));
@@ -126,6 +126,18 @@ export default function Home() {
           }
           return prev;
         });
+
+        for (let i = 0; i < games.length; i++) {
+          if (games[i].answer == currentEnteredWord) {
+            setGames((prev) => {
+              const newGames = [...prev];
+              newGames[i].solved = true;
+              return newGames;
+            });
+            break;
+          }
+        }
+
         setCurrentEnteredWord("");
       }
 
@@ -143,12 +155,12 @@ export default function Home() {
 
   return (
     <>
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 justify-end items-end">
         <div className="flex justify-between items-center mb-4">
           <button
             className={`text-xl ${
               size != 1
-                ? "bg-gray-400/40 hover:bg-gray-400/50 active:hover:bg-gray-400/60"
+                ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
                 : "bg-gray-500/10 text-gray-600"
             } w-8 h-8 rounded-md transition ${
               size != 1 ? "cursor-pointer" : "cursor-not-allowed"
@@ -164,7 +176,7 @@ export default function Home() {
           <button
             className={`text-xl ${
               size != 5
-                ? "bg-gray-400/40 hover:bg-gray-400/50 active:hover:bg-gray-400/60"
+                ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
                 : "bg-gray-500/10 text-gray-600"
             } w-8 h-8 rounded-md transition ${
               size != 5 ? "cursor-pointer" : "cursor-not-allowed"
@@ -197,48 +209,79 @@ export default function Home() {
         </div>
       </div>
 
-      <h1 className="text-7xl font-black">Everydle</h1>
-      <h2 className="text-xl font-medium mt-2">Always win in one guess</h2>
-      <h2 className="text-sm text-gray-700 italic mt-3 mb-16">
-        * Not all rows are shown for each game. If they were, the website would
-        crash.
-      </h2>
+      <div className="px-8 py-16">
+        <h1 className="text-7xl font-black">Everydle</h1>
+        <h2 className="text-xl font-medium mt-2">
+          Save 2000+ days of your time
+        </h2>
+        {/* Win every time
+        Always win on the first guess
+        It's much more efficient
+        Save 2000 days of your time
+        Play 2000+ games at once */}
 
-      <div
-        className={`grid ${sizeClass} justify-items-center align-items-center`}
-      >
-        {games.map((game, i) => (
-          <div key={i} className="bg-gray-300/20 p-3 gap-3 rounded-md mb-6">
-            {/* entered words rows */}
-            {guessedWords.slice(0, guessedWords.length).map((word, j) => (
-              <div className="flex gap-x-1 mb-1 " key={j}>
-                {[...word].slice(0, 5).map((char, k) => (
-                  <Letter
-                    key={k}
-                    letter={char}
-                    className={
-                      char == game.answer[k]
-                        ? "bg-green-500/60"
-                        : game.answer.includes(char)
-                        ? "bg-yellow-500/60"
-                        : "bg-gray-400/60"
-                    }
-                    size={size}
-                  />
-                ))}
-              </div>
-            ))}
-            {/* current word row */}
-            <div className="flex gap-x-1 mb-1">
-              {[...currentEnteredWord].slice(0, 5).map((char, k) => (
-                <Letter key={k} letter={char} className="" size={size} />
-              ))}
-              {Array.from({ length: 5 - currentEnteredWord.length }).map(
-                (_, k) => (
-                  <Letter key={k} letter="" className="" size={size} />
+        <div className="w-full flex gap-5 items-center justify-center mt-6 mb-16">
+          <h4 className="">
+            {guessedWords.length} / {MAX_GUESSES} guesses
+          </h4>
+          <h4 className="">
+            {games.filter((game) => game.solved).length} / {games.length} solved
+          </h4>
+        </div>
+
+        <div
+          className={`grid ${sizeClass} justify-items-center align-items-center`}
+        >
+          {games.map((game, i) => (
+            <div
+              key={i}
+              className={`${
+                guessedWords.includes(game.answer)
+                  ? "bg-green-300/30"
+                  : "bg-gray-300/30"
+              } h-min p-3 gap-3 rounded-md mb-6`}
+            >
+              {/* entered words rows */}
+              {guessedWords
+                .slice(
+                  0,
+                  guessedWords.includes(game.answer)
+                    ? guessedWords.indexOf(game.answer) + 1
+                    : guessedWords.length
                 )
-              )}
-            </div>
+                .map((word, j) => (
+                  <div className="flex gap-x-1 mb-1 " key={j}>
+                    {[...word].slice(0, 5).map((char, k) => (
+                      <Letter
+                        key={k}
+                        letter={char}
+                        className={
+                          char == game.answer[k]
+                            ? "bg-green-500/60"
+                            : game.answer.includes(char)
+                            ? "bg-yellow-500/60"
+                            : "bg-gray-400/60"
+                        }
+                        size={size}
+                      />
+                    ))}
+                  </div>
+                ))}
+              {/* current word row */}
+              <div
+                className={`flex gap-x-1 ${
+                  guessedWords.includes(game.answer) ? "hidden" : ""
+                }`}
+              >
+                {[...currentEnteredWord].slice(0, 5).map((char, k) => (
+                  <Letter key={k} letter={char} className="" size={size} />
+                ))}
+                {Array.from({ length: 5 - currentEnteredWord.length }).map(
+                  (_, k) => (
+                    <Letter key={k} letter="" className="" size={size} />
+                  )
+                )}
+              </div>
 
               <span
                 className={`${

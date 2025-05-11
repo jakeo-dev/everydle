@@ -30,7 +30,7 @@ export default function Callout(props: {
         props.letter == "" ? "border-gray-400/50" : "border-gray-500/50"
       } ${sizeClass} ${
         props.className
-      } font-semibold flex justify-center items-center`}
+      } font-semibold flex justify-center items-center select-none`}
     >
       <span>{props.letter}</span>
     </div>
