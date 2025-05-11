@@ -3,6 +3,9 @@
 import Letter from "@/components/letter";
 import { useEffect, useState } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+
 type Game = {
   solved: boolean;
   answer: string;
@@ -294,6 +297,35 @@ export default function Home() {
           ))}
         </div>
       </div>
+
+      <footer className="bg-gray-300/30 w-full p-3 md:py-4 md:px-8">
+        <div className="text-xs md:text-sm text-center">
+          <div className="flex justify-center items-center">
+            <a
+              className="hover:drop-shadow-md active:drop-shadow-none transition"
+              href="https://jakeo.dev"
+              target="_blank"
+            >
+              <img
+                src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
+                className="w-[3.25rem] md:w-16"
+              />
+            </a>
+            <span className="mx-2 md:mx-3">•</span>
+            <a
+              className="hover:text-blue-600 underline decoration-[1.5px] hover:decoration-wavy hover:decoration-[0.75px] transition"
+              href="https://github.com/jakeo-dev/everydle"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={faGithub} className="mr-1" aria-hidden />
+              <span>GitHub</span>
+            </a>
+          </div>
+          {/* <h3 className="text-xs italic mt-2">
+            i know you havent solved every game yet. scroll back up.
+          </h3> */}
+        </div>
+      </footer>
     </>
   );
 }
