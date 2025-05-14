@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Button from "@/components/Button";
-import Letter from "@/components/TempLetter";
+import Letter from "@/components/Letter";
 import { faArrowRight, faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 
 type Game = {

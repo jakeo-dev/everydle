@@ -1,8 +1,4 @@
-export default function Letter(props: {
-  letter: string;
-  className?: string;
-  size?: number;
-}) {
+function Letter(props: { letter: string; className?: string; size?: number }) {
   let sizeClass: string;
   switch (props.size) {
     case 1:
@@ -27,7 +23,7 @@ export default function Letter(props: {
   return (
     <div
       className={`${
-        props.letter == "" ? "border-gray-400/50" : "border-gray-500/50"
+        props.letter === "" ? "border-gray-400/50" : "border-gray-500/50"
       } ${sizeClass} ${
         props.className
       } font-semibold flex justify-center items-center select-none`}
@@ -36,3 +32,5 @@ export default function Letter(props: {
     </div>
   );
 }
+
+export default Letter;
