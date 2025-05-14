@@ -1,10 +1,12 @@
 "use client";
 
-import Letter from "@/components/letter";
 import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import Button from "@/components/Button";
+import Letter from "@/components/Letter";
+import { faArrowRight, faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 
 type Game = {
   solved: boolean;
@@ -41,6 +43,7 @@ export default function Home() {
           `Save ${gameArray.length} days of your time`,
           `Play ${gameArray.length} games at once`,
           `Every wordle everywhere all at once`,
+          `It's your fault if something crashes`,
         ])
       );
     };
@@ -183,6 +186,10 @@ export default function Home() {
     return array[Math.floor(Math.random() * array.length)];
   }
 
+  const keyboardRow1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
+  const keyboardRow2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
+  const keyboardRow3 = ["Z", "X", "C", "V", "B", "N", "M"];
+
   return (
     <>
       <div className="absolute top-4 right-4 justify-end items-end">
@@ -261,16 +268,14 @@ export default function Home() {
             <div
               key={i}
               className={`${
-                guessedWords.includes(game.answer)
-                  ? "bg-green-300/30"
-                  : "bg-gray-300/30"
+                game.solved ? "bg-green-300/30" : "bg-gray-300/30"
               } h-min p-3 gap-3 rounded-md mb-6`}
             >
               {/* entered words rows */}
               {guessedWords
                 .slice(
                   0,
-                  guessedWords.includes(game.answer)
+                  game.solved
                     ? guessedWords.indexOf(game.answer) + 1
                     : guessedWords.length
                 )
@@ -310,11 +315,7 @@ export default function Home() {
                   </div>
                 ))}
               {/* current word row */}
-              <div
-                className={`flex gap-x-1 ${
-                  guessedWords.includes(game.answer) ? "hidden" : ""
-                }`}
-              >
+              <div className={`flex gap-x-1 ${game.solved ? "hidden" : ""}`}>
                 {[...currentEnteredWord].slice(0, 5).map((char, k) => (
                   <Letter key={k} letter={char} className="" size={size} />
                 ))}
@@ -334,6 +335,89 @@ export default function Home() {
               </span>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="sticky bottom-0 left-0 right-0">
+        <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[35rem] mx-auto p-4">
+          {/* keyboard */}
+          <div className="flex flex-col gap-y-2 items-center">
+            <div className="flex gap-x-2">
+              {keyboardRow1.map((letter, i) => (
+                <Button
+                  key={i}
+                  onClick={() => {
+                    setCurrentEnteredWord((prev) => {
+                      if (prev.length < 5) {
+                        return prev + letter;
+                      }
+                      return prev;
+                    });
+                  }}
+                  className="w-8 h-10 pt-1.5"
+                >
+                  <span className="text-xl">{letter}</span>
+                </Button>
+              ))}
+            </div>
+            <div className="flex gap-x-2">
+              {keyboardRow2.map((letter, i) => (
+                <Button
+                  key={i}
+                  onClick={() => {
+                    setCurrentEnteredWord((prev) => {
+                      if (prev.length < 5) {
+                        return prev + letter;
+                      }
+                      return prev;
+                    });
+                  }}
+                  className="w-8 h-10 pt-1.5"
+                >
+                  <span className="text-xl">{letter}</span>
+                </Button>
+              ))}
+            </div>
+            <div className="flex gap-x-2">
+              {keyboardRow3.map((letter, i) => (
+                <Button
+                  key={i}
+                  onClick={() => {
+                    setCurrentEnteredWord((prev) => {
+                      if (prev.length < 5) {
+                        return prev + letter;
+                      }
+                      return prev;
+                    });
+                  }}
+                  className="w-8 h-10 pt-1.5"
+                >
+                  <span className="text-xl">{letter}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-2 mt-4">
+            <Button
+              onClick={() => {
+                setCurrentEnteredWord((prev) => prev.slice(0, -1));
+              }}
+              className="items-center w-full"
+            >
+              <FontAwesomeIcon icon={faDeleteLeft} className="mr-2" />
+              <span className="text-sm">Backspace</span>
+            </Button>
+            <Button
+              onClick={() => {
+                setEnterPressed(true);
+              }}
+              className="items-center w-full"
+            >
+              <span className="text-sm">Enter</span>
+              <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+            </Button>
+          </div>
         </div>
       </div>
 

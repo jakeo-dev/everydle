@@ -1,4 +1,4 @@
-export default function Callout(props: {
+export default function Letter(props: {
   letter: string;
   className?: string;
   size?: number;
