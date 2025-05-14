@@ -6,7 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import Button from "@/components/Button";
 import Letter from "@/components/Letter";
-import { faArrowRight, faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faDeleteLeft,
+  faMinus,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 type Game = {
   solved: boolean;
@@ -203,38 +208,34 @@ export default function Home() {
       <div className="absolute top-4 right-4 justify-end items-end">
         <div className="flex justify-between items-center mb-4">
           <button
-            className={`text-xl ${
+            className={`w-6 h-6 rounded-md transition ${
               size != 1
                 ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
                 : "bg-gray-500/10 text-gray-600"
-            } w-8 h-8 rounded-md transition ${
-              size != 1 ? "cursor-pointer" : "cursor-not-allowed"
-            }`}
+            } ${size != 1 ? "cursor-pointer" : "cursor-not-allowed"}`}
             onClick={() => {
               setSize((prev) => (prev == 1 ? prev : prev - 1));
             }}
             disabled={size == 1}
           >
-            -
+            <FontAwesomeIcon icon={faPlus} className="text-sm" aria-hidden />
           </button>
           <span className="text-sm px-2">Change size</span>
           <button
-            className={`text-xl ${
+            className={`w-6 h-6 rounded-md transition ${
               size != 5
                 ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
                 : "bg-gray-500/10 text-gray-600"
-            } w-8 h-8 rounded-md transition ${
-              size != 5 ? "cursor-pointer" : "cursor-not-allowed"
-            }`}
+            } ${size != 5 ? "cursor-pointer" : "cursor-not-allowed"}`}
             onClick={() => {
               setSize((prev) => (prev == 5 ? prev : prev + 1));
             }}
             disabled={size == 5}
           >
-            +
+            <FontAwesomeIcon icon={faMinus} className="text-sm" aria-hidden />
           </button>
         </div>
-        <div className="">
+        <div>
           <button
             onClick={() => {
               if (answersVisible) setAnswersVisible(false);
@@ -247,14 +248,37 @@ export default function Home() {
                 answersVisible
                   ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
                   : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-              } w-8 h-8 rounded-md cursor-pointer transition`}
+              } w-6 h-6 rounded-md cursor-pointer transition`}
             ></div>
             <label className="pl-2 text-sm cursor-pointer">Show answers</label>
           </button>
         </div>
+        <div className="text-xs text-center mt-4">
+          <div className="flex">
+            <a
+              className="hover:drop-shadow-md active:drop-shadow-none transition"
+              href="https://jakeo.dev"
+              target="_blank"
+            >
+              <img
+                src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
+                className="w-[3.25rem]"
+              />
+            </a>
+            <span className="mx-2.5">•</span>
+            <a
+              className="hover:text-blue-600 underline decoration-[1.5px] hover:decoration-wavy hover:decoration-[0.75px] transition"
+              href="https://github.com/jakeo-dev/everydle"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={faGithub} className="mr-1" aria-hidden />
+              <span>GitHub</span>
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div className="px-8 py-28 md:py-16">
+      <div className="px-8 py-32 md:py-16">
         <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
         <h2 className="text-lg md:text-xl font-medium italic text-pretty mt-2">
           {subtitle}
@@ -354,10 +378,10 @@ export default function Home() {
 
       <div className="sticky bottom-0 left-0 right-0">
         {/* keyboard */}
-        <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[35rem] mx-auto p-4">
+        <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[32rem] mx-auto p-4">
           {/* letters */}
-          <div className="flex flex-col gap-y-2 items-center">
-            <div className="flex gap-x-2">
+          <div className="flex flex-col gap-y-1.5 sm:gap-y-2 items-center">
+            <div className="flex gap-x-1.5 sm:gap-x-2">
               {keyboardRow1.map((letter, i) => (
                 <Button
                   key={i}
@@ -369,13 +393,13 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="w-8 h-10 pt-1.5"
+                  className="w-7 h-9 sm:w-8 sm:h-10 pt-1 sm:pt-1.5"
                 >
                   <span className="text-xl">{letter}</span>
                 </Button>
               ))}
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-1.5 sm:gap-x-2">
               {keyboardRow2.map((letter, i) => (
                 <Button
                   key={i}
@@ -387,13 +411,13 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="w-8 h-10 pt-1.5"
+                  className="w-7 h-9 sm:w-8 sm:h-10 pt-1 sm:pt-1.5"
                 >
                   <span className="text-xl">{letter}</span>
                 </Button>
               ))}
             </div>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-1.5 sm:gap-x-2">
               {keyboardRow3.map((letter, i) => (
                 <Button
                   key={i}
@@ -405,7 +429,7 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="w-8 h-10 pt-1.5"
+                  className="w-7 h-9 sm:w-8 sm:h-10 pt-1 sm:pt-1.5"
                 >
                   <span className="text-xl">{letter}</span>
                 </Button>
@@ -436,35 +460,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <footer className="bg-gray-300/30 w-full p-3 md:py-4 md:px-8">
-        <div className="text-xs md:text-sm text-center">
-          <div className="flex justify-center items-center">
-            <a
-              className="hover:drop-shadow-md active:drop-shadow-none transition"
-              href="https://jakeo.dev"
-              target="_blank"
-            >
-              <img
-                src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
-                className="w-[3.25rem] md:w-16"
-              />
-            </a>
-            <span className="mx-2 md:mx-3">•</span>
-            <a
-              className="hover:text-blue-600 underline decoration-[1.5px] hover:decoration-wavy hover:decoration-[0.75px] transition"
-              href="https://github.com/jakeo-dev/everydle"
-              target="_blank"
-            >
-              <FontAwesomeIcon icon={faGithub} className="mr-1" aria-hidden />
-              <span>GitHub</span>
-            </a>
-          </div>
-          {/* <h3 className="text-xs italic mt-2">
-            i know you havent solved every game yet. scroll back up.
-          </h3> */}
-        </div>
-      </footer>
     </>
   );
 }
