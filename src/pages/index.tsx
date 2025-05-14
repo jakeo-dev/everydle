@@ -120,7 +120,11 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+      if (
+        event.key.length === 1 &&
+        event.key.match(/[a-zA-Z]/) &&
+        guessedWords.length < MAX_GUESSES
+      ) {
         setCurrentEnteredWord((prev) => {
           if (prev.length < 5) {
             return (prev + event.key).toUpperCase();
@@ -150,6 +154,10 @@ export default function Home() {
         alert("Entered word is not in word list");
       } else {
         setGuessedWords((prev) => {
+          if (prev.length == MAX_GUESSES - 1) {
+            setAnswersVisible(true);
+            alert("Better luck next time! All answers are now visible.");
+          }
           if (prev.length < MAX_GUESSES) {
             return [...prev, currentEnteredWord];
           }
@@ -315,7 +323,13 @@ export default function Home() {
                   </div>
                 ))}
               {/* current word row */}
-              <div className={`flex gap-x-1 ${game.solved ? "hidden" : ""}`}>
+              <div
+                className={`flex gap-x-1 ${
+                  game.solved || guessedWords.length == MAX_GUESSES
+                    ? "hidden"
+                    : ""
+                }`}
+              >
                 {[...currentEnteredWord].slice(0, 5).map((char, k) => (
                   <Letter key={k} letter={char} className="" size={size} />
                 ))}
@@ -329,7 +343,7 @@ export default function Home() {
               <span
                 className={`${
                   answersVisible ? "block mt-2" : "hidden"
-                } text-sm tracking-wider text-gray-700 italic`}
+                } tracking-wider text-gray-700 italic`}
               >
                 {game.answer}
               </span>
@@ -339,8 +353,9 @@ export default function Home() {
       </div>
 
       <div className="sticky bottom-0 left-0 right-0">
+        {/* keyboard */}
         <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[35rem] mx-auto p-4">
-          {/* keyboard */}
+          {/* letters */}
           <div className="flex flex-col gap-y-2 items-center">
             <div className="flex gap-x-2">
               {keyboardRow1.map((letter, i) => (
@@ -398,6 +413,7 @@ export default function Home() {
             </div>
           </div>
 
+          {/* enter & backspace */}
           <div className="flex gap-2 mt-4">
             <Button
               onClick={() => {
