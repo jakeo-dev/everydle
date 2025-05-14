@@ -218,7 +218,7 @@ export default function Home() {
             }}
             disabled={size == 1}
           >
-            <FontAwesomeIcon icon={faPlus} className="text-sm" aria-hidden />
+            <FontAwesomeIcon icon={faMinus} className="text-sm" aria-hidden />
           </button>
           <span className="text-sm px-2">Change size</span>
           <button
@@ -232,7 +232,7 @@ export default function Home() {
             }}
             disabled={size == 5}
           >
-            <FontAwesomeIcon icon={faMinus} className="text-sm" aria-hidden />
+            <FontAwesomeIcon icon={faPlus} className="text-sm" aria-hidden />
           </button>
         </div>
         <div>
