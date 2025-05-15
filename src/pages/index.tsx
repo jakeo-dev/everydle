@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import Head from "next/head";
 import Button from "@/components/Button";
 import Letter from "@/components/Letter";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
   faDeleteLeft,
@@ -205,6 +207,33 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Everydle</title>
+
+        <meta name="keywords" content="everydle, wordle, " />
+        <meta
+          property="description"
+          content="Play every game of wordle at the same time."
+        />
+
+        <meta property="og:title" content="Everydle" />
+        <meta
+          property="og:description"
+          content="Play every game of wordle at the same time."
+        />
+        <meta name="theme-color" content="#00c951" />
+        <meta property="og:url" content="https://everydle.jakeo.dev" />
+
+        <meta name="twitter:title" content="Everydle" />
+        <meta
+          name="twitter:description"
+          content="Play every game of wordle at the same time."
+        />
+        <meta name="twitter:url" content="https://everydle.jakeo.dev" />
+      </Head>
+
       <div className="absolute top-4 right-4 justify-end items-end">
         <div className="flex justify-between items-center mb-4">
           <button
@@ -267,7 +296,7 @@ export default function Home() {
             </a>
             <span className="mx-2.5">•</span>
             <a
-              className="hover:text-blue-600 underline decoration-[1.5px] hover:decoration-wavy hover:decoration-[0.75px] transition"
+              className="hover:text-blue-600 transition"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
             >
