@@ -173,6 +173,15 @@ export default function Home() {
 
         for (let i = 0; i < games.length; i++) {
           if (games[i].answer == currentEnteredWord) {
+            if (
+              games.filter((game) => game.solved).length ==
+              games.length - 1
+            ) {
+              setAnswersVisible(true);
+              alert(
+                "Congratulations! You just solved every possible wordle game! Now go do something better with your time."
+              );
+            }
             setGames((prev) => {
               const newGames = [...prev];
               newGames[i].solved = true;
@@ -361,7 +370,7 @@ export default function Home() {
                     : guessedWords.length
                 )
                 .map((word, j) => (
-                  <div className="flex gap-x-1 mb-1 " key={j}>
+                  <div className="flex gap-x-1 mb-1" key={j}>
                     {[...word].slice(0, 5).map((char, k) => (
                       <Letter
                         key={k}
