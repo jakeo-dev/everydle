@@ -92,9 +92,9 @@ export default function Home() {
 
   const [enterPressed, setEnterPressed] = useState(false);
 
+  const [size, setSize] = useState(3);
   const [answersVisible, setAnswersVisible] = useState(false);
-
-  const [size, setSize] = useState(4);
+  const [typeInKeyboard, setTypeInKeyboard] = useState(false);
 
   let sizeClass: string;
   switch (size) {
@@ -235,7 +235,7 @@ export default function Home() {
       </Head>
 
       <div className="absolute top-4 right-4 justify-end items-end">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center">
           <button
             className={`w-6 h-6 rounded-md transition ${
               size != 1
@@ -249,9 +249,8 @@ export default function Home() {
           >
             <FontAwesomeIcon icon={faMinus} className="text-sm" aria-hidden />
           </button>
-          <span className="text-sm px-2">Change size</span>
           <button
-            className={`w-6 h-6 rounded-md transition ${
+            className={`w-6 h-6 rounded-md transition ml-2 ${
               size != 5
                 ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
                 : "bg-gray-500/10 text-gray-600"
@@ -263,8 +262,29 @@ export default function Home() {
           >
             <FontAwesomeIcon icon={faPlus} className="text-sm" aria-hidden />
           </button>
+          <span className="text-sm pl-2">Change size</span>
         </div>
-        <div>
+        <div className="mt-2.5 md:mt-4">
+          <button
+            onClick={() => {
+              if (typeInKeyboard) setTypeInKeyboard(false);
+              else setTypeInKeyboard(true);
+            }}
+            className="flex items-center"
+          >
+            <div
+              className={`${
+                typeInKeyboard
+                  ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
+                  : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
+              } w-6 h-6 rounded-md cursor-pointer transition`}
+            ></div>
+            <label className="text-sm pl-2 cursor-pointer">
+              Switch input mode
+            </label>
+          </button>
+        </div>
+        <div className="mt-2.5 md:mt-4">
           <button
             onClick={() => {
               if (answersVisible) setAnswersVisible(false);
@@ -279,10 +299,10 @@ export default function Home() {
                   : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
               } w-6 h-6 rounded-md cursor-pointer transition`}
             ></div>
-            <label className="pl-2 text-sm cursor-pointer">Show answers</label>
+            <label className="text-sm pl-2 cursor-pointer">Show answers</label>
           </button>
         </div>
-        <div className="text-xs text-center mt-4">
+        <div className="text-xs text-center mt-2.5 md:mt-4">
           <div className="flex">
             <a
               className="hover:drop-shadow-md active:drop-shadow-none transition"
@@ -307,13 +327,13 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-8 py-32 md:py-16">
+      <div className="px-8 py-38 md:py-16">
         <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
-        <h2 className="text-lg md:text-xl font-medium italic text-pretty mt-2">
+        <h2 className="text-base md:text-xl font-medium italic text-pretty mt-2">
           {subtitle}
         </h2>
 
-        <div className="w-full flex gap-6 items-center justify-center mt-6 mb-16">
+        <div className="w-full flex gap-6 items-center justify-center mt-6 mb-10 md:mb-16">
           <h4>
             {guessedWords.length} / {MAX_GUESSES} guesses
           </h4>
@@ -383,14 +403,27 @@ export default function Home() {
                     : ""
                 }`}
               >
-                {[...currentEnteredWord].slice(0, 5).map((char, k) => (
-                  <Letter key={k} letter={char} className="" size={size} />
-                ))}
-                {Array.from({ length: 5 - currentEnteredWord.length }).map(
-                  (_, k) => (
-                    <Letter key={k} letter="" className="" size={size} />
-                  )
-                )}
+                {!typeInKeyboard
+                  ? [...currentEnteredWord]
+                      .slice(0, 5)
+                      .map((char, k) => (
+                        <Letter
+                          key={k}
+                          letter={char}
+                          className=""
+                          size={size}
+                        />
+                      ))
+                  : ""}
+                {typeInKeyboard && guessedWords.length > 0
+                  ? ""
+                  : Array.from({
+                      length: typeInKeyboard
+                        ? 5
+                        : 5 - currentEnteredWord.length,
+                    }).map((_, k) => (
+                      <Letter key={k} letter="" className="" size={size} />
+                    ))}
               </div>
 
               <span
@@ -408,6 +441,16 @@ export default function Home() {
       <div className="sticky bottom-0 left-0 right-0">
         {/* keyboard */}
         <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[32rem] mx-auto p-4">
+          <div
+            className={`bg-gray-200 h-10 md:h-12 w-full rounded-lg flex justify-center items-center mb-4 ${
+              typeInKeyboard ? "" : "hidden"
+            }`}
+          >
+            <span className="text-xl md:text-2xl font-semibold tracking-wider">
+              {currentEnteredWord}
+            </span>
+          </div>
+
           {/* letters */}
           <div className="flex flex-col gap-y-1.5 sm:gap-y-2 items-center">
             <div className="flex gap-x-1.5 sm:gap-x-2">
