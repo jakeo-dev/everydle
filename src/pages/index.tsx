@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Head from "next/head";
 import Button from "@/components/Button";
@@ -123,6 +123,27 @@ export default function Home() {
         "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
   }
 
+  const firstKeyRef = useRef<HTMLButtonElement>(null);
+  const [keyWidth, setKeyWidth] = useState(0);
+
+  useEffect(() => {
+    // set width of all keyboard keys to the width of the keys in the first row (because there are the most letters there)
+    if (firstKeyRef.current)
+      setKeyWidth(firstKeyRef.current.getBoundingClientRect().width);
+
+    // update width ono resize
+    const handleResize = () => {
+      if (firstKeyRef.current)
+        setKeyWidth(firstKeyRef.current.getBoundingClientRect().width);
+    };
+    window.addEventListener("resize", handleResize);
+
+    console.log(firstKeyRef.current);
+    console.log(firstKeyRef.current?.getBoundingClientRect().width);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const MAX_GUESSES = games.length + 5;
 
   useEffect(() => {
@@ -174,7 +195,7 @@ export default function Home() {
         for (let i = 0; i < games.length; i++) {
           if (games[i].answer == currentEnteredWord) {
             if (
-              games.filter((game) => game.solved).length ==
+              games.filter((game) => game.solved).length >=
               games.length - 1
             ) {
               setAnswersVisible(true);
@@ -221,16 +242,19 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Everydle</title>
 
-        <meta name="keywords" content="everydle, wordle, " />
+        <meta
+          name="keywords"
+          content="everydle, wordle, word game, puzzle game, game, daily"
+        />
         <meta
           property="description"
-          content="Play every game of wordle at the same time."
+          content="Play every game of Wordle at the same time."
         />
 
         <meta property="og:title" content="Everydle" />
         <meta
           property="og:description"
-          content="Play every game of wordle at the same time."
+          content="Play every game of Wordle at the same time."
         />
         <meta name="theme-color" content="#00c951" />
         <meta property="og:url" content="https://everydle.jakeo.dev" />
@@ -238,7 +262,7 @@ export default function Home() {
         <meta name="twitter:title" content="Everydle" />
         <meta
           name="twitter:description"
-          content="Play every game of wordle at the same time."
+          content="Play every game of Wordle at the same time."
         />
         <meta name="twitter:url" content="https://everydle.jakeo.dev" />
       </Head>
@@ -449,7 +473,7 @@ export default function Home() {
 
       <div className="sticky bottom-0 left-0 right-0">
         {/* keyboard */}
-        <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[32rem] mx-auto p-4">
+        <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[30rem] mx-auto p-4">
           <div
             className={`bg-gray-200 h-10 md:h-12 w-full rounded-lg flex justify-center items-center mb-4 ${
               typeInKeyboard ? "" : "hidden"
@@ -461,8 +485,8 @@ export default function Home() {
           </div>
 
           {/* letters */}
-          <div className="flex flex-col gap-y-1.5 sm:gap-y-2 items-center">
-            <div className="flex gap-x-1.5 sm:gap-x-2">
+          <div className="flex flex-col gap-y-1.5 sm:gap-y-2 items-center w-full">
+            <div className="flex gap-x-1.5 sm:gap-x-2 justify-center w-full">
               {keyboardRow1.map((letter, i) => (
                 <Button
                   key={i}
@@ -474,13 +498,14 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="w-7 h-9 sm:w-8 sm:h-10 pt-1 sm:pt-1.5"
+                  className="flex-1 min-w-0 h-11 pt-2"
+                  ref={firstKeyRef}
                 >
                   <span className="text-xl">{letter}</span>
                 </Button>
               ))}
             </div>
-            <div className="flex gap-x-1.5 sm:gap-x-2">
+            <div className="flex gap-x-1.5 sm:gap-x-2 justify-center w-full">
               {keyboardRow2.map((letter, i) => (
                 <Button
                   key={i}
@@ -492,13 +517,16 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="w-7 h-9 sm:w-8 sm:h-10 pt-1 sm:pt-1.5"
+                  className="min-w-0 h-11 pt-2"
+                  style={{
+                    width: `${keyWidth}px`,
+                  }}
                 >
                   <span className="text-xl">{letter}</span>
                 </Button>
               ))}
             </div>
-            <div className="flex gap-x-1.5 sm:gap-x-2">
+            <div className="flex gap-x-1.5 sm:gap-x-2 justify-center w-full">
               {keyboardRow3.map((letter, i) => (
                 <Button
                   key={i}
@@ -510,7 +538,10 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="w-7 h-9 sm:w-8 sm:h-10 pt-1 sm:pt-1.5"
+                  className="min-w-0 h-11 pt-2"
+                  style={{
+                    width: `${keyWidth}px`,
+                  }}
                 >
                   <span className="text-xl">{letter}</span>
                 </Button>
