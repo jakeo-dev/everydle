@@ -2,10 +2,10 @@ function Letter(props: { letter: string; className?: string; size?: number }) {
   let sizeClass: string;
   switch (props.size) {
     case 1:
-      sizeClass = "w-3 h-3 text-xs rounded-none border-[1.5px]";
+      sizeClass = "w-3 h-3 text-[10px] rounded-xs border-[1.5px]";
       break;
     case 2:
-      sizeClass = "w-5 h-5 text-base rounded border-[1.5px]";
+      sizeClass = "w-5 h-5 text-base rounded border-[1.75px]";
       break;
     case 3:
       sizeClass = "w-6 h-6 text-lg rounded-sm border-2";
