@@ -138,9 +138,6 @@ export default function Home() {
     };
     window.addEventListener("resize", handleResize);
 
-    console.log(firstKeyRef.current);
-    console.log(firstKeyRef.current?.getBoundingClientRect().width);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -366,13 +363,31 @@ export default function Home() {
           {subtitle}
         </h2>
 
-        <div className="w-full flex gap-6 items-center justify-center mt-6 mb-10 md:mb-16">
-          <h4>
-            {guessedWords.length} / {MAX_GUESSES} guesses
-          </h4>
-          <h4>
-            {games.filter((game) => game.solved).length} / {games.length} solved
-          </h4>
+        <div className="w-full sticky z-10 top-6 mt-6 mb-10 md:mb-16">
+          <div className="bg-gray-200/80 rounded-full max-w-fit mx-auto">
+            <div
+              className={`${
+                games.filter((game) => game.solved).length >=
+                  games.length - 1 &&
+                games.filter((game) => game.solved).length > 0
+                  ? "bg-green-300/30 hover:bg-green-300"
+                  : "bg-gray-300/30 hover:bg-gray-300"
+              } flex gap-8 items-center justify-center rounded-full max-w-fit h-full px-7 py-2 mx-auto transition`}
+            >
+              <div>
+                <h3 className="font-semibold">
+                  {guessedWords.length} / {MAX_GUESSES}
+                </h3>
+                <h4 className="text-sm">guesses remaining</h4>
+              </div>
+              <div>
+                <h3 className="font-semibold">
+                  {games.filter((game) => game.solved).length} / {games.length}
+                </h3>
+                <h4 className="text-sm">words solved</h4>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
