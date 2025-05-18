@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import Head from "next/head";
+import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
-import Letter from "@/components/Letter";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -93,35 +93,9 @@ export default function Home() {
   const [enterPressed, setEnterPressed] = useState(false);
 
   const [size, setSize] = useState(3);
-  const [answersVisible, setAnswersVisible] = useState(false);
   const [typeInKeyboard, setTypeInKeyboard] = useState(false);
-
-  let sizeClass: string;
-  switch (size) {
-    case 1:
-      sizeClass =
-        "grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10";
-      break;
-    case 2:
-      sizeClass =
-        "grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8";
-      break;
-    case 3:
-      sizeClass =
-        "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7";
-      break;
-    case 4:
-      sizeClass =
-        "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
-      break;
-    case 5:
-      sizeClass =
-        "grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
-      break;
-    default:
-      sizeClass =
-        "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
-  }
+  const [answersVisible, setAnswersVisible] = useState(false);
+  const [virtualize, setVirtualize] = useState(true);
 
   const firstKeyRef = useRef<HTMLButtonElement>(null);
   const [keyWidth, setKeyWidth] = useState(0);
@@ -294,7 +268,7 @@ export default function Home() {
           </button>
           <span className="text-sm pl-2">Change size</span>
         </div>
-        <div className="mt-2.5 md:mt-4">
+        <div className="mt-2 md:mt-3">
           <button
             onClick={() => {
               if (typeInKeyboard) setTypeInKeyboard(false);
@@ -314,7 +288,7 @@ export default function Home() {
             </label>
           </button>
         </div>
-        <div className="mt-2.5 md:mt-4">
+        <div className="mt-2 md:mt-3">
           <button
             onClick={() => {
               if (answersVisible) setAnswersVisible(false);
@@ -332,7 +306,27 @@ export default function Home() {
             <label className="text-sm pl-2 cursor-pointer">Show answers</label>
           </button>
         </div>
-        <div className="text-xs text-center mt-2.5 md:mt-4">
+        <div className="mt-2 md:mt-3">
+          <button
+            onClick={() => {
+              if (virtualize) setVirtualize(false);
+              else setVirtualize(true);
+            }}
+            className="flex items-center"
+          >
+            <div
+              className={`${
+                virtualize
+                  ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
+                  : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
+              } w-6 h-6 rounded-md cursor-pointer transition`}
+            ></div>
+            <label className="text-sm pl-2 cursor-pointer">
+              Enable virtualization
+            </label>
+          </button>
+        </div>
+        <div className="text-xs text-center mt-2 md:mt-3">
           <div className="flex">
             <a
               className="hover:drop-shadow-md active:drop-shadow-none transition"
@@ -357,7 +351,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-8 py-38 md:py-16">
+      <div className="px-8 py-42 md:py-16">
         <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
         <h2 className="text-base md:text-xl font-medium italic text-pretty mt-2">
           {subtitle}
@@ -372,7 +366,7 @@ export default function Home() {
                 games.filter((game) => game.solved).length > 0
                   ? "bg-green-300/30 hover:bg-green-300"
                   : "bg-gray-300/30 hover:bg-gray-300"
-              } flex gap-8 items-center justify-center rounded-full max-w-fit h-full px-7 py-2 mx-auto transition`}
+              } flex gap-8 items-center justify-center rounded-full max-w-fit h-full px-6 py-2 mx-auto transition`}
             >
               <div>
                 <h3 className="font-semibold">
@@ -390,100 +384,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          className={`grid ${sizeClass} justify-items-center align-items-center`}
-        >
-          {games.map((game, i) => (
-            <div
-              key={i}
-              className={`${
-                game.solved ? "bg-green-300/30" : "bg-gray-300/30"
-              } h-min p-3 gap-3 rounded-md mb-6`}
-            >
-              {/* entered words rows */}
-              {guessedWords
-                .slice(
-                  0,
-                  game.solved
-                    ? guessedWords.indexOf(game.answer) + 1
-                    : guessedWords.length
-                )
-                .map((word, j) => (
-                  <div className="flex gap-x-1 mb-1" key={j}>
-                    {[...word].slice(0, 5).map((char, k) => (
-                      <Letter
-                        key={k}
-                        letter={char}
-                        className={
-                          char == game.answer[k]
-                            ? "bg-green-500/60"
-                            : game.answer.includes(char) && // character is in answer
-                              char != game.answer[k] && // character is not in the same position as character is in answer
-                              !word.slice(0, k).includes(char) && // entered word does NOT contain the character BEFORE this character's position
-                              Array.from({ length: 5 }).filter(
-                                // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
-                                (_, i) =>
-                                  word[i] === char && game.answer[i] === char
-                              ).length < 1
-                            ? "bg-yellow-500/60"
-                            : game.answer.includes(char) && // character is in answer
-                              char != game.answer[k] && // character is not in the same position as character is in answer
-                              (!word.slice(0, k).includes(char) ||
-                                word.slice(k, 5).includes(char)) && // entered word does NOT contain the character BEFORE this character's position OR entered word DOES contain the character AFTER this character's position
-                              game.answer.replaceAll(
-                                // character appears more than once in the answer
-                                new RegExp(`[^${char}]`, "gi"),
-                                ""
-                              ).length > 1
-                            ? "bg-yellow-500/60"
-                            : "bg-gray-400/60"
-                        }
-                        size={size}
-                      />
-                    ))}
-                  </div>
-                ))}
-              {/* current word row */}
-              <div
-                className={`flex gap-x-1 ${
-                  game.solved || guessedWords.length == MAX_GUESSES
-                    ? "hidden"
-                    : ""
-                }`}
-              >
-                {!typeInKeyboard
-                  ? [...currentEnteredWord]
-                      .slice(0, 5)
-                      .map((char, k) => (
-                        <Letter
-                          key={k}
-                          letter={char}
-                          className=""
-                          size={size}
-                        />
-                      ))
-                  : ""}
-                {typeInKeyboard && guessedWords.length > 0
-                  ? ""
-                  : Array.from({
-                      length: typeInKeyboard
-                        ? 5
-                        : 5 - currentEnteredWord.length,
-                    }).map((_, k) => (
-                      <Letter key={k} letter="" className="" size={size} />
-                    ))}
-              </div>
-
-              <span
-                className={`${
-                  answersVisible ? "block mt-2" : "hidden"
-                } tracking-wider text-gray-700 italic`}
-              >
-                {game.answer}
-              </span>
-            </div>
-          ))}
-        </div>
+        <GameGrid
+          games={games}
+          guessedWords={guessedWords}
+          currentEnteredWord={currentEnteredWord}
+          MAX_GUESSES={MAX_GUESSES}
+          size={size}
+          typeInKeyboard={typeInKeyboard}
+          answersVisible={answersVisible}
+          virtualize={virtualize}
+        />
       </div>
 
       <div className="sticky bottom-0 left-0 right-0">

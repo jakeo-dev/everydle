@@ -1,4 +1,9 @@
-function Letter(props: { letter: string; className?: string; size?: number }) {
+function Letter(props: {
+  letter: string;
+  size: number;
+  guessed: boolean;
+  className?: string;
+}) {
   let sizeClass: string;
   switch (props.size) {
     case 1:
@@ -17,13 +22,17 @@ function Letter(props: { letter: string; className?: string; size?: number }) {
       sizeClass = "w-10 h-10 text-2xl rounded-sm border-2";
       break;
     default:
-      sizeClass = "w-8 h-8 text-xl rounded-sm border-2";
+      sizeClass = "w-6 h-6 text-lg rounded-sm border-2";
   }
 
   return (
     <div
       className={`${
-        props.letter === "" ? "border-gray-400/50" : "border-gray-500/50"
+        props.letter === ""
+          ? "border-gray-400/50"
+          : props.guessed
+          ? "border-transparent"
+          : "border-gray-500/50"
       } ${sizeClass} ${
         props.className
       } font-semibold flex justify-center items-center select-none`}
