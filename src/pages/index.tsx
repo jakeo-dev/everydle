@@ -245,7 +245,10 @@ export default function Home() {
           content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
         />
 
-        <meta property="og:title" content="Everydle" />
+        <meta
+          property="og:title"
+          content="Everydle - Play every Wordle at once"
+        />
         <meta
           property="og:description"
           content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
@@ -257,7 +260,10 @@ export default function Home() {
           content="https://jakeo.dev/images/everydle-ss-1.png"
         />
 
-        <meta name="twitter:title" content="Everydle" />
+        <meta
+          name="twitter:title"
+          content="Everydle - Play every Wordle at once"
+        />
         <meta
           name="twitter:description"
           content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
