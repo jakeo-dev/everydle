@@ -273,8 +273,10 @@ export default function Home() {
               ref={menuButtonRef}
             >
               <FontAwesomeIcon
-                icon={showOptions ? faChevronUp : faChevronDown}
-                className="mr-2"
+                icon={faChevronDown}
+                className={`${
+                  showOptions ? "rotate-180" : ""
+                } transition duration-200 mr-2`}
               />
               Options
             </button>
