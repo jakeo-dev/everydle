@@ -177,7 +177,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
             <span
               className={`${
                 props.answersVisible ? "block mt-2" : "hidden"
-              } tracking-wider text-gray-700 italic`}
+              } text-sm tracking-widest text-gray-600 italic`}
             >
               {game.answer}
             </span>
@@ -286,7 +286,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
             <span
               className={`${
                 props.answersVisible ? "block mt-2" : "hidden"
-              } tracking-wider text-gray-700 italic`}
+              } text-sm tracking-widest text-gray-600 italic`}
             >
               {game.answer}
             </span>

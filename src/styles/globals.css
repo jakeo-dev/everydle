@@ -1,12 +1,11 @@
 @import "tailwindcss";
 
 @layer components {
-
-  .fadeIn {
+  .invisibleFade {
     @apply invisible opacity-0 transition-all;
   }
 
-  .fadeOut {
+  .visibleFade {
     @apply visible opacity-100 transition-all;
   }
 }

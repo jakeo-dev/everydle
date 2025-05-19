@@ -5,11 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
+import Toggle from "@/components/Toggle";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
+  faChevronDown,
+  faChevronUp,
   faDeleteLeft,
   faMinus,
   faPlus,
@@ -87,6 +90,10 @@ export default function Home() {
     return array;
   }
 
+  function randomElement<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
   const [guessedWords, setGuessedWords] = useState<string[]>([]);
   const [currentEnteredWord, setCurrentEnteredWord] = useState<string>("");
 
@@ -105,7 +112,7 @@ export default function Home() {
     if (firstKeyRef.current)
       setKeyWidth(firstKeyRef.current.getBoundingClientRect().width);
 
-    // update width ono resize
+    // update width on resize
     const handleResize = () => {
       if (firstKeyRef.current)
         setKeyWidth(firstKeyRef.current.getBoundingClientRect().width);
@@ -116,6 +123,8 @@ export default function Home() {
   }, []);
 
   const MAX_GUESSES = games.length + 5;
+
+  /* handle clicking letters */
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -144,6 +153,8 @@ export default function Home() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  /* handle submitting entered word */
 
   useEffect(() => {
     if (enterPressed) {
@@ -190,17 +201,29 @@ export default function Home() {
     }
   }, [enterPressed, currentEnteredWord]);
 
-  /* useEffect(() => {
-    console.log("Guessed words updated:", guessedWords);
-  }, [guessedWords]);
+  /* options */
+
+  const [showOptions, setShowOptions] = useState(false);
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  function handleOutsideClick(event: MouseEvent) {
+    if (
+      menuRef.current &&
+      menuButtonRef.current &&
+      !menuRef.current.contains(event.target as Element) &&
+      !menuButtonRef.current.contains(event.target as Element)
+    )
+      setShowOptions(false);
+  }
 
   useEffect(() => {
-    console.log("Current word updated:", currentEnteredWord);
-  }, [currentEnteredWord]); */
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, []);
 
-  function randomElement<T>(array: T[]): T {
-    return array[Math.floor(Math.random() * array.length)];
-  }
+  /* keyboard letters */
 
   const keyboardRow1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
   const keyboardRow2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
@@ -238,151 +261,153 @@ export default function Home() {
         <meta name="twitter:url" content="https://everydle.jakeo.dev" />
       </Head>
 
-      <div className="absolute top-4 right-4 justify-end items-end">
-        <div className="flex items-center">
-          <button
-            className={`w-6 h-6 rounded-md transition ${
-              size != 1
-                ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-                : "bg-gray-500/10 text-gray-600"
-            } ${size != 1 ? "cursor-pointer" : "cursor-not-allowed"}`}
-            onClick={() => {
-              setSize((prev) => (prev == 1 ? prev : prev - 1));
-            }}
-            disabled={size == 1}
-          >
-            <FontAwesomeIcon icon={faMinus} className="text-sm" aria-hidden />
-          </button>
-          <button
-            className={`w-6 h-6 rounded-md transition ml-2 ${
-              size != 5
-                ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-                : "bg-gray-500/10 text-gray-600"
-            } ${size != 5 ? "cursor-pointer" : "cursor-not-allowed"}`}
-            onClick={() => {
-              setSize((prev) => (prev == 5 ? prev : prev + 1));
-            }}
-            disabled={size == 5}
-          >
-            <FontAwesomeIcon icon={faPlus} className="text-sm" aria-hidden />
-          </button>
-          <span className="text-sm pl-2">Change size</span>
-        </div>
-        <div className="mt-2 md:mt-3">
-          <button
-            onClick={() => {
-              if (typeInKeyboard) setTypeInKeyboard(false);
-              else setTypeInKeyboard(true);
-            }}
-            className="flex items-center"
-          >
-            <div
-              className={`${
-                typeInKeyboard
-                  ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
-                  : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-              } w-6 h-6 rounded-md cursor-pointer transition`}
-            ></div>
-            <label className="text-sm pl-2 cursor-pointer">
-              Switch input mode
-            </label>
-          </button>
-        </div>
-        <div className="mt-2 md:mt-3">
-          <button
-            onClick={() => {
-              if (answersVisible) setAnswersVisible(false);
-              else setAnswersVisible(true);
-            }}
-            className="flex items-center"
-          >
-            <div
-              className={`${
-                answersVisible
-                  ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
-                  : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-              } w-6 h-6 rounded-md cursor-pointer transition`}
-            ></div>
-            <label className="text-sm pl-2 cursor-pointer">Show answers</label>
-          </button>
-        </div>
-        <div className="mt-2 md:mt-3">
-          <button
-            onClick={() => {
-              if (virtualize) setVirtualize(false);
-              else setVirtualize(true);
-            }}
-            className="flex items-center"
-          >
-            <div
-              className={`${
-                virtualize
-                  ? "bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40"
-                  : "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-              } w-6 h-6 rounded-md cursor-pointer transition`}
-            ></div>
-            <label className="text-sm pl-2 cursor-pointer">
-              Enable virtualization
-            </label>
-          </button>
-        </div>
-        <div className="text-xs text-center mt-2 md:mt-3">
-          <div className="flex">
-            <a
-              className="hover:drop-shadow-md active:drop-shadow-none transition"
-              href="https://jakeo.dev"
-              target="_blank"
+      <div className="w-full flex justify-end sticky top-4 z-20">
+        <div className="relative w-full">
+          <div className="absolute right-4 flex flex-col items-end">
+            <button
+              onClick={() => {
+                setShowOptions(!showOptions);
+              }}
+              className="text-sm md:text-base bg-gray-100 hover:bg-gray-200 shadow-sm rounded-md w-fit px-4 py-2 cursor-pointer transition"
+              ref={menuButtonRef}
             >
-              <img
-                src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
-                className="w-[3.25rem]"
+              <FontAwesomeIcon
+                icon={showOptions ? faChevronUp : faChevronDown}
+                className="mr-2"
               />
-            </a>
-            <span className="mx-2.5">•</span>
-            <a
-              className="hover:text-blue-600 transition"
-              href="https://github.com/jakeo-dev/everydle"
-              target="_blank"
+              Options
+            </button>
+            <div className="text-xs text-center bg-gray-100 shadow-sm rounded-md px-4 py-2 mt-3 md:mt-4 transition">
+              <div className="flex justify-end">
+                <a
+                  className="hover:drop-shadow-md active:drop-shadow-none transition"
+                  href="https://jakeo.dev"
+                  target="_blank"
+                >
+                  <img
+                    src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
+                    className="w-[3.25rem]"
+                  />
+                </a>
+                <span className="mx-2.5">•</span>
+                <a
+                  className="hover:text-blue-600 transition"
+                  href="https://github.com/jakeo-dev/everydle"
+                  target="_blank"
+                >
+                  <FontAwesomeIcon
+                    icon={faGithub}
+                    className="mr-1"
+                    aria-hidden
+                  />
+                  <span>GitHub</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div
+              className={`${
+                showOptions ? "visibleFade" : "invisibleFade"
+              } absolute top-12 right-4 bg-gray-200 rounded-md w-60 shadow-sm p-4`}
+              ref={menuRef}
             >
-              <FontAwesomeIcon icon={faGithub} className="mr-1" aria-hidden />
-              <span>GitHub</span>
-            </a>
+              <div className="flex items-center">
+                <button
+                  className={`w-6 h-6 rounded-md transition ${
+                    size != 1
+                      ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
+                      : "bg-gray-500/10 text-gray-600"
+                  } ${size != 1 ? "cursor-pointer" : "cursor-not-allowed"}`}
+                  onClick={() => {
+                    setSize((prev) => (prev == 1 ? prev : prev - 1));
+                  }}
+                  disabled={size == 1}
+                >
+                  <FontAwesomeIcon
+                    icon={faMinus}
+                    className="text-sm"
+                    aria-hidden
+                  />
+                </button>
+                <button
+                  className={`w-6 h-6 rounded-md transition ml-2 ${
+                    size != 5
+                      ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
+                      : "bg-gray-500/10 text-gray-600"
+                  } ${size != 5 ? "cursor-pointer" : "cursor-not-allowed"}`}
+                  onClick={() => {
+                    setSize((prev) => (prev == 5 ? prev : prev + 1));
+                  }}
+                  disabled={size == 5}
+                >
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    className="text-sm"
+                    aria-hidden
+                  />
+                </button>
+                <span className="text-sm pl-2">Change size</span>
+              </div>
+              <Toggle
+                state={typeInKeyboard}
+                setState={setTypeInKeyboard}
+                text="Switch input mode"
+                subtext="Input letters above keyboard instead of below each game"
+              />
+              <Toggle
+                state={answersVisible}
+                setState={setAnswersVisible}
+                text="Reveal answers"
+                subtext="Show answers for all games"
+              />
+              <Toggle
+                state={virtualize}
+                setState={setVirtualize}
+                text="Enable virtualization"
+                subtext="Significantly improve performance by only loading games visible on screen"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="px-8 py-42 md:py-16">
-        <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
-        <h2 className="text-base md:text-xl font-medium italic text-pretty mt-2">
-          {subtitle}
-        </h2>
-
-        <div className="w-full sticky z-10 top-6 mt-6 mb-10 md:mb-16">
-          <div className="bg-gray-200/80 rounded-full max-w-fit mx-auto">
-            <div
-              className={`${
-                games.filter((game) => game.solved).length >=
-                  games.length - 1 &&
-                games.filter((game) => game.solved).length > 0
-                  ? "bg-green-300/30 hover:bg-green-300"
-                  : "bg-gray-300/30 hover:bg-gray-300"
-              } flex gap-8 items-center justify-center rounded-full max-w-fit h-full px-6 py-2 mx-auto transition`}
-            >
-              <div>
-                <h3 className="font-semibold">
-                  {guessedWords.length} / {MAX_GUESSES}
-                </h3>
-                <h4 className="text-sm">guesses remaining</h4>
-              </div>
-              <div>
-                <h3 className="font-semibold">
-                  {games.filter((game) => game.solved).length} / {games.length}
-                </h3>
-                <h4 className="text-sm">words solved</h4>
-              </div>
+      <div className="w-full flex justify-end sticky top-4 z-10">
+        <div className="relative w-full">
+          <div
+            className={`${
+              games.filter((game) => game.solved).length >= games.length &&
+              games.filter((game) => game.solved).length > 0
+                ? "bg-green-200"
+                : "bg-gray-100"
+            } items-center justify-center absolute left-4 shadow-sm rounded-md px-4 py-2.5 transition`}
+          >
+            <div className="text-xs md:text-sm text-left">
+              <h3>
+                <b className="text-sm md:text-base">{guessedWords.length}</b> of{" "}
+                {MAX_GUESSES}
+              </h3>
+              <h4>guesses remaining</h4>
+            </div>
+            <div className="text-xs md:text-sm text-left mt-2 md:mt-3">
+              <h3>
+                <b className="text-sm md:text-base">
+                  {games.filter((game) => game.solved).length}
+                </b>{" "}
+                of {games.length}
+              </h3>
+              <h4>words solved</h4>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="px-8 pb-16 pt-36 md:pt-16">
+        <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
+        <h2 className="text-base md:text-xl font-medium italic text-pretty mt-2 mb-10 md:mb-16">
+          {subtitle}
+        </h2>
 
         <GameGrid
           games={games}
@@ -398,7 +423,7 @@ export default function Home() {
 
       <div className="sticky bottom-0 left-0 right-0">
         {/* keyboard */}
-        <div className="bg-gray-100 shadow-xl rounded-t-xl w-full md:w-[26rem] mx-auto p-2 sm:p-3">
+        <div className="bg-gray-100 shadow-sm rounded-t-xl w-full md:w-[26rem] mx-auto p-2 sm:p-3">
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
