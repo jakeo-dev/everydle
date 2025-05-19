@@ -261,7 +261,7 @@ export default function Home() {
         <meta name="twitter:url" content="https://everydle.jakeo.dev" />
       </Head>
 
-      <div className="w-full flex justify-end sticky top-4 z-20">
+      <div className="w-full flex justify-end sticky top-4 z-90">
         <div className="relative w-full">
           <div className="absolute right-4 flex flex-col items-end">
             <button
@@ -381,7 +381,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full flex justify-end sticky top-4 z-10">
+      <div className="w-full flex justify-end sticky top-4 z-80">
         <div className="relative w-full">
           <div
             className={`${
@@ -413,7 +413,7 @@ export default function Home() {
 
       <div className="px-8 pb-16 pt-36 md:pt-16">
         <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
-        <h2 className="text-base md:text-xl font-medium italic text-pretty mt-2 mb-10 md:mb-16">
+        <h2 className="text-base md:text-lg font-medium text-gray-700 italic text-pretty mt-2 mb-10 md:mb-16">
           {subtitle}
         </h2>
 

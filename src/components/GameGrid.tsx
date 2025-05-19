@@ -35,8 +35,10 @@ function Game(props: GameProps) {
   return (
     <div
       className={`${
-        props.game.solved ? "bg-green-300/30" : "bg-gray-300/30"
-      } w-min h-min p-3 gap-3 rounded-md mb-6 mx-auto`}
+        props.game.solved ? "bg-green-400/30 opacity-60" : "bg-gray-300/30"
+      } w-min h-min ${
+        props.size <= 1 ? "p-2" : "p-3"
+      } gap-3 rounded-md mb-6 mx-auto`}
     >
       {/* entered words rows */}
       {props.guessedWords
@@ -105,7 +107,6 @@ function Game(props: GameProps) {
                   letter={char}
                   guessed={false}
                   size={props.size}
-                  className=""
                 />
               ))
           : null}
@@ -116,13 +117,7 @@ function Game(props: GameProps) {
                 ? 5
                 : 5 - props.currentEnteredWord.length,
             }).map((_, k) => (
-              <Letter
-                key={k}
-                letter=""
-                guessed={false}
-                size={props.size}
-                className=""
-              />
+              <Letter key={k} letter="" guessed={false} size={props.size} />
             ))}
       </div>
 
