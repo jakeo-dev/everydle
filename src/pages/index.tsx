@@ -101,6 +101,7 @@ export default function Home() {
 
   const [size, setSize] = useState(3);
   const [typeInKeyboard, setTypeInKeyboard] = useState(false);
+  const [moveSolved, setMoveSolved] = useState(false);
   const [answersVisible, setAnswersVisible] = useState(false);
   const [virtualize, setVirtualize] = useState(true);
 
@@ -357,6 +358,12 @@ export default function Home() {
                 subtext="Input letters above keyboard instead of below each game"
               />
               <Toggle
+                state={moveSolved}
+                setState={setMoveSolved}
+                text="Move solved to top"
+                subtext="Move solved games to the top of the grid"
+              />
+              <Toggle
                 state={answersVisible}
                 setState={setAnswersVisible}
                 text="Reveal answers"
@@ -416,6 +423,7 @@ export default function Home() {
           MAX_GUESSES={MAX_GUESSES}
           size={size}
           typeInKeyboard={typeInKeyboard}
+          moveSolved={moveSolved}
           answersVisible={answersVisible}
           virtualize={virtualize}
         />

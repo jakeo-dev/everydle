@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import Letter from "@/components/Letter";
 import React from "react";
 
+type Game = {
+  solved: boolean;
+  answer: string;
+};
+
 type GameGridProps = {
-  games: {
-    solved: boolean;
-    answer: string;
-  }[];
+  games: Game[];
   guessedWords: string[];
   currentEnteredWord: string;
   MAX_GUESSES: number;
   size: number;
   answersVisible: boolean;
+  moveSolved: boolean;
   typeInKeyboard: boolean;
   virtualize: boolean;
 };
@@ -21,6 +24,14 @@ type GameGridProps = {
 const GameGrid = React.memo(function Grid(props: GameGridProps) {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => setIsClient(true), []);
+
+  function sortGames(a: Game, b: Game) {
+    if (props.moveSolved) {
+      return Number(b.solved) - Number(a.solved);
+    } else {
+      return 0;
+    }
+  }
 
   // for virtualized grid
   let colWidth: number;
@@ -75,7 +86,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   return isClient ? (
     props.virtualize ? (
       <Masonry
-        items={props.games}
+        items={[...props.games].sort(sortGames)}
         columnGutter={15}
         columnWidth={colWidth}
         overscanBy={2.5}
@@ -188,7 +199,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
       <div
         className={`grid ${sizeClass} justify-items-center align-items-center`}
       >
-        {props.games.map((game, index) => (
+        {[...props.games].sort(sortGames).map((game, index) => (
           <div
             key={index}
             className={`${
