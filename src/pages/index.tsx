@@ -73,32 +73,28 @@ export default function Home() {
     fetchGuesses();
   }, []);
 
-  function shuffle<T>(array: T[]): T[] {
-    let currentIndex = array.length;
+  /* set screen width */
 
-    while (currentIndex != 0) {
-      const randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
+  const [screenWidth, setScreenWidth] = useState<number>(0);
 
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
-      ];
+  useEffect(() => {
+    handleResize();
+
+    function handleResize() {
+      setScreenWidth(window.innerWidth);
+      setSize(window.innerWidth >= 768 ? 3 : 2);
     }
 
-    return array;
-  }
-
-  function randomElement<T>(array: T[]): T {
-    return array[Math.floor(Math.random() * array.length)];
-  }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [guessedWords, setGuessedWords] = useState<string[]>([]);
   const [currentEnteredWord, setCurrentEnteredWord] = useState<string>("");
 
   const [enterPressed, setEnterPressed] = useState(false);
 
-  const [size, setSize] = useState(3);
+  const [size, setSize] = useState(screenWidth >= 768 ? 3 : 2);
   const [typeInKeyboard, setTypeInKeyboard] = useState(false);
   const [moveSolved, setMoveSolved] = useState(false);
   const [answersVisible, setAnswersVisible] = useState(false);
@@ -123,6 +119,28 @@ export default function Home() {
   }, []);
 
   const MAX_GUESSES = games.length + 5;
+
+  /* random functions */
+
+  function shuffle<T>(array: T[]): T[] {
+    let currentIndex = array.length;
+
+    while (currentIndex != 0) {
+      const randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  }
+
+  function randomElement<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+  }
 
   /* handle clicking letters */
 
