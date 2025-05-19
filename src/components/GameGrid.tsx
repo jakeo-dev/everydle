@@ -28,14 +28,12 @@ type GameProps = {
   size: number;
   answersVisible: boolean;
   typeInKeyboard: boolean;
-  index: number;
   game: Game;
 };
 
 function Game(props: GameProps) {
   return (
     <div
-      key={props.index}
       className={`${
         props.game.solved ? "bg-green-300/30" : "bg-gray-300/30"
       } w-min h-min p-3 gap-3 rounded-md mb-6 mx-auto`}
@@ -209,9 +207,9 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
         columnGutter={15}
         columnWidth={colWidth}
         overscanBy={2.5}
-        render={({ index, data: game }) => (
+        render={({ data: game }) => (
           <Game
-            index={index}
+            key={game.answer}
             game={game}
             guessedWords={props.guessedWords}
             currentEnteredWord={props.currentEnteredWord}
@@ -227,9 +225,9 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
       <div
         className={`grid ${sizeClass} justify-items-center align-items-center`}
       >
-        {[...props.games].sort(sortGames).map((game, index) => (
+        {[...props.games].sort(sortGames).map((game) => (
           <Game
-            index={index}
+            key={game.answer}
             game={game}
             guessedWords={props.guessedWords}
             currentEnteredWord={props.currentEnteredWord}
