@@ -47,12 +47,12 @@ export default function Home() {
 
       setSubtitle(
         randomElement([
-          `Win every time`,
           `Always win on the first guess`,
           `Save ${gameArray.length} days of your time`,
           `Play ${gameArray.length} games at once`,
           `Every wordle everywhere all at once`,
           `It's your fault if something crashes`,
+          `Never worry about missing a day again`,
         ])
       );
     };
@@ -234,31 +234,40 @@ export default function Home() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Everydle</title>
+        <title>Everydle - Play every Wordle at once</title>
 
         <meta
           name="keywords"
-          content="everydle, wordle, word game, puzzle game, game, daily"
+          content="everydle, wordle, word game, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
         />
         <meta
           property="description"
-          content="Play every game of Wordle at the same time."
+          content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
         />
 
         <meta property="og:title" content="Everydle" />
         <meta
           property="og:description"
-          content="Play every game of Wordle at the same time."
+          content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
         />
         <meta name="theme-color" content="#00c951" />
         <meta property="og:url" content="https://everydle.jakeo.dev" />
+        <meta
+          property="og:image"
+          content="https://jakeo.dev/images/everydle-ss-1.png"
+        />
 
         <meta name="twitter:title" content="Everydle" />
         <meta
           name="twitter:description"
-          content="Play every game of Wordle at the same time."
+          content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
         />
         <meta name="twitter:url" content="https://everydle.jakeo.dev" />
+        <meta
+          name="twitter:image:src"
+          content="https://jakeo.dev/images/everydle-ss-1.png"
+        />
+        <meta property="twitter:card" content="summary_large_image" />
       </Head>
 
       <div className="w-full flex justify-end sticky top-4 z-90">
