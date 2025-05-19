@@ -21,6 +21,124 @@ type GameGridProps = {
   virtualize: boolean;
 };
 
+type GameProps = {
+  guessedWords: string[];
+  currentEnteredWord: string;
+  MAX_GUESSES: number;
+  size: number;
+  answersVisible: boolean;
+  typeInKeyboard: boolean;
+  index: number;
+  game: Game;
+};
+
+function Game(props: GameProps) {
+  return (
+    <div
+      key={props.index}
+      className={`${
+        props.game.solved ? "bg-green-300/30" : "bg-gray-300/30"
+      } w-min h-min p-3 gap-3 rounded-md mb-6 mx-auto`}
+    >
+      {/* entered words rows */}
+      {props.guessedWords
+        .slice(
+          0,
+          props.game.solved
+            ? props.guessedWords.indexOf(props.game.answer) + 1
+            : props.guessedWords.length
+        )
+        .map((word, j) => (
+          <div className="flex gap-x-1 mb-1" key={j}>
+            {[...word].slice(0, 5).map((char, k) => {
+              const isCorrect = char === props.game.answer[k];
+              const isInAnswer = props.game.answer.includes(char);
+              const isMisplaced =
+                isInAnswer &&
+                !isCorrect &&
+                !word.slice(0, k).includes(char) && // entered word does NOT contain the character BEFORE this character's position
+                Array.from({ length: 5 }).filter(
+                  // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
+                  (_, i) => word[i] === char && props.game.answer[i] === char
+                ).length < 1;
+
+              return (
+                <Letter
+                  key={k}
+                  letter={char}
+                  size={props.size}
+                  guessed={true}
+                  className={
+                    isCorrect
+                      ? "bg-green-500/60"
+                      : isMisplaced
+                      ? "bg-yellow-500/60"
+                      : isInAnswer &&
+                        (!word.slice(0, k).includes(char) || // entered word does NOT contain the character BEFORE this character's position
+                          word.slice(k, 5).includes(char)) && // entered word does NOT contain the character BEFORE this character's position OR entered word DOES contain the character AFTER this character's position
+                        props.game.answer.replaceAll(
+                          // character appears more than once in the answer
+                          new RegExp(`[^${char}]`, "gi"),
+                          ""
+                        ).length > 1
+                      ? "bg-yellow-500/60"
+                      : "bg-gray-400/60"
+                  }
+                />
+              );
+            })}
+          </div>
+        ))}
+
+      {/* current word row */}
+      <div
+        className={`flex gap-x-1 ${
+          props.game.solved || props.guessedWords.length == props.MAX_GUESSES
+            ? "hidden"
+            : ""
+        }`}
+      >
+        {!props.typeInKeyboard
+          ? [...props.currentEnteredWord]
+              .slice(0, 5)
+              .map((char, k) => (
+                <Letter
+                  key={k}
+                  letter={char}
+                  guessed={false}
+                  size={props.size}
+                  className=""
+                />
+              ))
+          : null}
+        {props.typeInKeyboard && props.guessedWords.length > 0
+          ? null
+          : Array.from({
+              length: props.typeInKeyboard
+                ? 5
+                : 5 - props.currentEnteredWord.length,
+            }).map((_, k) => (
+              <Letter
+                key={k}
+                letter=""
+                guessed={false}
+                size={props.size}
+                className=""
+              />
+            ))}
+      </div>
+
+      <span
+        className={`${
+          props.answersVisible ? "block mt-2" : "hidden"
+        } text-sm tracking-widest text-gray-600 italic`}
+      >
+        {props.game.answer}
+      </span>
+    </div>
+  );
+}
+
 const GameGrid = React.memo(function Grid(props: GameGridProps) {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => setIsClient(true), []);
@@ -85,223 +203,41 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
 
   return isClient ? (
     props.virtualize ? (
+      // virtualized grid
       <Masonry
         items={[...props.games].sort(sortGames)}
         columnGutter={15}
         columnWidth={colWidth}
         overscanBy={2.5}
         render={({ index, data: game }) => (
-          <div
-            key={index}
-            className={`${
-              game.solved ? "bg-green-300/30" : "bg-gray-300/30"
-            } w-min h-min p-3 gap-3 rounded-md mb-6 mx-auto`}
-          >
-            {/* entered words rows */}
-            {props.guessedWords
-              .slice(
-                0,
-                game.solved
-                  ? props.guessedWords.indexOf(game.answer) + 1
-                  : props.guessedWords.length
-              )
-              .map((word, j) => (
-                <div className="flex gap-x-1 mb-1" key={j}>
-                  {[...word].slice(0, 5).map((char, k) => {
-                    const isCorrect = char === game.answer[k];
-                    const isInAnswer = game.answer.includes(char);
-                    const isMisplaced =
-                      isInAnswer &&
-                      !isCorrect &&
-                      !word.slice(0, k).includes(char) && // entered word does NOT contain the character BEFORE this character's position
-                      Array.from({ length: 5 }).filter(
-                        // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
-                        (_, i) => word[i] === char && game.answer[i] === char
-                      ).length < 1;
-
-                    return (
-                      <Letter
-                        key={k}
-                        letter={char}
-                        size={props.size}
-                        guessed={true}
-                        className={
-                          isCorrect
-                            ? "bg-green-500/60"
-                            : isMisplaced
-                            ? "bg-yellow-500/60"
-                            : isInAnswer &&
-                              (!word.slice(0, k).includes(char) || // entered word does NOT contain the character BEFORE this character's position
-                                word.slice(k, 5).includes(char)) && // entered word does NOT contain the character BEFORE this character's position OR entered word DOES contain the character AFTER this character's position
-                              game.answer.replaceAll(
-                                // character appears more than once in the answer
-                                new RegExp(`[^${char}]`, "gi"),
-                                ""
-                              ).length > 1
-                            ? "bg-yellow-500/60"
-                            : "bg-gray-400/60"
-                        }
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-
-            {/* current word row */}
-            <div
-              className={`flex gap-x-1 ${
-                game.solved || props.guessedWords.length == props.MAX_GUESSES
-                  ? "hidden"
-                  : ""
-              }`}
-            >
-              {!props.typeInKeyboard
-                ? [...props.currentEnteredWord]
-                    .slice(0, 5)
-                    .map((char, k) => (
-                      <Letter
-                        key={k}
-                        letter={char}
-                        guessed={false}
-                        size={props.size}
-                        className=""
-                      />
-                    ))
-                : null}
-              {props.typeInKeyboard && props.guessedWords.length > 0
-                ? null
-                : Array.from({
-                    length: props.typeInKeyboard
-                      ? 5
-                      : 5 - props.currentEnteredWord.length,
-                  }).map((_, k) => (
-                    <Letter
-                      key={k}
-                      letter=""
-                      guessed={false}
-                      size={props.size}
-                      className=""
-                    />
-                  ))}
-            </div>
-
-            <span
-              className={`${
-                props.answersVisible ? "block mt-2" : "hidden"
-              } text-sm tracking-widest text-gray-600 italic`}
-            >
-              {game.answer}
-            </span>
-          </div>
+          <Game
+            index={index}
+            game={game}
+            guessedWords={props.guessedWords}
+            currentEnteredWord={props.currentEnteredWord}
+            MAX_GUESSES={props.MAX_GUESSES}
+            size={props.size}
+            answersVisible={props.answersVisible}
+            typeInKeyboard={props.typeInKeyboard}
+          />
         )}
       />
     ) : (
+      // normal grid
       <div
         className={`grid ${sizeClass} justify-items-center align-items-center`}
       >
         {[...props.games].sort(sortGames).map((game, index) => (
-          <div
-            key={index}
-            className={`${
-              game.solved ? "bg-green-300/30" : "bg-gray-300/30"
-            } w-min h-min p-3 gap-3 rounded-md mb-6 mx-auto`}
-          >
-            {/* entered words rows */}
-            {props.guessedWords
-              .slice(
-                0,
-                game.solved
-                  ? props.guessedWords.indexOf(game.answer) + 1
-                  : props.guessedWords.length
-              )
-              .map((word, j) => (
-                <div className="flex gap-x-1 mb-1" key={j}>
-                  {[...word].slice(0, 5).map((char, k) => {
-                    const isCorrect = char === game.answer[k];
-                    const isInAnswer = game.answer.includes(char);
-                    const isMisplaced =
-                      isInAnswer &&
-                      !isCorrect &&
-                      !word.slice(0, k).includes(char) && // entered word does NOT contain the character BEFORE this character's position
-                      Array.from({ length: 5 }).filter(
-                        // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
-                        (_, i) => word[i] === char && game.answer[i] === char
-                      ).length < 1;
-
-                    return (
-                      <Letter
-                        key={k}
-                        letter={char}
-                        size={props.size}
-                        guessed={true}
-                        className={
-                          isCorrect
-                            ? "bg-green-500/60"
-                            : isMisplaced
-                            ? "bg-yellow-500/60"
-                            : isInAnswer &&
-                              (!word.slice(0, k).includes(char) || // entered word does NOT contain the character BEFORE this character's position
-                                word.slice(k, 5).includes(char)) && // entered word does NOT contain the character BEFORE this character's position OR entered word DOES contain the character AFTER this character's position
-                              game.answer.replaceAll(
-                                // character appears more than once in the answer
-                                new RegExp(`[^${char}]`, "gi"),
-                                ""
-                              ).length > 1
-                            ? "bg-yellow-500/60"
-                            : "bg-gray-400/60"
-                        }
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-
-            {/* current word row */}
-            <div
-              className={`flex gap-x-1 ${
-                game.solved || props.guessedWords.length == props.MAX_GUESSES
-                  ? "hidden"
-                  : ""
-              }`}
-            >
-              {!props.typeInKeyboard
-                ? [...props.currentEnteredWord]
-                    .slice(0, 5)
-                    .map((char, k) => (
-                      <Letter
-                        key={k}
-                        letter={char}
-                        guessed={false}
-                        size={props.size}
-                        className=""
-                      />
-                    ))
-                : null}
-              {props.typeInKeyboard && props.guessedWords.length > 0
-                ? null
-                : Array.from({
-                    length: props.typeInKeyboard
-                      ? 5
-                      : 5 - props.currentEnteredWord.length,
-                  }).map((_, k) => (
-                    <Letter
-                      key={k}
-                      letter=""
-                      guessed={false}
-                      size={props.size}
-                      className=""
-                    />
-                  ))}
-            </div>
-
-            <span
-              className={`${
-                props.answersVisible ? "block mt-2" : "hidden"
-              } text-sm tracking-widest text-gray-600 italic`}
-            >
-              {game.answer}
-            </span>
-          </div>
+          <Game
+            index={index}
+            game={game}
+            guessedWords={props.guessedWords}
+            currentEnteredWord={props.currentEnteredWord}
+            MAX_GUESSES={props.MAX_GUESSES}
+            size={props.size}
+            answersVisible={props.answersVisible}
+            typeInKeyboard={props.typeInKeyboard}
+          />
         ))}
       </div>
     )

@@ -12,7 +12,6 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
   faChevronDown,
-  faChevronUp,
   faDeleteLeft,
   faMinus,
   faPlus,
