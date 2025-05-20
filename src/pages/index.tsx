@@ -340,6 +340,7 @@ export default function Home() {
                 className={`${
                   showOptions ? "rotate-180" : ""
                 } transition duration-200 mr-2`}
+                aria-hidden
               />
               Options
             </button>
@@ -392,7 +393,7 @@ export default function Home() {
                   <FontAwesomeIcon
                     icon={faMinus}
                     className="text-sm"
-                    aria-hidden
+                    aria-label="Decrease size"
                   />
                 </button>
                 <button
@@ -407,7 +408,7 @@ export default function Home() {
                   <FontAwesomeIcon
                     icon={faPlus}
                     className="text-sm"
-                    aria-hidden
+                    aria-label="Increase size"
                   />
                 </button>
                 <span className="text-sm pl-2">Change size</span>

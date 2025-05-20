@@ -63,6 +63,7 @@ function Game(props: GameProps) {
                   guessed={true}
                   phantom={false}
                   typeInKeyboard={props.typeInKeyboard}
+                  guessedWordsLength={props.guessedWords.length}
                   className={
                     getLetterColor(word, char, k, props.game.answer) == "green"
                       ? "bg-green-500/60"
@@ -98,32 +99,38 @@ function Game(props: GameProps) {
                   guessed={false}
                   phantom={false}
                   typeInKeyboard={props.typeInKeyboard}
+                  guessedWordsLength={props.guessedWords.length}
                   size={props.size}
                 />
               ))
           : null}
-        {Array.from({
-          length: props.typeInKeyboard
-            ? 5
-            : 5 - props.currentEnteredWord.length,
-        }).map((_, k) => (
-          <Letter
-            key={k}
-            letter={
-              props.showPhantoms
-                ? props.game.guessedLetters.find((l) =>
-                    !props.typeInKeyboard
-                      ? l.position - props.currentEnteredWord.length === k
-                      : l.position === k
-                  )?.character || ""
-                : ""
-            }
-            guessed={false}
-            phantom={props.showPhantoms}
-            typeInKeyboard={props.typeInKeyboard}
-            size={props.size}
-          />
-        ))}
+        {!props.typeInKeyboard ||
+        props.showPhantoms ||
+        props.guessedWords.length < 1
+          ? Array.from({
+              length: props.typeInKeyboard
+                ? 5
+                : 5 - props.currentEnteredWord.length,
+            }).map((_, k) => (
+              <Letter
+                key={k}
+                letter={
+                  props.showPhantoms
+                    ? props.game.guessedLetters.find((l) =>
+                        !props.typeInKeyboard
+                          ? l.position - props.currentEnteredWord.length === k
+                          : l.position === k
+                      )?.character || ""
+                    : ""
+                }
+                guessed={false}
+                phantom={props.showPhantoms}
+                typeInKeyboard={props.typeInKeyboard}
+                guessedWordsLength={props.guessedWords.length}
+                size={props.size}
+              />
+            ))
+          : null}
       </div>
 
       <span
@@ -207,6 +214,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
         columnGutter={15}
         columnWidth={colWidth}
         overscanBy={2.5}
+        className="focus:outline-none"
         render={({ data: game }) => (
           <Game
             key={game.answer}
