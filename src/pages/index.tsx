@@ -423,7 +423,7 @@ export default function Home() {
                 state={showPhantoms}
                 setState={setShowPhantoms}
                 text="Show solved letters"
-                subtext="Show all solved letters in input line below each game (switch input mode must be disabled)"
+                subtext="Show all solved letters in input line below each game"
               />
               <Toggle
                 state={moveSolved}
