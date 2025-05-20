@@ -62,6 +62,7 @@ function Game(props: GameProps) {
                   size={props.size}
                   guessed={true}
                   phantom={false}
+                  typeInKeyboard={props.typeInKeyboard}
                   className={
                     getLetterColor(word, char, k, props.game.answer) == "green"
                       ? "bg-green-500/60"
@@ -96,32 +97,33 @@ function Game(props: GameProps) {
                   letter={char}
                   guessed={false}
                   phantom={false}
+                  typeInKeyboard={props.typeInKeyboard}
                   size={props.size}
                 />
               ))
           : null}
-        {props.typeInKeyboard && props.guessedWords.length > 0
-          ? null
-          : Array.from({
-              length: props.typeInKeyboard
-                ? 5
-                : 5 - props.currentEnteredWord.length,
-            }).map((_, k) => (
-              <Letter
-                key={k}
-                letter={
-                  props.showPhantoms
-                    ? props.game.guessedLetters.find(
-                        (l) =>
-                          l.position - props.currentEnteredWord.length === k
-                      )?.character || ""
-                    : ""
-                }
-                guessed={false}
-                phantom={props.showPhantoms}
-                size={props.size}
-              />
-            ))}
+        {Array.from({
+          length: props.typeInKeyboard
+            ? 5
+            : 5 - props.currentEnteredWord.length,
+        }).map((_, k) => (
+          <Letter
+            key={k}
+            letter={
+              props.showPhantoms
+                ? props.game.guessedLetters.find((l) =>
+                    !props.typeInKeyboard
+                      ? l.position - props.currentEnteredWord.length === k
+                      : l.position === k
+                  )?.character || ""
+                : ""
+            }
+            guessed={false}
+            phantom={props.showPhantoms}
+            typeInKeyboard={props.typeInKeyboard}
+            size={props.size}
+          />
+        ))}
       </div>
 
       <span

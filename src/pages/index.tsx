@@ -375,17 +375,15 @@ export default function Home() {
           <div className="relative">
             <div
               className={`${
-                showOptions ? "visibleFade" : "invisibleFade"
+                showOptions ? "visible-fade" : "invisible-fade"
               } absolute top-12 right-4 bg-gray-200 rounded-md w-60 shadow-sm p-4`}
               ref={menuRef}
             >
               <div className="flex items-center">
                 <button
                   className={`w-6 h-6 rounded-md transition ${
-                    size != 1
-                      ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-                      : "bg-gray-500/10 text-gray-600"
-                  } ${size != 1 ? "cursor-pointer" : "cursor-not-allowed"}`}
+                    size != 1 ? "neutral-toggle" : "disabled-toggle"
+                  }`}
                   onClick={() => {
                     setSize((prev) => (prev == 1 ? prev : prev - 1));
                   }}
@@ -399,10 +397,8 @@ export default function Home() {
                 </button>
                 <button
                   className={`w-6 h-6 rounded-md transition ml-2 ${
-                    size != 5
-                      ? "bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50"
-                      : "bg-gray-500/10 text-gray-600"
-                  } ${size != 5 ? "cursor-pointer" : "cursor-not-allowed"}`}
+                    size != 5 ? "neutral-toggle" : "disabled-toggle"
+                  }`}
                   onClick={() => {
                     setSize((prev) => (prev == 5 ? prev : prev + 1));
                   }}

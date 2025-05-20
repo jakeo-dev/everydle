@@ -3,6 +3,7 @@ function Letter(props: {
   size: number;
   guessed: boolean;
   phantom: boolean;
+  typeInKeyboard: boolean;
   className?: string;
 }) {
   let sizeClass: string;
@@ -29,7 +30,9 @@ function Letter(props: {
   return (
     <div
       className={`${
-        props.letter === "" || props.phantom
+        props.phantom && props.typeInKeyboard
+          ? "border-transparent"
+          : props.letter === "" || props.phantom
           ? "border-gray-400/50"
           : props.guessed
           ? "border-transparent"
