@@ -102,7 +102,7 @@ export default function Home() {
   const [showPhantoms, setShowPhantoms] = useState(true);
   const [moveSolved, setMoveSolved] = useState(false);
   const [answersVisible, setAnswersVisible] = useState(false);
-  const [virtualize, setVirtualize] = useState(true);
+  //const [virtualize, setVirtualize] = useState(true);
 
   const firstKeyRef = useRef<HTMLButtonElement>(null);
   const [keyWidth, setKeyWidth] = useState(0);
@@ -497,7 +497,7 @@ export default function Home() {
           showPhantoms={showPhantoms}
           moveSolved={moveSolved}
           answersVisible={answersVisible}
-          virtualize={virtualize}
+          virtualize={true}
         />
       </div>
 
