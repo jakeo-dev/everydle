@@ -184,6 +184,8 @@ export default function Home() {
         alert("Entered word must be five letters long");
       } else if (!possibleGuesses.includes(currentEnteredWord)) {
         alert("Entered word is not in word list");
+      } else if (guessedWords.includes(currentEnteredWord)) {
+        alert("Entered word has already been guessed");
       } else {
         setGuessedWords((prev) => {
           if (prev.length == MAX_GUESSES - 1) {
