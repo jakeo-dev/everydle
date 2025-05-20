@@ -15,7 +15,7 @@ function Toggle(props: ToggleProps) {
       <button
         onClick={() => {
           props.setState(!props.state);
-          props.onClick && props.onClick();
+          if (props.onClick) props.onClick();
         }}
         disabled={props.disabled}
         className="flex items-center mt-2 md:mt-3"
