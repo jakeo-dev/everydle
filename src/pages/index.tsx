@@ -440,12 +440,12 @@ export default function Home() {
                 text="Reveal answers"
                 subtext="Show answers for all games"
               />
-              <Toggle
+              {/* <Toggle
                 state={virtualize}
                 setState={setVirtualize}
                 text="Enable virtualization"
                 subtext="Significantly improve performance by only loading games visible on screen"
-              />
+              /> */}
             </div>
           </div>
         </div>
