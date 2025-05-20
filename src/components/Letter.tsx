@@ -2,6 +2,7 @@ function Letter(props: {
   letter: string;
   size: number;
   guessed: boolean;
+  phantom: boolean;
   className?: string;
 }) {
   let sizeClass: string;
@@ -28,7 +29,7 @@ function Letter(props: {
   return (
     <div
       className={`${
-        props.letter === ""
+        props.letter === "" || props.phantom
           ? "border-gray-400/50"
           : props.guessed
           ? "border-transparent"
@@ -37,7 +38,9 @@ function Letter(props: {
         props.className
       } font-semibold flex justify-center items-center select-none`}
     >
-      <span>{props.letter}</span>
+      <span className={props.phantom ? "text-gray-500" : ""}>
+        {props.letter}
+      </span>
     </div>
   );
 }

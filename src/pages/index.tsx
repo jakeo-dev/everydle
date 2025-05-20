@@ -16,10 +16,12 @@ import {
   faMinus,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { getLetterColor } from "@/utility";
 
 type Game = {
   solved: boolean;
   answer: string;
+  guessedLetters: { character: string; position: number }[];
 };
 
 export default function Home() {
@@ -41,6 +43,7 @@ export default function Home() {
       const gameArray: Game[] = lines.map((answer) => ({
         solved: false,
         answer: answer,
+        guessedLetters: [],
       }));
 
       setGames(shuffle(gameArray));
@@ -96,6 +99,7 @@ export default function Home() {
 
   const [size, setSize] = useState(screenWidth >= 768 ? 3 : 2);
   const [typeInKeyboard, setTypeInKeyboard] = useState(false);
+  const [showPhantoms, setShowPhantoms] = useState(true);
   const [moveSolved, setMoveSolved] = useState(false);
   const [answersVisible, setAnswersVisible] = useState(false);
   const [virtualize, setVirtualize] = useState(true);
@@ -193,6 +197,34 @@ export default function Home() {
         });
 
         for (let i = 0; i < games.length; i++) {
+          for (let j = 0; j < currentEnteredWord.length; j++) {
+            if (
+              getLetterColor(
+                currentEnteredWord,
+                currentEnteredWord[j],
+                j,
+                games[i].answer
+              ) == "green" ||
+              getLetterColor(
+                currentEnteredWord,
+                currentEnteredWord[j],
+                j,
+                games[i].answer
+              ) == "yellow" // if this letter is green or yellow
+            ) {
+              // then add this specific letter to this game object's guessedLetters with its position
+              setGames((prev) => {
+                const newGames = [...prev];
+                newGames[i].guessedLetters.push({
+                  character: currentEnteredWord[j],
+                  position:
+                    currentEnteredWord[j] == games[i].answer[j] ? j : -1, // position is -1 if letter is yellow
+                });
+                return newGames;
+              });
+            }
+          }
+
           if (games[i].answer == currentEnteredWord) {
             if (
               games.filter((game) => game.solved).length >=
@@ -208,7 +240,6 @@ export default function Home() {
               newGames[i].solved = true;
               return newGames;
             });
-            break;
           }
         }
 
@@ -392,6 +423,12 @@ export default function Home() {
                 subtext="Input letters above keyboard instead of below each game"
               />
               <Toggle
+                state={showPhantoms}
+                setState={setShowPhantoms}
+                text="Show solved letters"
+                subtext="Show all solved letters in input line below each game (switch input mode must be disabled)"
+              />
+              <Toggle
                 state={moveSolved}
                 setState={setMoveSolved}
                 text="Move solved to top"
@@ -457,6 +494,7 @@ export default function Home() {
           MAX_GUESSES={MAX_GUESSES}
           size={size}
           typeInKeyboard={typeInKeyboard}
+          showPhantoms={showPhantoms}
           moveSolved={moveSolved}
           answersVisible={answersVisible}
           virtualize={virtualize}

@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 
 import Letter from "@/components/Letter";
 import React from "react";
+import { getLetterColor } from "@/utility";
 
 type Game = {
   solved: boolean;
   answer: string;
+  guessedLetters: { character: string; position: number }[];
 };
 
 type GameGridProps = {
@@ -15,9 +17,10 @@ type GameGridProps = {
   currentEnteredWord: string;
   MAX_GUESSES: number;
   size: number;
+  typeInKeyboard: boolean;
+  showPhantoms: boolean;
   answersVisible: boolean;
   moveSolved: boolean;
-  typeInKeyboard: boolean;
   virtualize: boolean;
 };
 
@@ -26,8 +29,9 @@ type GameProps = {
   currentEnteredWord: string;
   MAX_GUESSES: number;
   size: number;
-  answersVisible: boolean;
   typeInKeyboard: boolean;
+  showPhantoms: boolean;
+  answersVisible: boolean;
   game: Game;
 };
 
@@ -51,37 +55,22 @@ function Game(props: GameProps) {
         .map((word, j) => (
           <div className="flex gap-x-1 mb-1" key={j}>
             {[...word].slice(0, 5).map((char, k) => {
-              const isCorrect = char === props.game.answer[k];
-              const isInAnswer = props.game.answer.includes(char);
-              const isMisplaced =
-                isInAnswer &&
-                !isCorrect &&
-                !word.slice(0, k).includes(char) && // entered word does NOT contain the character BEFORE this character's position
-                Array.from({ length: 5 }).filter(
-                  // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
-                  (_, i) => word[i] === char && props.game.answer[i] === char
-                ).length < 1;
-
               return (
                 <Letter
                   key={k}
                   letter={char}
                   size={props.size}
                   guessed={true}
+                  phantom={false}
                   className={
-                    isCorrect
+                    getLetterColor(word, char, k, props.game.answer) == "green"
                       ? "bg-green-500/60"
-                      : isMisplaced
+                      : getLetterColor(word, char, k, props.game.answer) ==
+                        "yellow"
                       ? "bg-yellow-500/60"
-                      : isInAnswer &&
-                        (!word.slice(0, k).includes(char) || // entered word does NOT contain the character BEFORE this character's position
-                          word.slice(k, 5).includes(char)) && // entered word does NOT contain the character BEFORE this character's position OR entered word DOES contain the character AFTER this character's position
-                        props.game.answer.replaceAll(
-                          // character appears more than once in the answer
-                          new RegExp(`[^${char}]`, "gi"),
-                          ""
-                        ).length > 1
-                      ? "bg-yellow-500/60"
+                      : getLetterColor(word, char, k, props.game.answer) ==
+                        "gray"
+                      ? "bg-gray-400/60"
                       : "bg-gray-400/60"
                   }
                 />
@@ -106,6 +95,7 @@ function Game(props: GameProps) {
                   key={k}
                   letter={char}
                   guessed={false}
+                  phantom={false}
                   size={props.size}
                 />
               ))
@@ -117,7 +107,20 @@ function Game(props: GameProps) {
                 ? 5
                 : 5 - props.currentEnteredWord.length,
             }).map((_, k) => (
-              <Letter key={k} letter="" guessed={false} size={props.size} />
+              <Letter
+                key={k}
+                letter={
+                  props.showPhantoms
+                    ? props.game.guessedLetters.find(
+                        (l) =>
+                          l.position - props.currentEnteredWord.length === k
+                      )?.character || ""
+                    : ""
+                }
+                guessed={false}
+                phantom={props.showPhantoms}
+                size={props.size}
+              />
             ))}
       </div>
 
@@ -210,8 +213,9 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
             currentEnteredWord={props.currentEnteredWord}
             MAX_GUESSES={props.MAX_GUESSES}
             size={props.size}
-            answersVisible={props.answersVisible}
             typeInKeyboard={props.typeInKeyboard}
+            showPhantoms={props.showPhantoms}
+            answersVisible={props.answersVisible}
           />
         )}
       />
@@ -228,8 +232,9 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
             currentEnteredWord={props.currentEnteredWord}
             MAX_GUESSES={props.MAX_GUESSES}
             size={props.size}
-            answersVisible={props.answersVisible}
             typeInKeyboard={props.typeInKeyboard}
+            showPhantoms={props.showPhantoms}
+            answersVisible={props.answersVisible}
           />
         ))}
       </div>
