@@ -1,14 +1,12 @@
 import React from "react";
 
-type ButtonProps = {
+function Button(props: {
   children: React.ReactNode;
   className: string;
   onClick: () => void;
   ref?: React.Ref<HTMLButtonElement>;
   style?: React.CSSProperties;
-};
-
-function Button(props: ButtonProps) {
+}) {
   return (
     <button
       onClick={props.onClick}

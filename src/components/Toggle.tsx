@@ -1,15 +1,13 @@
 import React, { SetStateAction } from "react";
 
-type ToggleProps = {
+function Toggle(props: {
   state: boolean;
   setState: (value: SetStateAction<boolean>) => void;
   onClick?: () => void;
   disabled?: boolean;
   text: string;
   subtext?: string;
-};
-
-function Toggle(props: ToggleProps) {
+}) {
   return (
     <>
       <button

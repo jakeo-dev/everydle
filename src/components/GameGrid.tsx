@@ -3,19 +3,10 @@ import { useEffect, useState } from "react";
 
 import Letter from "@/components/Letter";
 import React from "react";
+
 import { getLetterColor, getSizeClass } from "@/utility";
 
-type Game = {
-  solved: boolean;
-  answer: string;
-  guessedLetters: GuessedLetter[];
-};
-
-type GuessedLetter = {
-  character: string;
-  position: number; // position for green, -1 for yellow, -2 for gray
-  placedPosition?: number; // used for yellow and gray letters to indicate the position where they were guessed
-};
+import { Game } from "@/types";
 
 type GameGridProps = {
   games: Game[];
@@ -43,7 +34,7 @@ type GameProps = {
   game: Game;
 };
 
-function Game(props: GameProps) {
+function GameTile(props: GameProps) {
   return (
     <div
       className={`${
@@ -360,7 +351,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
         overscanBy={2.5}
         className="focus:outline-none"
         render={({ data: game }) => (
-          <Game
+          <GameTile
             key={game.answer}
             game={game}
             guessedWords={props.guessedWords}
@@ -380,7 +371,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
         className={`grid ${sizeClass} justify-items-center align-items-center`}
       >
         {[...props.games].sort(sortGames).map((game) => (
-          <Game
+          <GameTile
             key={game.answer}
             game={game}
             guessedWords={props.guessedWords}
