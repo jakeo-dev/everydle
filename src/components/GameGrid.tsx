@@ -3,12 +3,18 @@ import { useEffect, useState } from "react";
 
 import Letter from "@/components/Letter";
 import React from "react";
-import { getLetterColor } from "@/utility";
+import { getLetterColor, getSizeClass } from "@/utility";
 
 type Game = {
   solved: boolean;
   answer: string;
-  guessedLetters: { character: string; position: number }[];
+  guessedLetters: GuessedLetter[];
+};
+
+type GuessedLetter = {
+  character: string;
+  position: number; // position for green, -1 for yellow, -2 for gray
+  placedPosition?: number; // used for yellow and gray letters to indicate the position where they were guessed
 };
 
 type GameGridProps = {
@@ -18,6 +24,7 @@ type GameGridProps = {
   MAX_GUESSES: number;
   size: number;
   typeInKeyboard: boolean;
+  compactMode: boolean;
   showPhantoms: boolean;
   answersVisible: boolean;
   moveSolved: boolean;
@@ -30,6 +37,7 @@ type GameProps = {
   MAX_GUESSES: number;
   size: number;
   typeInKeyboard: boolean;
+  compactMode: boolean;
   showPhantoms: boolean;
   answersVisible: boolean;
   game: Game;
@@ -44,42 +52,106 @@ function Game(props: GameProps) {
         props.size <= 1 ? "p-2" : "p-3"
       } gap-3 rounded-md mb-6 mx-auto`}
     >
-      {/* entered words rows */}
-      {props.guessedWords
-        .slice(
-          0,
-          props.game.solved
-            ? props.guessedWords.indexOf(props.game.answer) + 1
-            : props.guessedWords.length
-        )
-        .map((word, j) => (
-          <div className="flex gap-x-1 mb-1" key={j}>
-            {[...word].slice(0, 5).map((char, k) => {
-              return (
-                <Letter
-                  key={k}
-                  letter={char}
-                  size={props.size}
-                  guessed={true}
-                  phantom={false}
-                  typeInKeyboard={props.typeInKeyboard}
-                  guessedWordsLength={props.guessedWords.length}
-                  className={
-                    getLetterColor(word, char, k, props.game.answer) == "green"
-                      ? "bg-green-500/60"
-                      : getLetterColor(word, char, k, props.game.answer) ==
-                        "yellow"
-                      ? "bg-yellow-500/60"
-                      : getLetterColor(word, char, k, props.game.answer) ==
-                        "gray"
-                      ? "bg-gray-400/60"
-                      : "bg-gray-400/60"
-                  }
-                />
-              );
-            })}
+      {props.compactMode ? (
+        <>
+          <div className="w-full flex gap-1 justify-between items-end">
+            {/* compact yellow letters */}
+            {Array.from({ length: 5 }).map((_, wordPosition) => (
+              <div key={wordPosition}>
+                <div className="h-min" key={props.game.answer}>
+                  {[...props.game.guessedLetters].map((letter, i) => (
+                    <div key={i}>
+                      {letter.position === -1 &&
+                      letter.placedPosition == wordPosition ? (
+                        <Letter
+                          letter={letter.character}
+                          size={props.size}
+                          guessed={true}
+                          phantom={false}
+                          typeInKeyboard={props.typeInKeyboard}
+                          compactMode={props.compactMode}
+                          guessedWordsLength={props.guessedWords.length}
+                          className="bg-yellow-500/60 mx-auto mb-1"
+                        />
+                      ) : (
+                        <div
+                          className={`invisible max-h-0 !border-0 mx-auto ${getSizeClass(
+                            props.size
+                          )}`}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="flex gap-x-1">
+            {props.game.solved ? (
+              <>
+                {[...props.game.answer].slice(0, 5).map((char, k) => {
+                  return (
+                    <Letter
+                      key={k}
+                      letter={char}
+                      size={props.size}
+                      guessed={true}
+                      phantom={false}
+                      typeInKeyboard={props.typeInKeyboard}
+                      compactMode={props.compactMode}
+                      guessedWordsLength={props.guessedWords.length}
+                      className="bg-green-500/60"
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              <></>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* entered words rows */}
+          {props.guessedWords
+            .slice(
+              0,
+              props.game.solved
+                ? props.guessedWords.indexOf(props.game.answer) + 1
+                : props.guessedWords.length
+            )
+            .map((word, j) => (
+              <div className="flex gap-x-1 mb-1" key={j}>
+                {[...word].slice(0, 5).map((char, k) => {
+                  return (
+                    <Letter
+                      key={k}
+                      letter={char}
+                      size={props.size}
+                      guessed={true}
+                      phantom={false}
+                      typeInKeyboard={props.typeInKeyboard}
+                      compactMode={props.compactMode}
+                      guessedWordsLength={props.guessedWords.length}
+                      className={
+                        getLetterColor(word, char, k, props.game.answer) ==
+                        "green"
+                          ? "bg-green-500/60"
+                          : getLetterColor(word, char, k, props.game.answer) ==
+                            "yellow"
+                          ? "bg-yellow-500/60"
+                          : getLetterColor(word, char, k, props.game.answer) ==
+                            "gray"
+                          ? "bg-gray-400/60"
+                          : "bg-gray-400/60"
+                      }
+                    />
+                  );
+                })}
+              </div>
+            ))}
+        </>
+      )}
 
       {/* current word row */}
       <div
@@ -99,6 +171,7 @@ function Game(props: GameProps) {
                   guessed={false}
                   phantom={false}
                   typeInKeyboard={props.typeInKeyboard}
+                  compactMode={props.compactMode}
                   guessedWordsLength={props.guessedWords.length}
                   size={props.size}
                 />
@@ -126,12 +199,83 @@ function Game(props: GameProps) {
                 guessed={false}
                 phantom={props.showPhantoms}
                 typeInKeyboard={props.typeInKeyboard}
+                compactMode={props.compactMode}
                 guessedWordsLength={props.guessedWords.length}
                 size={props.size}
               />
             ))
           : null}
       </div>
+
+      {/* gray letters for compact mode */}
+      {props.compactMode &&
+      props.game.guessedLetters.filter((g) => g.position === -2).length > 0 ? (
+        <div
+          className={`${
+            props.size < 2
+              ? "text-[10px] px-0.5 mt-1"
+              : props.size == 2
+              ? "text-xs px-0.5 mt-1"
+              : props.size == 3
+              ? "text-sm px-1 mt-2"
+              : "text-base px-1 mt-2"
+          } flex gap-2 w-full font-medium tracking-[0.2em]`}
+        >
+          {/* {props.game.guessedLetters.filter((g) => g.position === -1).length >
+        0 ? (
+          <div
+            className="text-yellow-600 w-1/2 text-left wrap-anywhere"
+            key={props.game.answer}
+          >
+            {[...props.game.guessedLetters].sort().map((letter, i) => (
+              <span key={i}>
+                {letter.position == -1 ? letter.character : ""}
+              </span>
+            ))}
+          </div>
+        ) : null} */}
+          <div
+            className="w-full flex-wrap flex justify-center gap-1"
+            key={props.game.answer}
+          >
+            {[...props.game.guessedLetters]
+              .filter(
+                // filters out letters with same character but possibly different placedPosition
+                (letter, index, guessedLetters) =>
+                  guessedLetters.findIndex(
+                    (l) => l.character == letter.character
+                  ) == index
+              )
+              .sort((a, b) => {
+                return a.character.localeCompare(b.character);
+              })
+              .map((letter, i) => (
+                <>
+                  {letter.position == -2 ? (
+                    <div
+                      key={i}
+                      className={`bg-gray-400/60 rounded-sm pl-[0.1875rem] flex justify-center items-center select-none ${
+                        props.size < 2
+                          ? "w-3 h-3"
+                          : props.size == 2
+                          ? "w-4 h-4"
+                          : props.size == 3
+                          ? "w-5 h-5"
+                          : "w-6 h-6"
+                      }`}
+                    >
+                      <span>{letter.character}</span>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              ))}
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
 
       <span
         className={`${
@@ -224,6 +368,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
             MAX_GUESSES={props.MAX_GUESSES}
             size={props.size}
             typeInKeyboard={props.typeInKeyboard}
+            compactMode={props.compactMode}
             showPhantoms={props.showPhantoms}
             answersVisible={props.answersVisible}
           />
@@ -243,6 +388,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
             MAX_GUESSES={props.MAX_GUESSES}
             size={props.size}
             typeInKeyboard={props.typeInKeyboard}
+            compactMode={props.compactMode}
             showPhantoms={props.showPhantoms}
             answersVisible={props.answersVisible}
           />

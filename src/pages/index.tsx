@@ -16,12 +16,18 @@ import {
   faMinus,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { getLetterColor } from "@/utility";
+import { getLetterColor, removeDuplicates } from "@/utility";
+
+type GuessedLetter = {
+  character: string;
+  position: number; // position for green, -1 for yellow, -2 for gray
+  placedPosition?: number; // used for yellow and gray letters to indicate the position where they were guessed
+};
 
 type Game = {
   solved: boolean;
   answer: string;
-  guessedLetters: { character: string; position: number }[];
+  guessedLetters: GuessedLetter[];
 };
 
 export default function Home() {
@@ -100,6 +106,7 @@ export default function Home() {
   const [size, setSize] = useState(screenWidth >= 768 ? 3 : 2);
   const [typeInKeyboard, setTypeInKeyboard] = useState(false);
   const [showPhantoms, setShowPhantoms] = useState(true);
+  const [compactMode, setCompactMode] = useState(false);
   const [moveSolved, setMoveSolved] = useState(false);
   const [answersVisible, setAnswersVisible] = useState(false);
   //const [virtualize, setVirtualize] = useState(true);
@@ -187,7 +194,7 @@ export default function Home() {
       } else if (guessedWords.includes(currentEnteredWord)) {
         alert("Entered word has already been guessed");
       } else {
-        setGuessedWords((prev) => {
+        /* const updatedGuessedWords = (prev: string[]) => {
           if (prev.length == MAX_GUESSES - 1) {
             setAnswersVisible(true);
             alert("Better luck next time! All answers are now visible.");
@@ -196,53 +203,81 @@ export default function Home() {
             return [...prev, currentEnteredWord];
           }
           return prev;
-        });
+        };
+        setGuessedWords(updatedGuessedWords); */
 
-        for (let i = 0; i < games.length; i++) {
-          for (let j = 0; j < currentEnteredWord.length; j++) {
-            if (
-              getLetterColor(
-                currentEnteredWord,
-                currentEnteredWord[j],
-                j,
-                games[i].answer
-              ) == "green" ||
-              getLetterColor(
-                currentEnteredWord,
-                currentEnteredWord[j],
-                j,
-                games[i].answer
-              ) == "yellow" // if this letter is green or yellow
-            ) {
-              // then add this specific letter to this game object's guessedLetters with its position
-              setGames((prev) => {
-                const newGames = [...prev];
-                newGames[i].guessedLetters.push({
-                  character: currentEnteredWord[j],
-                  position:
-                    currentEnteredWord[j] == games[i].answer[j] ? j : -1, // position is -1 if letter is yellow
-                });
-                return newGames;
-              });
+        const updatedGuessedWords = [...guessedWords, currentEnteredWord];
+        if (updatedGuessedWords.length >= MAX_GUESSES) {
+          setAnswersVisible(true);
+          alert("Better luck next time! All answers are now visible.");
+        }
+        if (updatedGuessedWords.length <= MAX_GUESSES) {
+          setGuessedWords(updatedGuessedWords);
+
+          setGames((prevGames) => {
+            const newGames = [...prevGames];
+
+            for (let i = 0; i < newGames.length; i++) {
+              const game = newGames[i];
+              const updatedGuessedLetters: GuessedLetter[] = [];
+
+              for (let j = 0; j < updatedGuessedWords.length; j++) {
+                const word = updatedGuessedWords[j];
+
+                for (let k = 0; k < word.length; k++) {
+                  const char = word[k];
+                  const color = getLetterColor(word, char, k, game.answer);
+
+                  updatedGuessedLetters.push({
+                    character: char,
+                    position:
+                      color == "green" ? k : color == "yellow" ? -1 : -2,
+                    placedPosition:
+                      color == "yellow" || color == "gray" ? k : undefined,
+                  });
+                }
+              }
+
+              const finalLetters: GuessedLetter[] = [];
+
+              for (let l = 0; l < updatedGuessedLetters.length; l++) {
+                const current = updatedGuessedLetters[l];
+
+                // if character is already in finalLetters
+                const existingIndex = finalLetters.findIndex(
+                  (g) =>
+                    g.character === current.character &&
+                    g.placedPosition === current.placedPosition
+                );
+
+                if (existingIndex === -1) {
+                  // add to finalLetters if not already there
+                  finalLetters.push(current);
+                } else if (
+                  current.position >= 0 &&
+                  finalLetters[existingIndex].position === -1
+                ) {
+                  finalLetters[existingIndex] = current;
+                }
+              }
+
+              game.guessedLetters = removeDuplicates(finalLetters);
+
+              // set solved to true if solved
+              if (currentEnteredWord === game.answer) game.solved = true;
             }
-          }
 
-          if (games[i].answer == currentEnteredWord) {
-            if (
-              games.filter((game) => game.solved).length >=
-              games.length - 1
-            ) {
+            // check if all are solved
+            const solvedCount = newGames.filter((g) => g.solved).length;
+            if (solvedCount >= newGames.length) {
               setAnswersVisible(true);
               alert(
                 "Congratulations! You just solved every possible wordle game! Now go do something better with your time."
               );
             }
-            setGames((prev) => {
-              const newGames = [...prev];
-              newGames[i].solved = true;
-              return newGames;
-            });
-          }
+
+            return newGames;
+          });
         }
 
         setCurrentEnteredWord("");
@@ -250,7 +285,7 @@ export default function Home() {
 
       setEnterPressed(false);
     }
-  }, [enterPressed, currentEnteredWord]);
+  }, [enterPressed]);
 
   /* options */
 
@@ -385,7 +420,7 @@ export default function Home() {
               <div className="flex items-center">
                 <button
                   className={`w-6 h-6 rounded-md transition ${
-                    size != 1 ? "neutral-toggle" : "disabled-toggle"
+                    size != 1 ? "off-toggle" : "off-toggle-disabled"
                   }`}
                   onClick={() => {
                     setSize((prev) => (prev == 1 ? prev : prev - 1));
@@ -400,7 +435,7 @@ export default function Home() {
                 </button>
                 <button
                   className={`w-6 h-6 rounded-md transition ml-2 ${
-                    size != 5 ? "neutral-toggle" : "disabled-toggle"
+                    size != 5 ? "off-toggle" : "off-toggle-disabled"
                   }`}
                   onClick={() => {
                     setSize((prev) => (prev == 5 ? prev : prev + 1));
@@ -416,16 +451,26 @@ export default function Home() {
                 <span className="text-sm pl-2">Change size</span>
               </div>
               <Toggle
-                state={typeInKeyboard}
-                setState={setTypeInKeyboard}
-                text="Switch input mode"
-                subtext="Input letters above keyboard instead of below each game"
+                state={compactMode}
+                setState={setCompactMode}
+                onClick={() => {
+                  if (!compactMode) setShowPhantoms(true);
+                }}
+                text="Enable compact mode"
+                subtext="Only show yellow letters above input line and always show solved letters"
               />
               <Toggle
                 state={showPhantoms}
                 setState={setShowPhantoms}
+                disabled={compactMode}
                 text="Show solved letters"
                 subtext="Show all solved letters in input line below each game"
+              />
+              <Toggle
+                state={typeInKeyboard}
+                setState={setTypeInKeyboard}
+                text="Switch input mode"
+                subtext="Input letters above keyboard instead of below each game"
               />
               <Toggle
                 state={moveSolved}
@@ -465,9 +510,9 @@ export default function Home() {
                 <b className="text-sm md:text-base">{guessedWords.length}</b> of{" "}
                 {MAX_GUESSES}
               </h3>
-              <h4>guesses remaining</h4>
+              <h4>guesses used</h4>
             </div>
-            <div className="text-xs md:text-sm text-left mt-2 md:mt-3">
+            <div className="text-xs md:text-sm text-left border-t border-gray-300 pt-2 mt-2 md:pt-2.5 md:mt-2.5">
               <h3>
                 <b className="text-sm md:text-base">
                   {games.filter((game) => game.solved).length}
@@ -493,6 +538,7 @@ export default function Home() {
           MAX_GUESSES={MAX_GUESSES}
           size={size}
           typeInKeyboard={typeInKeyboard}
+          compactMode={compactMode}
           showPhantoms={showPhantoms}
           moveSolved={moveSolved}
           answersVisible={answersVisible}

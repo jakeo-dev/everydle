@@ -39,3 +39,37 @@ export function getLetterColor(
     return "yellow";
   else return "gray";
 }
+
+/**
+ * Removes duplicate elements from an array
+ *
+ * @param {Array} array - original array with potential duplicates
+ * @returns {Array} - array with duplicates removed
+ */
+export function removeDuplicates<T>(array: Array<T>): Array<T> {
+  // https://stackoverflow.com/a/9229821
+  return [...new Set(array)];
+}
+
+/**
+ * Removes duplicate elements from an array
+ *
+ * @param {number} size - number 1-5 representing size
+ * @returns {string} - class name corresponding letter sizes
+ */
+export function getSizeClass(size: number): string {
+  switch (size) {
+    case 1:
+      return "w-3 h-3 text-[10px] rounded-xs border-[1.5px]";
+    case 2:
+      return "w-5 h-5 text-base rounded border-[1.75px]";
+    case 3:
+      return "w-6 h-6 text-lg rounded-sm border-2";
+    case 4:
+      return "w-8 h-8 text-xl rounded-sm border-2";
+    case 5:
+      return "w-10 h-10 text-2xl rounded-sm border-2";
+    default:
+      return "w-6 h-6 text-lg rounded-sm border-2";
+  }
+}

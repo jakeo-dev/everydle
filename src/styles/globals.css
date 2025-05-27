@@ -1,16 +1,20 @@
 @import "tailwindcss";
 
 @layer components {
-  .neutral-toggle {
+  .off-toggle {
     @apply bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50 cursor-pointer;
   }
 
-  .enabled-toggle {
+  .on-toggle {
     @apply bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40 cursor-pointer;
   }
 
-  .disabled-toggle {
-    @apply bg-gray-500/10 text-gray-600 cursor-not-allowed;
+  .off-toggle-disabled {
+    @apply bg-gray-500/10 cursor-not-allowed;
+  }
+
+  .on-toggle-disabled {
+    @apply bg-green-700/30 cursor-not-allowed;
   }
 
   .invisible-fade {

@@ -22,17 +22,21 @@ function Toggle(props: ToggleProps) {
       >
         <div
           className={`${
-            props.state
-              ? "enabled-toggle"
-              : !props.disabled
-              ? "neutral-toggle"
-              : "disabled-toggle"
+            props.state && !props.disabled
+              ? "on-toggle"
+              : props.state && props.disabled
+              ? "on-toggle-disabled"
+              : !props.state && props.disabled
+              ? "off-toggle-disabled"
+              : "off-toggle"
           } w-6 h-6 rounded-md transition`}
         />
         <label
           className={`${
-            props.disabled ? "text-gray-500" : ""
-          } text-sm text-pretty pl-2 cursor-pointer`}
+            props.disabled
+              ? "text-gray-500 cursor-not-allowed"
+              : "cursor-pointer"
+          } text-sm text-pretty pl-2`}
         >
           {props.text}
         </label>
