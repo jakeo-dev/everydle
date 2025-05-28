@@ -216,8 +216,7 @@ export default function Home() {
                     character: char,
                     position:
                       color == "green" ? k : color == "yellow" ? -1 : -2,
-                    placedPosition:
-                      color == "yellow" || color == "gray" ? k : undefined,
+                    placedPosition: k,
                   });
                 }
               }

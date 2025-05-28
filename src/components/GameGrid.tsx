@@ -50,29 +50,30 @@ function GameTile(props: GameProps) {
             {Array.from({ length: 5 }).map((_, wordPosition) => (
               <div key={wordPosition}>
                 <div className="h-min" key={props.game.answer}>
-                  {[...props.game.guessedLetters].map((letter, i) => (
-                    <div key={i}>
-                      {letter.position === -1 &&
-                      letter.placedPosition == wordPosition ? (
-                        <Letter
-                          letter={letter.character}
-                          size={props.size}
-                          guessed={true}
-                          phantom={false}
-                          typeInKeyboard={props.typeInKeyboard}
-                          compactMode={props.compactMode}
-                          guessedWordsLength={props.guessedWords.length}
-                          className="bg-yellow-500/60 mx-auto mb-1"
-                        />
-                      ) : (
-                        <div
-                          className={`invisible max-h-0 !border-0 mx-auto ${getSizeClass(
-                            props.size
-                          )}`}
-                        />
-                      )}
-                    </div>
-                  ))}
+                  {[...props.game.guessedLetters]
+                    .filter((letter) => letter.placedPosition === wordPosition)
+                    .map((letter, i) => (
+                      <div key={i}>
+                        {letter.position === -1 ? (
+                          <Letter
+                            letter={letter.character}
+                            size={props.size}
+                            guessed={true}
+                            phantom={false}
+                            typeInKeyboard={props.typeInKeyboard}
+                            compactMode={props.compactMode}
+                            guessedWordsLength={props.guessedWords.length}
+                            className="bg-yellow-500/60 mx-auto mb-1"
+                          />
+                        ) : (
+                          <div
+                            className={`invisible max-h-0 !border-0 mx-auto ${getSizeClass(
+                              props.size
+                            )}`}
+                          />
+                        )}
+                      </div>
+                    ))}
                 </div>
               </div>
             ))}
