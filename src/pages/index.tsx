@@ -78,15 +78,8 @@ export default function Home() {
   const [screenWidth, setScreenWidth] = useState<number>(0);
 
   useEffect(() => {
-    handleResize();
-
-    function handleResize() {
-      setScreenWidth(window.innerWidth);
-      setSize(window.innerWidth >= 768 ? 3 : 2);
-    }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    setScreenWidth(window.innerWidth);
+    setSize(window.innerWidth >= 768 ? 3 : 2);
   }, []);
 
   const [guessedWords, setGuessedWords] = useState<string[]>([]);
