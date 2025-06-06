@@ -7,9 +7,9 @@ config.autoAddCss = false;
 
 import { Analytics } from "@vercel/analytics/react";
 
-import { Lexend } from "next/font/google";
+import { Chivo } from "next/font/google";
 
-const lexend = Lexend({ subsets: ["latin"] });
+const lexend = Chivo({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

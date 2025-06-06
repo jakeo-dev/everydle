@@ -27,7 +27,9 @@ function Letter(props: {
         props.className
       } font-semibold flex justify-center items-center select-none`}
     >
-      <span className={props.phantom ? "text-green-700/60" : ""}>
+      <span
+        className={`${props.phantom ? "text-green-700/60" : ""} -mb-[0.09rem]`}
+      >
         {props.letter}
       </span>
     </div>
