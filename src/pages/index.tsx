@@ -95,10 +95,10 @@ export default function Home() {
     // set current word to the last entered word in guessed words in local storage
     if (!dataLoaded) return;
 
-    let currentGuessedWords = JSON.parse(
+    const currentGuessedWords = JSON.parse(
       localStorage.getItem("guessedWords") || '[""]'
     );
-    let lastCurrentGuessedWord = currentGuessedWords.pop();
+    const lastCurrentGuessedWord = currentGuessedWords.pop();
 
     setGuessedWords(currentGuessedWords);
     setCurrentEnteredWord(lastCurrentGuessedWord);

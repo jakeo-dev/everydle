@@ -255,9 +255,7 @@ function GameTile(props: GameProps) {
                     >
                       <span>{letter.character}</span>
                     </div>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                 </>
               ))}
           </div>
