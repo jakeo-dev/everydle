@@ -56,10 +56,17 @@ export default function Home() {
         randomElement([
           `Always win on the first guess`,
           `Save ${gameArray.length} days of your time`,
-          `Play ${gameArray.length} games at once`,
+          `Play ${gameArray.length} wordles at once`,
           `Every wordle everywhere all at once`,
           `It's your fault if something crashes`,
           `Never worry about missing a day again`,
+          `"basically re-type the wordle word list with an increasingly unuseable UI"`,
+          `"oh it gets worse 200 words in"`,
+          `"NONONONONOONO, get it away from me!"`,
+          `"increasingly onerous"`,
+          `"wonderfully stupid"`,
+          //`"a declaration of war on your free time"`,
+          `"made me feel slightly queasy"`,
         ])
       );
     };
