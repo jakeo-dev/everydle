@@ -19,7 +19,6 @@ type GameGridProps = {
   showPhantoms: boolean;
   answersVisible: boolean;
   moveSolved: boolean;
-  virtualize: boolean;
 };
 
 type GameProps = {
@@ -224,19 +223,6 @@ function GameTile(props: GameProps) {
               : "text-base px-1 mt-2"
           } flex gap-2 w-full font-medium tracking-[0.2em]`}
         >
-          {/* {props.game.guessedLetters.filter((g) => g.position === -1).length >
-        0 ? (
-          <div
-            className="text-yellow-600 w-1/2 text-left wrap-anywhere"
-            key={props.game.answer}
-          >
-            {[...props.game.guessedLetters].sort().map((letter, i) => (
-              <span key={i}>
-                {letter.position == -1 ? letter.character : ""}
-              </span>
-            ))}
-          </div>
-        ) : null} */}
           <div
             className="w-full flex-wrap flex justify-center gap-1"
             key={props.game.answer}
@@ -303,7 +289,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
     }
   }
 
-  // for virtualized grid
+  // set width of columns for virtualized masonry grid
   let colWidth: number;
   switch (props.size) {
     case 1:
@@ -325,79 +311,29 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
       colWidth = 155;
   }
 
-  // for normal grid
-  let sizeClass: string;
-  switch (props.size) {
-    case 1:
-      sizeClass =
-        "grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10";
-      break;
-    case 2:
-      sizeClass =
-        "grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8";
-      break;
-    case 3:
-      sizeClass =
-        "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7";
-      break;
-    case 4:
-      sizeClass =
-        "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
-      break;
-    case 5:
-      sizeClass =
-        "grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
-      break;
-    default:
-      sizeClass =
-        "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
-  }
-
   return isClient ? (
-    props.virtualize ? (
-      // virtualized grid
-      <Masonry
-        items={[...props.games].sort(sortGames)}
-        columnGutter={15}
-        columnWidth={colWidth}
-        overscanBy={2.5}
-        className="focus:outline-none"
-        render={({ data: game }) => (
-          <GameTile
-            key={game.answer}
-            game={game}
-            guessedWords={props.guessedWords}
-            currentEnteredWord={props.currentEnteredWord}
-            MAX_GUESSES={props.MAX_GUESSES}
-            size={props.size}
-            typeInKeyboard={props.typeInKeyboard}
-            compactMode={props.compactMode}
-            showPhantoms={props.showPhantoms}
-            answersVisible={props.answersVisible}
-          />
-        )}
-      />
-    ) : (
-      // normal grid
-      <div
-        className={`grid ${sizeClass} justify-items-center align-items-center`}
-      >
-        {[...props.games].sort(sortGames).map((game) => (
-          <GameTile
-            key={game.answer}
-            game={game}
-            guessedWords={props.guessedWords}
-            currentEnteredWord={props.currentEnteredWord}
-            MAX_GUESSES={props.MAX_GUESSES}
-            size={props.size}
-            typeInKeyboard={props.typeInKeyboard}
-            compactMode={props.compactMode}
-            showPhantoms={props.showPhantoms}
-            answersVisible={props.answersVisible}
-          />
-        ))}
-      </div>
-    )
+    // virtualized grid
+    <Masonry
+      items={[...props.games].sort(sortGames)}
+      columnGutter={15}
+      columnWidth={colWidth}
+      overscanBy={2.5}
+      className="focus:outline-none"
+      render={({ data: game }) => (
+        <GameTile
+          key={game.answer}
+          game={game}
+          guessedWords={props.guessedWords}
+          currentEnteredWord={props.currentEnteredWord}
+          MAX_GUESSES={props.MAX_GUESSES}
+          size={props.size}
+          typeInKeyboard={props.typeInKeyboard}
+          compactMode={props.compactMode}
+          showPhantoms={props.showPhantoms}
+          answersVisible={props.answersVisible}
+        />
+      )}
+    />
   ) : null;
 });
 

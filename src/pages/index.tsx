@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
+  faArrowRotateRight,
   faChevronDown,
   faDeleteLeft,
   faMinus,
@@ -26,6 +27,8 @@ export default function Home() {
   const [possibleGuesses, setPossibleGuesses] = useState<string[]>([]);
 
   const [subtitle, setSubtitle] = useState<string>("");
+
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
     const fetchAnswers = async () => {
@@ -43,7 +46,11 @@ export default function Home() {
         guessedLetters: [],
       }));
 
-      setGames(shuffle(gameArray));
+      setGames(
+        JSON.parse(
+          localStorage.getItem("games") || JSON.stringify(shuffle(gameArray))
+        )
+      );
 
       setSubtitle(
         randomElement([
@@ -69,17 +76,13 @@ export default function Home() {
       setPossibleGuesses(guessesArray);
     };
 
-    fetchAnswers();
-    fetchGuesses();
-  }, []);
+    const loadData = async () => {
+      await fetchAnswers();
+      await fetchGuesses();
+      setDataLoaded(true); // set data loadd to true after possibleGuesses and gameArray are set
+    };
 
-  /* set screen width */
-
-  const [screenWidth, setScreenWidth] = useState<number>(0);
-
-  useEffect(() => {
-    setScreenWidth(window.innerWidth);
-    setSize(window.innerWidth >= 768 ? 3 : 2);
+    loadData();
   }, []);
 
   const [guessedWords, setGuessedWords] = useState<string[]>([]);
@@ -87,13 +90,40 @@ export default function Home() {
 
   const [enterPressed, setEnterPressed] = useState(false);
 
-  const [size, setSize] = useState(screenWidth >= 768 ? 3 : 2);
-  const [typeInKeyboard, setTypeInKeyboard] = useState(false);
-  const [showPhantoms, setShowPhantoms] = useState(true);
-  const [compactMode, setCompactMode] = useState(false);
-  const [moveSolved, setMoveSolved] = useState(false);
-  const [answersVisible, setAnswersVisible] = useState(false);
-  //const [virtualize, setVirtualize] = useState(true);
+  useEffect(() => {
+    // after data is loaded, set guessedWords to whats saved in local storage (EXCEPT the last word)
+    // set current word to the last entered word in guessed words in local storage
+    if (!dataLoaded) return;
+
+    let currentGuessedWords = JSON.parse(
+      localStorage.getItem("guessedWords") || '[""]'
+    );
+    let lastCurrentGuessedWord = currentGuessedWords.pop();
+
+    setGuessedWords(currentGuessedWords);
+    setCurrentEnteredWord(lastCurrentGuessedWord);
+  }, [dataLoaded]);
+
+  useEffect(() => {
+    // make sure the currentEnteredWord is the one thats last in the local storage
+    // if it is, simulate pressing enter to add this last word to guessedWords and make sure a bunch of other stuff is done
+    if (
+      currentEnteredWord ==
+        JSON.parse(localStorage.getItem("guessedWords") || '[""]')[
+          guessedWords.length
+        ] &&
+      currentEnteredWord.length == 5
+    ) {
+      setEnterPressed(true);
+    }
+  }, [currentEnteredWord]);
+
+  const [size, setSize] = useState<number>(1);
+  const [typeInKeyboard, setTypeInKeyboard] = useState<boolean>(false);
+  const [showPhantoms, setShowPhantoms] = useState<boolean>(true);
+  const [compactMode, setCompactMode] = useState<boolean>(false);
+  const [moveSolved, setMoveSolved] = useState<boolean>(false);
+  const [answersVisible, setAnswersVisible] = useState<boolean>(false);
 
   const firstKeyRef = useRef<HTMLButtonElement>(null);
   const [keyWidth, setKeyWidth] = useState(0);
@@ -170,15 +200,16 @@ export default function Home() {
   /* handle submitting entered word */
 
   useEffect(() => {
-    if (enterPressed) {
-      if (currentEnteredWord.length != 5) {
-        alert("Entered word must be five letters long");
-      } else if (!possibleGuesses.includes(currentEnteredWord)) {
-        alert("Entered word is not in word list");
-      } else if (guessedWords.includes(currentEnteredWord)) {
-        alert("Entered word has already been guessed");
-      } else {
-        /* const updatedGuessedWords = (prev: string[]) => {
+    if (!enterPressed) return;
+
+    if (currentEnteredWord.length != 5) {
+      alert("Entered word must be five letters long");
+    } else if (!possibleGuesses.includes(currentEnteredWord)) {
+      alert("Entered word is not in word list");
+    } else if (guessedWords.includes(currentEnteredWord)) {
+      alert("Entered word has already been guessed");
+    } else {
+      /* const updatedGuessedWords = (prev: string[]) => {
           if (prev.length == MAX_GUESSES - 1) {
             setAnswersVisible(true);
             alert("Better luck next time! All answers are now visible.");
@@ -190,84 +221,88 @@ export default function Home() {
         };
         setGuessedWords(updatedGuessedWords); */
 
-        const updatedGuessedWords = [...guessedWords, currentEnteredWord];
-        if (updatedGuessedWords.length >= MAX_GUESSES) {
-          setAnswersVisible(true);
-          alert("Better luck next time! All answers are now visible.");
-        }
-        if (updatedGuessedWords.length <= MAX_GUESSES) {
-          setGuessedWords(updatedGuessedWords);
+      const updatedGuessedWords = [...guessedWords, currentEnteredWord];
+      if (updatedGuessedWords.length >= MAX_GUESSES) {
+        setAnswersVisible(true);
+        alert("Better luck next time! All answers are now visible.");
+      }
+      if (updatedGuessedWords.length <= MAX_GUESSES) {
+        setGuessedWords(updatedGuessedWords);
+        localStorage.setItem(
+          "guessedWords",
+          JSON.stringify(updatedGuessedWords)
+        );
 
-          setGames((prevGames) => {
-            const newGames = [...prevGames];
+        setGames((prevGames) => {
+          const newGames = [...prevGames];
 
-            for (let i = 0; i < newGames.length; i++) {
-              const game = newGames[i];
-              const updatedGuessedLetters: GuessedLetter[] = [];
+          for (let i = 0; i < newGames.length; i++) {
+            const game = newGames[i];
+            const updatedGuessedLetters: GuessedLetter[] = [];
 
-              for (let j = 0; j < updatedGuessedWords.length; j++) {
-                const word = updatedGuessedWords[j];
+            for (let j = 0; j < updatedGuessedWords.length; j++) {
+              const word = updatedGuessedWords[j];
 
-                for (let k = 0; k < word.length; k++) {
-                  const char = word[k];
-                  const color = getLetterColor(word, char, k, game.answer);
+              for (let k = 0; k < word.length; k++) {
+                const char = word[k];
+                const color = getLetterColor(word, char, k, game.answer);
 
-                  updatedGuessedLetters.push({
-                    character: char,
-                    position:
-                      color == "green" ? k : color == "yellow" ? -1 : -2,
-                    placedPosition: k,
-                  });
-                }
+                updatedGuessedLetters.push({
+                  character: char,
+                  position: color == "green" ? k : color == "yellow" ? -1 : -2,
+                  placedPosition: k,
+                });
               }
-
-              const finalLetters: GuessedLetter[] = [];
-
-              for (let l = 0; l < updatedGuessedLetters.length; l++) {
-                const current = updatedGuessedLetters[l];
-
-                // if character is already in finalLetters
-                const existingIndex = finalLetters.findIndex(
-                  (g) =>
-                    g.character === current.character &&
-                    g.placedPosition === current.placedPosition
-                );
-
-                if (existingIndex === -1) {
-                  // add to finalLetters if not already there
-                  finalLetters.push(current);
-                } else if (
-                  current.position >= 0 &&
-                  finalLetters[existingIndex].position === -1
-                ) {
-                  finalLetters[existingIndex] = current;
-                }
-              }
-
-              game.guessedLetters = removeDuplicates(finalLetters);
-
-              // set solved to true if solved
-              if (currentEnteredWord === game.answer) game.solved = true;
             }
 
-            // check if all are solved
-            const solvedCount = newGames.filter((g) => g.solved).length;
-            if (solvedCount >= newGames.length) {
-              setAnswersVisible(true);
-              alert(
-                "Congratulations! You just solved every possible wordle game! Now go do something better with your time."
+            const finalLetters: GuessedLetter[] = [];
+
+            for (let l = 0; l < updatedGuessedLetters.length; l++) {
+              const current = updatedGuessedLetters[l];
+
+              // if character is already in finalLetters
+              const existingIndex = finalLetters.findIndex(
+                (g) =>
+                  g.character === current.character &&
+                  g.placedPosition === current.placedPosition
               );
+
+              if (existingIndex === -1) {
+                // add to finalLetters if not already there
+                finalLetters.push(current);
+              } else if (
+                current.position >= 0 &&
+                finalLetters[existingIndex].position === -1
+              ) {
+                finalLetters[existingIndex] = current;
+              }
             }
 
-            return newGames;
-          });
-        }
+            game.guessedLetters = removeDuplicates(finalLetters);
 
-        setCurrentEnteredWord("");
+            // set solved to true if solved
+            if (currentEnteredWord === game.answer) game.solved = true;
+          }
+
+          // check if all are solved
+          const solvedCount = newGames.filter((g) => g.solved).length;
+          if (solvedCount >= newGames.length) {
+            setAnswersVisible(true);
+            alert(
+              "Congratulations! You just solved every possible wordle game! Now go do something better with your time."
+            );
+          }
+
+          return newGames;
+        });
+
+        localStorage.setItem("games", JSON.stringify(games));
       }
 
-      setEnterPressed(false);
+      setCurrentEnteredWord("");
     }
+
+    setEnterPressed(false);
   }, [enterPressed]);
 
   /* options */
@@ -291,6 +326,71 @@ export default function Home() {
     document.addEventListener("click", handleOutsideClick);
     return () => document.removeEventListener("click", handleOutsideClick);
   }, []);
+
+  /* save options */
+
+  useEffect(() => {
+    if (!dataLoaded) return;
+
+    const options = {
+      size,
+      compactMode,
+      showPhantoms,
+      typeInKeyboard,
+      moveSolved,
+      answersVisible,
+    };
+    localStorage.setItem("options", JSON.stringify(options));
+  }, [
+    size,
+    compactMode,
+    showPhantoms,
+    typeInKeyboard,
+    moveSolved,
+    answersVisible,
+  ]);
+
+  useEffect(() => {
+    if (!dataLoaded) return;
+
+    const options = localStorage.getItem("options");
+
+    if (options && JSON.parse(options).size) {
+      setSize(Number(JSON.parse(options).size));
+    } else {
+      setSize(window.innerWidth >= 768 ? 3 : 2);
+    }
+
+    if (options && JSON.parse(options).compactMode !== undefined) {
+      setCompactMode(JSON.parse(options).compactMode);
+    } else {
+      setCompactMode(false);
+    }
+
+    if (options && JSON.parse(options).showPhantoms !== undefined) {
+      setShowPhantoms(JSON.parse(options).showPhantoms);
+    } else {
+      setShowPhantoms(true);
+    }
+
+    if (options && JSON.parse(options).typeInKeyboard !== undefined) {
+      setTypeInKeyboard(JSON.parse(options).typeInKeyboard);
+    } else {
+      setTypeInKeyboard(false);
+    }
+
+    if (options && JSON.parse(options).moveSolved !== undefined) {
+      setMoveSolved(JSON.parse(options).moveSolved);
+    } else {
+      setMoveSolved(false);
+    }
+
+    if (options && JSON.parse(options).answersVisible !== undefined) {
+      setAnswersVisible(JSON.parse(options).answersVisible);
+    } else {
+      setAnswersVisible(false);
+    }
+  }, [dataLoaded]);
 
   /* keyboard letters */
 
@@ -409,11 +509,12 @@ export default function Home() {
                     setSize((prev) => (prev == 1 ? prev : prev - 1));
                   }}
                   disabled={size == 1}
+                  aria-label="Decrease size"
                 >
                   <FontAwesomeIcon
                     icon={faMinus}
                     className="text-sm"
-                    aria-label="Decrease size"
+                    aria-hidden
                   />
                 </button>
                 <button
@@ -424,14 +525,17 @@ export default function Home() {
                     setSize((prev) => (prev == 5 ? prev : prev + 1));
                   }}
                   disabled={size == 5}
+                  aria-label="Increase size"
                 >
                   <FontAwesomeIcon
                     icon={faPlus}
                     className="text-sm"
-                    aria-label="Increase size"
+                    aria-hidden
                   />
                 </button>
-                <span className="text-sm pl-2">Change size</span>
+                <label className="text-sm cursor-default pl-2" aria-hidden>
+                  Change size
+                </label>
               </div>
               <Toggle
                 state={compactMode}
@@ -467,12 +571,34 @@ export default function Home() {
                 text="Reveal answers"
                 subtext="Show answers for all games"
               />
-              {/* <Toggle
-                state={virtualize}
-                setState={setVirtualize}
-                text="Enable virtualization"
-                subtext="Significantly improve performance by only loading games visible on screen"
-              /> */}
+              <div className="flex items-center mt-2 md:mt-3">
+                <button
+                  className="w-6 h-6 rounded-md transition off-toggle"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        `You've already solved ${
+                          games.filter((game) => game.solved).length
+                        } words. Are you sure you want to restart?`
+                      )
+                    ) {
+                      localStorage.removeItem("games");
+                      localStorage.removeItem("guessedWords");
+                      location.reload();
+                    }
+                  }}
+                  aria-label="Restart game"
+                >
+                  <FontAwesomeIcon
+                    icon={faArrowRotateRight}
+                    className="text-sm"
+                    aria-hidden
+                  />
+                </button>
+                <span className="text-sm cursor-default pl-2" aria-hidden>
+                  Restart game
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -525,7 +651,6 @@ export default function Home() {
           showPhantoms={showPhantoms}
           moveSolved={moveSolved}
           answersVisible={answersVisible}
-          virtualize={true}
         />
       </div>
 

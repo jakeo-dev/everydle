@@ -17,6 +17,8 @@ function Toggle(props: {
         }}
         disabled={props.disabled}
         className="flex items-center mt-2 md:mt-3"
+        aria-label={props.text}
+        aria-pressed={props.state}
       >
         <div
           className={`${
@@ -28,16 +30,18 @@ function Toggle(props: {
               ? "off-toggle-disabled"
               : "off-toggle"
           } w-6 h-6 rounded-md transition`}
+          aria-hidden
         />
-        <label
+        <span
           className={`${
             props.disabled
               ? "text-gray-500 cursor-not-allowed"
               : "cursor-pointer"
           } text-sm text-pretty pl-2`}
+          aria-hidden
         >
           {props.text}
-        </label>
+        </span>
       </button>
       <label
         className={`${
