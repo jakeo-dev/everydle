@@ -17,7 +17,7 @@ function Toggle(props: {
         }}
         disabled={props.disabled}
         className="flex items-center mt-2 md:mt-3"
-        aria-label={props.text}
+        aria-labelledby={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
         aria-pressed={props.state}
       >
         <div
@@ -38,7 +38,7 @@ function Toggle(props: {
               ? "text-gray-500 cursor-not-allowed"
               : "cursor-pointer"
           } text-sm text-pretty pl-2`}
-          aria-hidden
+          id={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
         >
           {props.text}
         </span>

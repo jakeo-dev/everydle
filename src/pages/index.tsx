@@ -587,7 +587,7 @@ export default function Home() {
                       location.reload();
                     }
                   }}
-                  aria-label="Restart game"
+                  aria-labelledby="restartLabel"
                 >
                   <FontAwesomeIcon
                     icon={faArrowRotateRight}
@@ -595,9 +595,12 @@ export default function Home() {
                     aria-hidden
                   />
                 </button>
-                <span className="text-sm cursor-default pl-2" aria-hidden>
+                <label
+                  className="text-sm cursor-default pl-2"
+                  id="restartLabel"
+                >
                   Restart game
-                </span>
+                </label>
               </div>
             </div>
           </div>
