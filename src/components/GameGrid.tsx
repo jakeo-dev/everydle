@@ -53,20 +53,18 @@ function GameTile(props: GameProps) {
                   else, put a placeholder element so the yellow letters stay the correct amount apart */}
                   {[...props.game.guessedLetters].filter(
                     (letter) =>
-                      letter.placedPosition === wordPosition &&
-                      letter.position === -1
+                      letter.setPos === wordPosition && letter.pos === -1
                   ).length > 0 ? (
                     <div>
                       {[...props.game.guessedLetters]
                         .filter(
                           (letter) =>
-                            letter.placedPosition === wordPosition &&
-                            letter.position === -1
+                            letter.setPos === wordPosition && letter.pos === -1
                         )
                         .map((letter, i) => (
                           <Letter
                             key={i}
-                            letter={letter.character}
+                            letter={letter.char}
                             size={props.size}
                             guessed={true}
                             phantom={false}
@@ -193,9 +191,9 @@ function GameTile(props: GameProps) {
                   props.showPhantoms
                     ? props.game.guessedLetters.find((l) =>
                         !props.typeInKeyboard
-                          ? l.position - props.currentEnteredWord.length === k
-                          : l.position === k
-                      )?.character || ""
+                          ? l.pos - props.currentEnteredWord.length === k
+                          : l.pos === k
+                      )?.char || ""
                     : ""
                 }
                 guessed={false}
@@ -211,7 +209,7 @@ function GameTile(props: GameProps) {
 
       {/* gray letters for compact mode */}
       {props.compactMode &&
-      props.game.guessedLetters.filter((g) => g.position === -2).length > 0 ? (
+      props.game.guessedLetters.filter((g) => g.pos === -2).length > 0 ? (
         <div
           className={`${
             props.size < 2
@@ -231,16 +229,15 @@ function GameTile(props: GameProps) {
               .filter(
                 // filters out letters with same character but possibly different placedPosition
                 (letter, index, guessedLetters) =>
-                  guessedLetters.findIndex(
-                    (l) => l.character == letter.character
-                  ) == index
+                  guessedLetters.findIndex((l) => l.char == letter.char) ==
+                  index
               )
               .sort((a, b) => {
-                return a.character.localeCompare(b.character);
+                return a.char.localeCompare(b.char);
               })
               .map((letter, i) => (
                 <>
-                  {letter.position == -2 ? (
+                  {letter.pos == -2 ? (
                     <div
                       key={i}
                       className={`bg-gray-400/60 rounded-sm pl-[0.1875rem] flex justify-center items-center select-none ${
@@ -253,7 +250,7 @@ function GameTile(props: GameProps) {
                           : "w-6 h-6"
                       }`}
                     >
-                      <span>{letter.character}</span>
+                      <span>{letter.char}</span>
                     </div>
                   ) : null}
                 </>

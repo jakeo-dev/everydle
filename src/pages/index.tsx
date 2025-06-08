@@ -18,6 +18,8 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { compressToUTF16, decompressFromUTF16 } from "lz-string";
+
 import { getLetterColor, removeDuplicates } from "@/utility";
 
 import { Game, GuessedLetter } from "@/types";
@@ -47,9 +49,14 @@ export default function Home() {
       }));
 
       setGames(
-        JSON.parse(
-          localStorage.getItem("games") || JSON.stringify(shuffle(gameArray))
-        )
+        typeof localStorage.getItem("games") === "string" &&
+          !localStorage.getItem("games")?.startsWith("[")
+          ? JSON.parse(
+              decompressFromUTF16(localStorage.getItem("games") || "[]")
+            ) // if games are saved in compressed format, decompress & parse them
+          : localStorage.getItem("games")?.startsWith("[")
+          ? JSON.parse(localStorage.getItem("games") || "[]") // else if they are saved in plain text format, parse them
+          : shuffle(gameArray) // else (not saved at all), set to shuffled gameArray
       );
 
       setSubtitle(
@@ -255,9 +262,9 @@ export default function Home() {
                 const color = getLetterColor(word, char, k, game.answer);
 
                 updatedGuessedLetters.push({
-                  character: char,
-                  position: color == "green" ? k : color == "yellow" ? -1 : -2,
-                  placedPosition: k,
+                  char: char,
+                  pos: color == "green" ? k : color == "yellow" ? -1 : -2,
+                  setPos: k,
                 });
               }
             }
@@ -269,17 +276,15 @@ export default function Home() {
 
               // if character is already in finalLetters
               const existingIndex = finalLetters.findIndex(
-                (g) =>
-                  g.character === current.character &&
-                  g.placedPosition === current.placedPosition
+                (g) => g.char === current.char && g.setPos === current.setPos
               );
 
               if (existingIndex === -1) {
                 // add to finalLetters if not already there
                 finalLetters.push(current);
               } else if (
-                current.position >= 0 &&
-                finalLetters[existingIndex].position === -1
+                current.pos >= 0 &&
+                finalLetters[existingIndex].pos === -1
               ) {
                 finalLetters[existingIndex] = current;
               }
@@ -303,7 +308,9 @@ export default function Home() {
           return newGames;
         });
 
-        localStorage.setItem("games", JSON.stringify(games));
+        const gamesStr = JSON.stringify(games);
+        console.log(new Blob([gamesStr]).size); // size in bytes
+        localStorage.setItem("games", compressToUTF16(JSON.stringify(games)));
       }
 
       setCurrentEnteredWord("");
