@@ -596,6 +596,8 @@ export default function Home() {
                         } words. Are you sure you want to restart?`
                       )
                     ) {
+                      setAnswersVisible(false);
+
                       localStorage.removeItem("games");
                       localStorage.removeItem("guessedWords");
                       location.reload();
