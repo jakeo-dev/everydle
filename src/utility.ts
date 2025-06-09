@@ -11,7 +11,7 @@ export function getLetterColor(
   enteredWord: string,
   char: string,
   pos: number,
-  gameAnswer: string
+  gameAnswer: string,
 ): string {
   const isCorrect = char === gameAnswer[pos];
   const isInAnswer = gameAnswer.includes(char);
@@ -21,7 +21,7 @@ export function getLetterColor(
     !enteredWord.slice(0, pos).includes(char) && // entered word does NOT contain the character BEFORE this character's position
     Array.from({ length: 5 }).filter(
       // the character appears twice in the entered word and the second appearance of the character is in the correct position in the answer
-      (_, i) => enteredWord[i] === char && gameAnswer[i] === char
+      (_, i) => enteredWord[i] === char && gameAnswer[i] === char,
     ).length < 1;
 
   if (isCorrect) return "green";
@@ -33,7 +33,7 @@ export function getLetterColor(
     gameAnswer.replaceAll(
       // character appears more than once in the answer
       new RegExp(`[^${char}]`, "gi"),
-      ""
+      "",
     ).length > 1
   )
     return "yellow";

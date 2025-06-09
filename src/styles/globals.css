@@ -2,19 +2,19 @@
 
 @layer components {
   .off-toggle {
-    @apply bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50 cursor-pointer;
+    @apply cursor-pointer bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50;
   }
 
   .on-toggle {
-    @apply bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40 cursor-pointer;
+    @apply cursor-pointer bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40;
   }
 
   .off-toggle-disabled {
-    @apply bg-gray-500/10 cursor-not-allowed;
+    @apply cursor-not-allowed bg-gray-500/10;
   }
 
   .on-toggle-disabled {
-    @apply bg-green-700/30 cursor-not-allowed;
+    @apply cursor-not-allowed bg-green-700/30;
   }
 
   .invisible-fade {

@@ -16,7 +16,7 @@ function Toggle(props: {
           if (props.onClick) props.onClick();
         }}
         disabled={props.disabled}
-        className="flex items-center mt-2 md:mt-3"
+        className="mt-2 flex items-center md:mt-3"
         aria-labelledby={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
         aria-pressed={props.state}
       >
@@ -25,19 +25,19 @@ function Toggle(props: {
             props.state && !props.disabled
               ? "on-toggle"
               : props.state && props.disabled
-              ? "on-toggle-disabled"
-              : !props.state && props.disabled
-              ? "off-toggle-disabled"
-              : "off-toggle"
-          } w-6 h-6 rounded-md transition`}
+                ? "on-toggle-disabled"
+                : !props.state && props.disabled
+                  ? "off-toggle-disabled"
+                  : "off-toggle"
+          } h-6 w-6 rounded-md transition`}
           aria-hidden
         />
         <span
           className={`${
             props.disabled
-              ? "text-gray-500 cursor-not-allowed"
+              ? "cursor-not-allowed text-gray-500"
               : "cursor-pointer"
-          } text-sm text-pretty pl-2`}
+          } pl-2 text-sm text-pretty`}
           id={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
         >
           {props.text}
@@ -46,7 +46,7 @@ function Toggle(props: {
       <label
         className={`${
           props.disabled ? "text-gray-400" : "text-gray-600"
-        } block text-[0.65rem] md:text-xs text-pretty text-left pl-8`}
+        } block pl-8 text-left text-[0.65rem] text-pretty md:text-xs`}
       >
         {props.subtext}
       </label>

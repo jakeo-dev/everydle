@@ -10,7 +10,7 @@ function Button(props: {
   return (
     <button
       onClick={props.onClick}
-      className={`${props.className} flex bg-gray-200 hover:bg-gray-300 active:bg-gray-400/50 text-black text-center justify-center rounded-lg cursor-pointer px-3.5 py-1 transition-all`}
+      className={`${props.className} flex cursor-pointer justify-center rounded-lg bg-gray-200 px-3.5 py-1 text-center text-black transition-all hover:bg-gray-300 active:bg-gray-400/50`}
       ref={props.ref}
       style={props.style}
     >

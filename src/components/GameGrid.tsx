@@ -38,13 +38,13 @@ function GameTile(props: GameProps) {
     <div
       className={`${
         props.game.solved ? "bg-green-400/30 opacity-60" : "bg-gray-300/30"
-      } w-min h-min ${
+      } h-min w-min ${
         props.size <= 1 ? "p-2" : "p-3"
-      } gap-3 rounded-md mb-6 mx-auto`}
+      } mx-auto mb-6 gap-3 rounded-md`}
     >
       {props.compactMode ? (
         <>
-          <div className="w-full flex gap-1 justify-between items-end">
+          <div className="flex w-full items-end justify-between gap-1">
             {/* compact yellow letters */}
             {Array.from({ length: 5 }).map((_, wordPosition) => (
               <div key={wordPosition}>
@@ -53,13 +53,13 @@ function GameTile(props: GameProps) {
                   else, put a placeholder element so the yellow letters stay the correct amount apart */}
                   {[...props.game.guessedLetters].filter(
                     (letter) =>
-                      letter.setPos === wordPosition && letter.pos === -1
+                      letter.setPos === wordPosition && letter.pos === -1,
                   ).length > 0 ? (
                     <div>
                       {[...props.game.guessedLetters]
                         .filter(
                           (letter) =>
-                            letter.setPos === wordPosition && letter.pos === -1
+                            letter.setPos === wordPosition && letter.pos === -1,
                         )
                         .map((letter, i) => (
                           <Letter
@@ -71,14 +71,14 @@ function GameTile(props: GameProps) {
                             typeInKeyboard={props.typeInKeyboard}
                             compactMode={props.compactMode}
                             guessedWordsLength={props.guessedWords.length}
-                            className="bg-yellow-500/60 mx-auto mb-1"
+                            className="mx-auto mb-1 bg-yellow-500/60"
                           />
                         ))}
                     </div>
                   ) : (
                     <div
-                      className={`invisible max-h-0 !border-0 mx-auto ${getSizeClass(
-                        props.size
+                      className={`invisible mx-auto max-h-0 !border-0 ${getSizeClass(
+                        props.size,
                       )}`}
                     />
                   )}
@@ -118,10 +118,10 @@ function GameTile(props: GameProps) {
               0,
               props.game.solved
                 ? props.guessedWords.indexOf(props.game.answer) + 1
-                : props.guessedWords.length
+                : props.guessedWords.length,
             )
             .map((word, j) => (
-              <div className="flex gap-x-1 mb-1" key={j}>
+              <div className="mb-1 flex gap-x-1" key={j}>
                 {[...word].slice(0, 5).map((char, k) => {
                   return (
                     <Letter
@@ -138,12 +138,16 @@ function GameTile(props: GameProps) {
                         "green"
                           ? "bg-green-500/60"
                           : getLetterColor(word, char, k, props.game.answer) ==
-                            "yellow"
-                          ? "bg-yellow-500/60"
-                          : getLetterColor(word, char, k, props.game.answer) ==
-                            "gray"
-                          ? "bg-gray-400/60"
-                          : "bg-gray-400/60"
+                              "yellow"
+                            ? "bg-yellow-500/60"
+                            : getLetterColor(
+                                  word,
+                                  char,
+                                  k,
+                                  props.game.answer,
+                                ) == "gray"
+                              ? "bg-gray-400/60"
+                              : "bg-gray-400/60"
                       }
                     />
                   );
@@ -192,7 +196,7 @@ function GameTile(props: GameProps) {
                     ? props.game.guessedLetters.find((l) =>
                         !props.typeInKeyboard
                           ? l.pos - props.currentEnteredWord.length === k
-                          : l.pos === k
+                          : l.pos === k,
                       )?.char || ""
                     : ""
                 }
@@ -213,16 +217,16 @@ function GameTile(props: GameProps) {
         <div
           className={`${
             props.size < 2
-              ? "text-[10px] px-0.5 mt-1"
+              ? "mt-1 px-0.5 text-[10px]"
               : props.size == 2
-              ? "text-xs px-0.5 mt-1"
-              : props.size == 3
-              ? "text-sm px-1 mt-2"
-              : "text-base px-1 mt-2"
-          } flex gap-2 w-full font-medium tracking-[0.2em]`}
+                ? "mt-1 px-0.5 text-xs"
+                : props.size == 3
+                  ? "mt-2 px-1 text-sm"
+                  : "mt-2 px-1 text-base"
+          } flex w-full gap-2 font-medium tracking-[0.2em]`}
         >
           <div
-            className="w-full flex-wrap flex justify-center gap-1"
+            className="flex w-full flex-wrap justify-center gap-1"
             key={props.game.answer}
           >
             {[...props.game.guessedLetters]
@@ -230,7 +234,7 @@ function GameTile(props: GameProps) {
                 // filters out letters with same character but possibly different placedPosition
                 (letter, index, guessedLetters) =>
                   guessedLetters.findIndex((l) => l.char == letter.char) ==
-                  index
+                  index,
               )
               .sort((a, b) => {
                 return a.char.localeCompare(b.char);
@@ -240,14 +244,14 @@ function GameTile(props: GameProps) {
                   {letter.pos == -2 ? (
                     <div
                       key={i}
-                      className={`bg-gray-400/60 rounded-sm pl-[0.1875rem] flex justify-center items-center select-none ${
+                      className={`flex items-center justify-center rounded-sm bg-gray-400/60 pl-[0.1875rem] select-none ${
                         props.size < 2
-                          ? "w-3 h-3"
+                          ? "h-3 w-3"
                           : props.size == 2
-                          ? "w-4 h-4"
-                          : props.size == 3
-                          ? "w-5 h-5"
-                          : "w-6 h-6"
+                            ? "h-4 w-4"
+                            : props.size == 3
+                              ? "h-5 w-5"
+                              : "h-6 w-6"
                       }`}
                     >
                       <span>{letter.char}</span>
@@ -263,7 +267,7 @@ function GameTile(props: GameProps) {
 
       <span
         className={`${
-          props.answersVisible ? "block mt-2" : "hidden"
+          props.answersVisible ? "mt-2 block" : "hidden"
         } text-sm tracking-widest text-gray-600 italic`}
       >
         {props.game.answer}

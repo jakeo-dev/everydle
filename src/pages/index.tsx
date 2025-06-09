@@ -72,8 +72,8 @@ export default function Home() {
           localStorage.getItem("games")?.startsWith("[")
             ? JSON.parse(localStorage.getItem("games") || "[]") // if games are saved in plain text format, parse them
             : JSON.parse(
-                decompressFromUTF16(localStorage.getItem("games") || "[]") // if games are saved in compressed format, decompress & then parse them
-              )
+                decompressFromUTF16(localStorage.getItem("games") || "[]"), // if games are saved in compressed format, decompress & then parse them
+              ),
         );
       }
 
@@ -96,7 +96,7 @@ export default function Home() {
     if (!dataLoaded) return;
 
     const currentGuessedWords = JSON.parse(
-      localStorage.getItem("guessedWords") || '[""]'
+      localStorage.getItem("guessedWords") || '[""]',
     );
     const lastCurrentGuessedWord = currentGuessedWords.pop();
 
@@ -135,7 +135,7 @@ export default function Home() {
         `"increasingly onerous"`,
         `"wonderfully stupid"`,
         `"made me feel slightly queasy"`,
-      ])
+      ]),
     );
   }, []);
 
@@ -251,7 +251,7 @@ export default function Home() {
         setGuessedWords(updatedGuessedWords);
         localStorage.setItem(
           "guessedWords",
-          JSON.stringify(updatedGuessedWords)
+          JSON.stringify(updatedGuessedWords),
         );
 
         setGames((prevGames) => {
@@ -283,7 +283,7 @@ export default function Home() {
 
               // if character is already in finalLetters
               const existingIndex = finalLetters.findIndex(
-                (g) => g.char === current.char && g.setPos === current.setPos
+                (g) => g.char === current.char && g.setPos === current.setPos,
               );
 
               if (existingIndex === -1) {
@@ -308,7 +308,7 @@ export default function Home() {
           if (solvedCount >= newGames.length) {
             setAnswersVisible(true);
             alert(
-              "Congratulations! You just solved every possible wordle game! Now go do something better with your time."
+              "Congratulations! You just solved every possible wordle game! Now go do something better with your time.",
             );
           }
 
@@ -467,36 +467,36 @@ export default function Home() {
       <div
         className={`${
           dataLoaded ? "invisible-fade" : "visible-fade"
-        } bg-gradient-to-br from-yellow-50/80 to-green-50/80 z-99 shadow-md rounded-xl absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 px-6 py-4 transition`}
+        } absolute top-1/2 left-1/2 z-99 -translate-x-1/2 -translate-y-1/2 transform rounded-xl bg-gradient-to-br from-yellow-50/80 to-green-50/80 px-6 py-4 shadow-md transition`}
       >
-        <p className="text-xl text-gray-700 font-medium text-center">
+        <p className="text-center text-xl font-medium text-gray-700">
           Loading several thousand games of Wordle...
         </p>
       </div>
 
-      <div className="w-full flex justify-end sticky top-4 z-90">
+      <div className="sticky top-4 z-90 flex w-full justify-end">
         <div className="relative w-full">
           <div className="absolute right-4 flex flex-col items-end">
             <button
               onClick={() => {
                 setShowOptions(!showOptions);
               }}
-              className="text-sm md:text-base bg-gray-100 hover:bg-gray-200 shadow-sm rounded-md w-fit px-4 py-2 cursor-pointer transition"
+              className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
               ref={menuButtonRef}
             >
               <FontAwesomeIcon
                 icon={faChevronDown}
                 className={`${
                   showOptions ? "rotate-180" : ""
-                } transition duration-200 mr-2`}
+                } mr-2 transition duration-200`}
                 aria-hidden
               />
               Options
             </button>
-            <div className="text-xs text-center bg-gray-100 shadow-sm rounded-md px-4 py-2 mt-3 md:mt-4 transition">
+            <div className="mt-3 rounded-md bg-gray-100 px-4 py-2 text-center text-xs shadow-sm transition md:mt-4">
               <div className="flex justify-end">
                 <a
-                  className="hover:drop-shadow-md active:drop-shadow-none transition"
+                  className="transition hover:drop-shadow-md active:drop-shadow-none"
                   href="https://jakeo.dev"
                   target="_blank"
                 >
@@ -507,7 +507,7 @@ export default function Home() {
                 </a>
                 <span className="mx-2.5">•</span>
                 <a
-                  className="hover:text-blue-600 transition"
+                  className="transition hover:text-blue-600"
                   href="https://github.com/jakeo-dev/everydle"
                   target="_blank"
                 >
@@ -526,12 +526,12 @@ export default function Home() {
             <div
               className={`${
                 showOptions ? "visible-fade" : "invisible-fade"
-              } absolute top-12 right-4 bg-gray-200 rounded-md w-60 shadow-sm p-4`}
+              } absolute top-12 right-4 w-60 rounded-md bg-gray-200 p-4 shadow-sm`}
               ref={menuRef}
             >
               <div className="flex items-center">
                 <button
-                  className={`w-6 h-6 rounded-md transition ${
+                  className={`h-6 w-6 rounded-md transition ${
                     size != 1 ? "off-toggle" : "off-toggle-disabled"
                   }`}
                   onClick={() => {
@@ -547,7 +547,7 @@ export default function Home() {
                   />
                 </button>
                 <button
-                  className={`w-6 h-6 rounded-md transition ml-2 ${
+                  className={`ml-2 h-6 w-6 rounded-md transition ${
                     size != 5 ? "off-toggle" : "off-toggle-disabled"
                   }`}
                   onClick={() => {
@@ -562,7 +562,7 @@ export default function Home() {
                     aria-hidden
                   />
                 </button>
-                <label className="text-sm cursor-default pl-2" aria-hidden>
+                <label className="cursor-default pl-2 text-sm" aria-hidden>
                   Change size
                 </label>
               </div>
@@ -600,15 +600,15 @@ export default function Home() {
                 text="Reveal answers"
                 subtext="Show answers for all games"
               />
-              <div className="flex items-center mt-2 md:mt-3">
+              <div className="mt-2 flex items-center md:mt-3">
                 <button
-                  className="w-6 h-6 rounded-md transition off-toggle"
+                  className="off-toggle h-6 w-6 rounded-md transition"
                   onClick={() => {
                     if (
                       confirm(
                         `You've already solved ${
                           games.filter((game) => game.solved).length
-                        } words. Are you sure you want to restart?`
+                        } words. Are you sure you want to restart?`,
                       )
                     ) {
                       setAnswersVisible(false);
@@ -627,7 +627,7 @@ export default function Home() {
                   />
                 </button>
                 <label
-                  className="text-sm cursor-default pl-2"
+                  className="cursor-default pl-2 text-sm"
                   id="restartLabel"
                 >
                   Restart game
@@ -638,7 +638,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-full flex justify-end sticky top-4 z-80">
+      <div className="sticky top-4 z-80 flex w-full justify-end">
         <div className="relative w-full">
           <div
             className={`${
@@ -646,16 +646,16 @@ export default function Home() {
               games.filter((game) => game.solved).length > 0
                 ? "bg-green-200"
                 : "bg-gray-100"
-            } items-center justify-center absolute left-4 shadow-sm rounded-md px-4 py-2.5 transition`}
+            } absolute left-4 items-center justify-center rounded-md px-4 py-2.5 shadow-sm transition`}
           >
-            <div className="text-xs md:text-sm text-left">
+            <div className="text-left text-xs md:text-sm">
               <h3>
                 <b className="text-sm md:text-base">{guessedWords.length}</b> of{" "}
                 {MAX_GUESSES}
               </h3>
               <h4>guesses used</h4>
             </div>
-            <div className="text-xs md:text-sm text-left border-t border-gray-300 pt-2 mt-2 md:pt-2.5 md:mt-2.5">
+            <div className="mt-2 border-t border-gray-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
               <h3>
                 <b className="text-sm md:text-base">
                   {games.filter((game) => game.solved).length}
@@ -668,9 +668,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-8 pb-16 pt-36 md:pt-16">
-        <h1 className="text-6xl md:text-7xl font-black">Everydle</h1>
-        <h2 className="text-base md:text-lg font-medium text-gray-700 italic text-pretty mt-2 mb-10 md:mb-16">
+      <div className="px-8 pt-36 pb-16 md:pt-16">
+        <h1 className="text-6xl font-black md:text-7xl">Everydle</h1>
+        <h2 className="mt-2 mb-10 text-base font-medium text-pretty text-gray-700 italic md:mb-16 md:text-lg">
           {subtitle}
         </h2>
 
@@ -688,22 +688,22 @@ export default function Home() {
         />
       </div>
 
-      <div className="sticky bottom-0 left-0 right-0">
+      <div className="sticky right-0 bottom-0 left-0">
         {/* keyboard */}
-        <div className="bg-gray-100 shadow-sm rounded-t-xl w-full md:w-[26rem] mx-auto p-2 sm:p-3">
+        <div className="mx-auto w-full rounded-t-xl bg-gray-100 p-2 shadow-sm sm:p-3 md:w-[26rem]">
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
-            } bg-gray-200 h-9 sm:h-11 w-full rounded-lg flex justify-center items-center mb-2 sm:mb-3`}
+            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-gray-200 sm:mb-3 sm:h-11`}
           >
-            <span className="text-xl md:text-2xl font-semibold tracking-wider">
+            <span className="text-xl font-semibold tracking-wider md:text-2xl">
               {currentEnteredWord}
             </span>
           </div>
 
           {/* letters */}
-          <div className="flex flex-col gap-y-1 sm:gap-y-1.5 items-center w-full">
-            <div className="flex gap-x-1 sm:gap-x-1.5 justify-center w-full">
+          <div className="flex w-full flex-col items-center gap-y-1 sm:gap-y-1.5">
+            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
               {keyboardRow1.map((letter, i) => (
                 <Button
                   key={i}
@@ -715,14 +715,14 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="flex-1 min-w-0 h-11 pt-2"
+                  className="h-11 min-w-0 flex-1 pt-2"
                   ref={firstKeyRef}
                 >
                   <span className="text-lg">{letter}</span>
                 </Button>
               ))}
             </div>
-            <div className="flex gap-x-1 sm:gap-x-1.5 justify-center w-full">
+            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
               {keyboardRow2.map((letter, i) => (
                 <Button
                   key={i}
@@ -734,7 +734,7 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="min-w-0 h-11 pt-2"
+                  className="h-11 min-w-0 pt-2"
                   style={{
                     width: `${keyWidth}px`,
                   }}
@@ -743,7 +743,7 @@ export default function Home() {
                 </Button>
               ))}
             </div>
-            <div className="flex gap-x-1 sm:gap-x-1.5 justify-center w-full">
+            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
               {keyboardRow3.map((letter, i) => (
                 <Button
                   key={i}
@@ -755,7 +755,7 @@ export default function Home() {
                       return prev;
                     });
                   }}
-                  className="min-w-0 h-11 pt-2"
+                  className="h-11 min-w-0 pt-2"
                   style={{
                     width: `${keyWidth}px`,
                   }}
@@ -767,12 +767,12 @@ export default function Home() {
           </div>
 
           {/* enter & backspace */}
-          <div className="flex gap-1 sm:gap-1.5 mt-2 sm:mt-3">
+          <div className="mt-2 flex gap-1 sm:mt-3 sm:gap-1.5">
             <Button
               onClick={() => {
                 setCurrentEnteredWord((prev) => prev.slice(0, -1));
               }}
-              className="items-center w-full"
+              className="w-full items-center"
             >
               <FontAwesomeIcon icon={faDeleteLeft} className="mr-1.5" />
               <span className="text-sm">Backspace</span>
@@ -781,7 +781,7 @@ export default function Home() {
               onClick={() => {
                 setEnterPressed(true);
               }}
-              className="items-center w-full"
+              className="w-full items-center"
             >
               <span className="text-sm">Enter</span>
               <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
