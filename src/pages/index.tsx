@@ -430,7 +430,7 @@ export default function Home() {
         />
         <meta
           property="description"
-          content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
+          content="Solve every Wordle at once in one extremely long sitting, and never worry about missing a day again."
         />
 
         <meta
@@ -439,7 +439,7 @@ export default function Home() {
         />
         <meta
           property="og:description"
-          content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
+          content="Solve every Wordle at once in one extremely long sitting, and never worry about missing a day again."
         />
         <meta name="theme-color" content="#00c951" />
         <meta property="og:url" content="https://everydle.jakeo.dev" />
@@ -454,7 +454,7 @@ export default function Home() {
         />
         <meta
           name="twitter:description"
-          content="Solve every Wordle at once in one extremely long sitting instead of spending five minutes every day, and never worry about missing one again."
+          content="Solve every Wordle at once in one extremely long sitting, and never worry about missing a day again."
         />
         <meta name="twitter:url" content="https://everydle.jakeo.dev" />
         <meta
