@@ -48,34 +48,7 @@ export default function Home() {
         guessedLetters: [],
       }));
 
-      setGames(
-        typeof localStorage.getItem("games") === "string" &&
-          !localStorage.getItem("games")?.startsWith("[")
-          ? JSON.parse(
-              decompressFromUTF16(localStorage.getItem("games") || "[]")
-            ) // if games are saved in compressed format, decompress & parse them
-          : localStorage.getItem("games")?.startsWith("[")
-          ? JSON.parse(localStorage.getItem("games") || "[]") // else if they are saved in plain text format, parse them
-          : shuffle(gameArray) // else (not saved at all), set to shuffled gameArray
-      );
-
-      setSubtitle(
-        randomElement([
-          `Always win on the first guess`,
-          `Save ${gameArray.length} days of your time`,
-          `Play ${gameArray.length} wordles at once`,
-          `Every wordle everywhere all at once`,
-          `It's your fault if something crashes`,
-          `Never worry about missing a day again`,
-          `"basically re-type the wordle word list with an increasingly unuseable UI"`,
-          `"oh it gets worse 200 words in"`,
-          `"NONONONONOONO, get it away from me!"`,
-          `"increasingly onerous"`,
-          `"wonderfully stupid"`,
-          //`"a declaration of war on your free time"`,
-          `"made me feel slightly queasy"`,
-        ])
-      );
+      setGames(shuffle(gameArray));
     };
 
     const fetchGuesses = async () => {
@@ -91,9 +64,22 @@ export default function Home() {
     };
 
     const loadData = async () => {
-      await fetchAnswers();
-      await fetchGuesses();
-      setDataLoaded(true); // set data loadd to true after possibleGuesses and gameArray are set
+      if (typeof localStorage.getItem("games") !== "string") {
+        // if games are NOT saved at all, fetch answers.txt & set games to shuffled gameArray
+        await fetchAnswers();
+      } else {
+        setGames(
+          localStorage.getItem("games")?.startsWith("[")
+            ? JSON.parse(localStorage.getItem("games") || "[]") // if games are saved in plain text format, parse them
+            : JSON.parse(
+                decompressFromUTF16(localStorage.getItem("games") || "[]") // if games are saved in compressed format, decompress & then parse them
+              )
+        );
+      }
+
+      await fetchGuesses(); // fetch possible gusses.txt & set possibleGuesses to guessesArray
+
+      setDataLoaded(true); // set data load to true after possibleGuesses and gameArray are set
     };
 
     loadData();
@@ -132,7 +118,28 @@ export default function Home() {
     }
   }, [currentEnteredWord]);
 
-  const [size, setSize] = useState<number>(1);
+  /* set random subtitle */
+
+  useEffect(() => {
+    setSubtitle(
+      randomElement([
+        `Always win on the first guess`,
+        `Save 2280 days of your time`,
+        `Play 2280 wordles at once`,
+        `Every wordle everywhere all at once`,
+        `It's your fault if something crashes`,
+        `Never worry about missing a day again`,
+        `"basically re-type the wordle word list with an increasingly unuseable UI"`,
+        `"oh it gets worse 200 words in"`,
+        `"NONONONONOONO, get it away from me!"`,
+        `"increasingly onerous"`,
+        `"wonderfully stupid"`,
+        `"made me feel slightly queasy"`,
+      ])
+    );
+  }, []);
+
+  const [size, setSize] = useState<number>(2);
   const [typeInKeyboard, setTypeInKeyboard] = useState<boolean>(false);
   const [showPhantoms, setShowPhantoms] = useState<boolean>(true);
   const [compactMode, setCompactMode] = useState<boolean>(false);
@@ -308,8 +315,6 @@ export default function Home() {
           return newGames;
         });
 
-        const gamesStr = JSON.stringify(games);
-        console.log(new Blob([gamesStr]).size); // size in bytes
         localStorage.setItem("games", compressToUTF16(JSON.stringify(games)));
       }
 
@@ -458,6 +463,16 @@ export default function Home() {
         />
         <meta property="twitter:card" content="summary_large_image" />
       </Head>
+
+      <div
+        className={`${
+          dataLoaded ? "invisible-fade" : "visible-fade"
+        } bg-gradient-to-br from-yellow-50/80 to-green-50/80 z-99 shadow-md rounded-xl absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 px-6 py-4 transition`}
+      >
+        <p className="text-xl text-gray-700 font-medium text-center">
+          Loading several thousand games of Wordle...
+        </p>
+      </div>
 
       <div className="w-full flex justify-end sticky top-4 z-90">
         <div className="relative w-full">
