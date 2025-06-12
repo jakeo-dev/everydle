@@ -9,11 +9,11 @@ import { Analytics } from "@vercel/analytics/react";
 
 import { Chivo } from "next/font/google";
 
-const lexend = Chivo({ subsets: ["latin"] });
+const chivo = Chivo({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={lexend.className}>
+    <main className={chivo.className}>
       <Component {...pageProps} />
       <Analytics />
     </main>

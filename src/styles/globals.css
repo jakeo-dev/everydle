@@ -10,11 +10,11 @@
   }
 
   .off-toggle-disabled {
-    @apply cursor-not-allowed bg-gray-500/10;
+    @apply cursor-not-allowed bg-gray-500/10 text-gray-800/80;
   }
 
   .on-toggle-disabled {
-    @apply cursor-not-allowed bg-green-700/30;
+    @apply cursor-not-allowed bg-green-700/30 text-gray-800/80;
   }
 
   .invisible-fade {
