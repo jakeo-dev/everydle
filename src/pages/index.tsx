@@ -16,6 +16,7 @@ import {
   faDeleteLeft,
   faMinus,
   faPlus,
+  faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
@@ -426,7 +427,7 @@ export default function Home() {
 
         <meta
           name="keywords"
-          content="everydle, wordle, word game, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
+          content="everydle, wordle, word game, dordle, quordle, octordle, sedecordle, duotrigordle, sexaginta-quattordle, sexagintaquattordle, polydle, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
         />
         <meta
           property="description"
@@ -477,22 +478,45 @@ export default function Home() {
       <div className="sticky top-4 z-90 flex w-full justify-end">
         <div className="relative w-full">
           <div className="absolute right-4 flex flex-col items-end">
-            <button
-              onClick={() => {
-                setShowOptions(!showOptions);
-              }}
-              className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
-              ref={menuButtonRef}
-            >
-              <FontAwesomeIcon
-                icon={faChevronDown}
-                className={`${
-                  showOptions ? "rotate-180" : ""
-                } mr-2 transition duration-200`}
-                aria-hidden
-              />
-              Options
-            </button>
+            <div className="flex gap-3 md:gap-4">
+              <button
+                onClick={() => {
+                  const text =
+                    "#everydle\nhttps://everydle.jakeo.dev\n" +
+                    `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
+                    `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
+                    games.map((game) => (game.solved ? "✅" : "⬜")).join("");
+
+                  navigator.clipboard.writeText(text);
+                  alert("Copied current results to clipboard!");
+                }}
+                className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
+                ref={menuButtonRef}
+              >
+                <FontAwesomeIcon
+                  icon={faShareNodes}
+                  className="mr-2"
+                  aria-hidden
+                />
+                Share
+              </button>
+              <button
+                onClick={() => {
+                  setShowOptions(!showOptions);
+                }}
+                className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
+                ref={menuButtonRef}
+              >
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className={`${
+                    showOptions ? "rotate-180" : ""
+                  } mr-2 transition duration-200`}
+                  aria-hidden
+                />
+                Options
+              </button>
+            </div>
             <div className="mt-3 rounded-md bg-gray-100 px-4 py-2 text-center text-xs shadow-sm transition md:mt-4">
               <div className="flex justify-end">
                 <a
@@ -640,29 +664,31 @@ export default function Home() {
 
       <div className="sticky top-4 z-80 flex w-full justify-end">
         <div className="relative w-full">
-          <div
-            className={`${
-              games.filter((game) => game.solved).length >= games.length &&
-              games.filter((game) => game.solved).length > 0
-                ? "bg-green-200"
-                : "bg-gray-100"
-            } absolute left-4 items-center justify-center rounded-md px-4 py-2.5 shadow-sm transition`}
-          >
-            <div className="text-left text-xs md:text-sm">
-              <h3>
-                <b className="text-sm md:text-base">{guessedWords.length}</b> of{" "}
-                {MAX_GUESSES}
-              </h3>
-              <h4>guesses used</h4>
-            </div>
-            <div className="mt-2 border-t border-gray-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
-              <h3>
-                <b className="text-sm md:text-base">
-                  {games.filter((game) => game.solved).length}
-                </b>{" "}
-                of {games.length}
-              </h3>
-              <h4>words solved</h4>
+          <div className="absolute left-4 flex flex-col items-start gap-4">
+            <div
+              className={`${
+                games.filter((game) => game.solved).length >= games.length &&
+                games.filter((game) => game.solved).length > 0
+                  ? "bg-green-200"
+                  : "bg-gray-100"
+              } items-center justify-center rounded-md px-4 py-2.5 shadow-sm transition`}
+            >
+              <div className="text-left text-xs md:text-sm">
+                <h3>
+                  <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
+                  of {MAX_GUESSES}
+                </h3>
+                <h4>guesses used</h4>
+              </div>
+              <div className="mt-2 border-t border-gray-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
+                <h3>
+                  <b className="text-sm md:text-base">
+                    {games.filter((game) => game.solved).length}
+                  </b>{" "}
+                  of {games.length}
+                </h3>
+                <h4>words solved</h4>
+              </div>
             </div>
           </div>
         </div>
