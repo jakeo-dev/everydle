@@ -21,12 +21,18 @@ import {
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
-import { getLetterColor, removeDuplicates } from "@/utility";
+import {
+  getLetterColor,
+  randomElement,
+  removeDuplicates,
+  shuffle,
+} from "@/utility";
 
 import { Game, GuessedLetter } from "@/types";
 
 export default function Home() {
   const [games, setGames] = useState<Game[]>([]);
+  const [answers, setAnswers] = useState<string[]>([]);
   const [possibleGuesses, setPossibleGuesses] = useState<string[]>([]);
 
   const [subtitle, setSubtitle] = useState<string>("");
@@ -43,13 +49,26 @@ export default function Home() {
         .map((line) => line.trim())
         .filter((line) => line !== "");
 
-      const gameArray: Game[] = lines.map((answer) => ({
-        solved: false,
-        answer: answer,
-        guessedLetters: [],
-      }));
+      setAnswers(lines);
 
-      setGames(shuffle(gameArray));
+      if (typeof localStorage.getItem("games") !== "string") {
+        // if games are NOT saved at all, set games to shuffled gameArray
+        const gameArray: Game[] = lines.map((answer) => ({
+          solved: false,
+          answer: answer,
+          guessedLetters: [],
+        }));
+
+        setGames(shuffle(gameArray));
+      } else {
+        setGames(
+          localStorage.getItem("games")?.startsWith("[")
+            ? JSON.parse(localStorage.getItem("games") || "[]") // if games are saved in plain text format, parse them
+            : JSON.parse(
+                decompressFromUTF16(localStorage.getItem("games") || "[]"), // if games are saved in compressed format, decompress & then parse them
+              ),
+        );
+      }
     };
 
     const fetchGuesses = async () => {
@@ -65,20 +84,8 @@ export default function Home() {
     };
 
     const loadData = async () => {
-      if (typeof localStorage.getItem("games") !== "string") {
-        // if games are NOT saved at all, fetch answers.txt & set games to shuffled gameArray
-        await fetchAnswers();
-      } else {
-        setGames(
-          localStorage.getItem("games")?.startsWith("[")
-            ? JSON.parse(localStorage.getItem("games") || "[]") // if games are saved in plain text format, parse them
-            : JSON.parse(
-                decompressFromUTF16(localStorage.getItem("games") || "[]"), // if games are saved in compressed format, decompress & then parse them
-              ),
-        );
-      }
-
-      await fetchGuesses(); // fetch possible gusses.txt & set possibleGuesses to guessesArray
+      await fetchAnswers(); // fetch answers.txt
+      await fetchGuesses(); // fetch possible guesses.txt & set possibleGuesses to guessesArray
 
       setDataLoaded(true); // set data load to true after possibleGuesses and gameArray are set
     };
@@ -166,28 +173,6 @@ export default function Home() {
   }, []);
 
   const MAX_GUESSES = games.length + 5;
-
-  /* random functions */
-
-  function shuffle<T>(array: T[]): T[] {
-    let currentIndex = array.length;
-
-    while (currentIndex != 0) {
-      const randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
-      ];
-    }
-
-    return array;
-  }
-
-  function randomElement<T>(array: T[]): T {
-    return array[Math.floor(Math.random() * array.length)];
-  }
 
   /* handle clicking letters */
 
@@ -710,6 +695,7 @@ export default function Home() {
 
         <GameGrid
           games={games}
+          answers={answers}
           guessedWords={guessedWords}
           currentEnteredWord={currentEnteredWord}
           MAX_GUESSES={MAX_GUESSES}

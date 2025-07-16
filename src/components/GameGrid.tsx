@@ -7,9 +7,13 @@ import React from "react";
 import { getLetterColor, getSizeClass } from "@/utility";
 
 import { Game } from "@/types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCircle } from "@fortawesome/free-regular-svg-icons";
 
 type GameGridProps = {
   games: Game[];
+  answers: string[];
   guessedWords: string[];
   currentEnteredWord: string;
   MAX_GUESSES: number;
@@ -31,6 +35,7 @@ type GameProps = {
   showPhantoms: boolean;
   answersVisible: boolean;
   game: Game;
+  index: number;
 };
 
 function GameTile(props: GameProps) {
@@ -38,10 +43,46 @@ function GameTile(props: GameProps) {
     <div
       className={`${
         props.game.solved ? "bg-green-400/30 opacity-60" : "bg-gray-300/30"
-      } h-min w-min ${
-        props.size <= 1 ? "p-2" : "p-3"
-      } mx-auto mb-6 gap-3 rounded-md`}
+      } h-min w-min ${props.size <= 1 ? "p-2" : "p-3"} mx-auto mb-3 rounded-md`}
     >
+      <div className="mb-2.5 flex items-center justify-between gap-2 px-1">
+        {/* <span
+          className={`${
+            props.size <= 2
+              ? "text-[0.65rem]"
+              : props.size == 3
+                ? "text-xs"
+                : "text-sm"
+          } text-xl font-black text-red-500`}
+        >
+          {getWordDifficulty(props.game.answer)}
+        </span> */}
+
+        <span
+          className={`${
+            props.size <= 2
+              ? "text-[0.65rem]"
+              : props.size == 3
+                ? "text-xs"
+                : "text-sm"
+          } text-gray-400`}
+        >
+          {props.index + 1}
+        </span>
+
+        <FontAwesomeIcon
+          icon={props.game.solved ? faCheckCircle : faCircle}
+          aria-label={props.game.solved ? "Solved" : "Unsolved"}
+          className={`${
+            props.size <= 2
+              ? "text-[0.65rem]"
+              : props.size == 3
+                ? "text-xs"
+                : "text-sm"
+          } text-gray-400`}
+        />
+      </div>
+
       {props.compactMode ? (
         <>
           <div className="flex w-full items-end justify-between gap-1">
@@ -322,6 +363,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
         <GameTile
           key={game.answer}
           game={game}
+          index={props.answers.indexOf(game.answer)}
           guessedWords={props.guessedWords}
           currentEnteredWord={props.currentEnteredWord}
           MAX_GUESSES={props.MAX_GUESSES}

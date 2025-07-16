@@ -73,3 +73,90 @@ export function getSizeClass(size: number): string {
       return "w-6 h-6 text-lg rounded-sm border-2";
   }
 }
+
+/**
+ * Shuffles an array
+ *
+ * @param {T[]} array - array to shuffle
+ * @template T - type of elements in the array
+ * @returns {T[]} - shuffled array
+ */
+export function shuffle<T>(array: T[]): T[] {
+  let currentIndex = array.length;
+
+  while (currentIndex != 0) {
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
+/**
+ * Gets a random element from an array
+ *
+ * @param {T[]} array - array
+ * @template T - type of elements in the array
+ * @returns {T} - random element from the array
+ */
+export function randomElement<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+/**
+ * Gets the difficulty to solve a word
+ *
+ * @param {string} word - five letter word
+ * @returns {number} - measured difficulty to solve the word (0 to 1)
+ */
+export function getWordDifficulty(word: string): number {
+  const bottom75Regex = /[BCDFGHJKMNPQSUVWXYZ]/gi;
+  const bottom75Count = word.match(bottom75Regex);
+  const bottom75 = bottom75Count ? bottom75Count.length * 0.01 : 0;
+
+  const bottom50Regex = /[BFGHJKMPQVWXZ]/gi;
+  const bottom50Count = word.match(bottom50Regex);
+  const bottom50 = bottom50Count ? bottom50Count.length * 0.02 : 0;
+
+  const bottom25Regex = /[JKQVWXZ]/gi;
+  const bottom25Count = word.match(bottom25Regex);
+  const bottom25 = bottom25Count ? bottom25Count.length * 0.04 : 0;
+
+  const duplicateLetterMultiplier =
+    duplicateLetterCount(word) >= 3
+      ? 2.225
+      : duplicateLetterCount(word) == 2
+        ? 1.75
+        : 1;
+
+  return Number(
+    (
+      (bottom75 + bottom50 + bottom25 + 0.1) *
+      duplicateLetterMultiplier
+    ).toFixed(2),
+  );
+}
+
+/**
+ * Returns number of duplicate letters in a word
+ *
+ * @param {string} word - word
+ * @returns {number} - number of duplicate letters in the word
+ */
+export function duplicateLetterCount(word: string): number {
+  const letters = word.split("").sort();
+
+  const counts: Record<string, number> = {};
+  letters.forEach(function (x) {
+    counts[x] = (counts[x] || 0) + 1;
+  });
+
+  const finalCounts = Object.values(counts);
+
+  return Math.max(...finalCounts);
+}
