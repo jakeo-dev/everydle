@@ -262,7 +262,15 @@ export default function Home() {
             const game = newGames[i];
             const updatedGuessedLetters: GuessedLetter[] = [];
 
-            for (let j = 0; j < updatedGuessedWords.length; j++) {
+            // if the game is solved, dont add letters that have been guessed after it was solved
+            const indexOfSolvedWord = updatedGuessedWords.indexOf(game.answer);
+            const guessedLettersLimit =
+              indexOfSolvedWord == -1
+                ? updatedGuessedWords.length
+                : indexOfSolvedWord + 1;
+
+            // add each guessed letter (up until the solved word if the game is solved)
+            for (let j = 0; j < guessedLettersLimit; j++) {
               const word = updatedGuessedWords[j];
 
               for (let k = 0; k < word.length; k++) {
