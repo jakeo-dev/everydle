@@ -131,7 +131,7 @@ export default function Home() {
   useEffect(() => {
     setSubtitle(
       randomElement([
-        `Always win on the first guess`,
+        `Always solve on the first guess`,
         `Save 2280 days of your time`,
         `Play 2280 wordles at once`,
         `Every wordle everywhere all at once`,
@@ -249,13 +249,13 @@ export default function Home() {
 
             // if the game is solved, dont add letters that have been guessed after it was solved
             const indexOfSolvedWord = updatedGuessedWords.indexOf(game.answer);
-            const guessedLettersLimit =
+            const guessedWordsLimit =
               indexOfSolvedWord == -1
                 ? updatedGuessedWords.length
                 : indexOfSolvedWord + 1;
 
             // add each guessed letter (up until the solved word if the game is solved)
-            for (let j = 0; j < guessedLettersLimit; j++) {
+            for (let j = 0; j < guessedWordsLimit; j++) {
               const word = updatedGuessedWords[j];
 
               for (let k = 0; k < word.length; k++) {
@@ -590,14 +590,14 @@ export default function Home() {
                   if (!compactMode) setShowPhantoms(true);
                 }}
                 text="Enable compact mode"
-                subtext="Only show yellow letters above input line and always show solved letters"
+                subtext="Reduce size of each game tile"
               />
               <Toggle
                 state={showPhantoms}
                 setState={setShowPhantoms}
                 disabled={compactMode}
                 text="Show solved letters"
-                subtext="Show all solved letters in input line below each game"
+                subtext="Show solved letters in input line below each game"
               />
               <Toggle
                 state={typeInKeyboard}
@@ -687,7 +687,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-8 pt-36 pb-16 md:pt-16">
+      <div className="px-8 pt-40 pb-16 md:pt-16">
         <h1 className="text-6xl font-black md:text-7xl">Everydle</h1>
         <h2 className="mt-2 mb-10 text-base font-medium text-pretty text-gray-700 italic md:mb-16 md:text-lg">
           {subtitle}
