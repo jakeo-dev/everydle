@@ -244,14 +244,14 @@ function GameTile(props: GameProps) {
                   {letter.pos == -2 ? (
                     <div
                       key={i}
-                      className={`flex items-center justify-center rounded-sm bg-gray-400/60 pl-[0.1875rem] select-none ${
+                      className={`flex items-center justify-center bg-gray-400/60 select-none ${
                         props.size < 2
-                          ? "h-3 w-3"
+                          ? "h-3 w-3 rounded-xs pl-[0.125rem]"
                           : props.size == 2
-                            ? "h-4 w-4"
+                            ? "h-4 w-4 rounded pl-[0.15rem]"
                             : props.size == 3
-                              ? "h-5 w-5"
-                              : "h-6 w-6"
+                              ? "h-5 w-5 rounded-sm pl-[0.1875rem]"
+                              : "h-6 w-6 rounded-sm pl-[0.1875rem]"
                       }`}
                     >
                       <span>{letter.char}</span>
@@ -280,7 +280,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => setIsClient(true), []);
 
-  function sortGames(a: Game, b: Game) {
+  function moveSolvedToTop(a: Game, b: Game) {
     if (props.moveSolved) {
       return Number(b.solved) - Number(a.solved);
     } else {
@@ -313,8 +313,8 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   return isClient ? (
     // virtualized grid
     <Masonry
-      items={[...props.games].sort(sortGames)}
-      columnGutter={15}
+      items={[...props.games].sort(moveSolvedToTop)}
+      columnGutter={25}
       columnWidth={colWidth}
       overscanBy={2.5}
       className="focus:outline-none"
