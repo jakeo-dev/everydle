@@ -420,11 +420,11 @@ export default function Home() {
 
         <meta
           name="keywords"
-          content="everydle, wordle, word game, dordle, quordle, octordle, sedecordle, duotrigordle, sexaginta-quattordle, sexagintaquattordle, polydle, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
+          content="everydle, wordle, word game, wordle unlimited, wordle of the day, wordle hint, dordle, quordle, octordle, sedecordle, duotrigordle, sexaginta-quattordle, sexagintaquattordle, polydle, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
         />
         <meta
           property="description"
-          content="Solve every Wordle at once in one extremely long sitting, and never worry about missing a day again."
+          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
         />
 
         <meta
@@ -433,7 +433,7 @@ export default function Home() {
         />
         <meta
           property="og:description"
-          content="Solve every Wordle at once in one extremely long sitting, and never worry about missing a day again."
+          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
         />
         <meta name="theme-color" content="#00c951" />
         <meta property="og:url" content="https://everydle.jakeo.dev" />
@@ -448,7 +448,7 @@ export default function Home() {
         />
         <meta
           name="twitter:description"
-          content="Solve every Wordle at once in one extremely long sitting, and never worry about missing a day again."
+          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
         />
         <meta name="twitter:url" content="https://everydle.jakeo.dev" />
         <meta
