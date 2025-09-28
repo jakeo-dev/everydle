@@ -42,7 +42,7 @@ function GameTile(props: GameProps) {
   return (
     <div
       className={`${
-        props.game.solved ? "bg-green-400/30 opacity-60" : "bg-gradient-to-b from-gray-300/30 to-gray-300/40"
+        props.game.solved ? "bg-green-400/30 opacity-60" : "bg-gradient-to-b from-gray-300/30 to-gray-400/15"
       } h-min w-min ${props.size <= 1 ? "p-2" : "p-3"} mx-auto mb-3 rounded-md`}
     >
       <div className="mb-2.5 flex items-center justify-between gap-2 px-1">
