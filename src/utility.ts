@@ -115,7 +115,7 @@ export function randomElement<T>(array: T[]): T {
  * @returns {number} - measured difficulty to solve the word (0 to 1)
  */
 export function getWordDifficulty(word: string): number {
-  const bottom75Regex = /[BCDFGHJKMNPQSUVWXYZ]/gi;
+  const bottom75Regex = /[BCDFGHJKMNPQSUVWXZ]/gi;
   const bottom75Count = word.match(bottom75Regex);
   const bottom75 = bottom75Count ? bottom75Count.length * 0.01 : 0;
 
@@ -127,6 +127,16 @@ export function getWordDifficulty(word: string): number {
   const bottom25Count = word.match(bottom25Regex);
   const bottom25 = bottom25Count ? bottom25Count.length * 0.04 : 0;
 
+  const noVowelsRegex = /[AEIOUY]/gi;
+  const noVowelsCount = word.match(noVowelsRegex);
+  const noVowelsMultiplier = noVowelsCount ? 1 : 1.2; // no vowels
+
+  const uncommonVowelsRegex = /[UY]/gi;
+  const uncommonVowelsCount = word.match(uncommonVowelsRegex);
+  const uncommonVowels = uncommonVowelsCount
+    ? uncommonVowelsCount.length * 0.01
+    : 0;
+
   const duplicateLetterMultiplier =
     duplicateLetterCount(word) >= 3
       ? 2.225
@@ -136,8 +146,9 @@ export function getWordDifficulty(word: string): number {
 
   return Number(
     (
-      (bottom75 + bottom50 + bottom25 + 0.1) *
-      duplicateLetterMultiplier
+      (uncommonVowels + bottom75 + bottom50 + bottom25 + 0.1) *
+      duplicateLetterMultiplier *
+      noVowelsMultiplier
     ).toFixed(2),
   );
 }
