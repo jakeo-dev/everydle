@@ -8,7 +8,6 @@ config.autoAddCss = false;
 import { Analytics } from "@vercel/analytics/react";
 
 import { Chivo } from "next/font/google";
-
 const chivo = Chivo({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps) {

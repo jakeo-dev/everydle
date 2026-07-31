@@ -1,38 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Head from "next/head";
-
-import { randomElement } from "@/utility";
 import Link from "next/link";
+import Image from "next/image";
+import Footer from "@/components/Footer";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 export default function Home() {
-  const [subtitle, setSubtitle] = useState<string>("");
-
-  /* set random subtitle */
-
-  useEffect(() => {
-    setSubtitle(
-      randomElement([
-        `Always solve on the first guess`,
-        `Save over 2,000 days of your time`,
-        `Every wordle everywhere all at once`,
-        `It's your fault if something crashes`,
-        `Never worry about missing a day again`,
-        `It's the same thing every day`,
-        `"basically re-type the wordle word list with an increasingly unuseable UI"`,
-        `"oh it gets worse 200 words in"`,
-        `"NONONONONOONO, get it away from me!"`,
-        `"increasingly onerous"`,
-        `"wonderfully stupid"`,
-        `"made me feel slightly queasy"`,
-      ]),
-    );
-  }, []);
-
   return (
     <>
       <Head>
@@ -82,13 +58,21 @@ export default function Home() {
 
       <div className="flex h-screen items-center justify-center px-8">
         <div>
-          <h1 className="text-6xl font-black md:text-9xl">Everydle</h1>
-          <h2 className="mt-3 text-xl font-medium text-pretty text-gray-800 md:text-2xl">
+          <Image
+            src="/everydle.png"
+            alt="Everydle logo"
+            width="100"
+            height="100"
+            className="mx-auto w-16 md:w-28"
+          />
+
+          <h1 className="mt-2 text-5xl font-black md:text-8xl">Everydle</h1>
+          <h2 className="mt-4 text-lg font-medium text-pretty text-gray-800 md:text-2xl">
             The unoriginal 5-letter word-guessing game
           </h2>
-          <h3 className="mt-2 text-base font-medium text-pretty text-gray-700 italic md:text-lg">
+          {/* <h3 className="mt-2 text-base font-medium text-pretty text-gray-700 italic md:text-lg">
             {subtitle}
-          </h3>
+          </h3> */}
 
           <Link
             className="mx-auto mt-8 block w-4/5 rounded-full bg-gray-900 px-4 py-2 text-lg text-gray-100 transition hover:bg-gray-700 active:bg-gray-800 md:w-2/3 md:py-3 md:text-xl"
@@ -97,7 +81,7 @@ export default function Home() {
             Play
           </Link>
 
-          <div className="mt-4 flex items-center justify-center text-sm">
+          <div className="mt-8 flex items-center justify-center text-sm">
             <a
               className="transition hover:drop-shadow-md active:drop-shadow-none"
               href="https://jakeo.dev"
@@ -120,6 +104,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 }
