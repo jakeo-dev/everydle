@@ -6,6 +6,7 @@ import Head from "next/head";
 import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
+import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -21,12 +22,7 @@ import {
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
-import {
-  getLetterColor,
-  randomElement,
-  removeDuplicates,
-  shuffle,
-} from "@/utility";
+import { getLetterColor, removeDuplicates, shuffle } from "@/utility";
 
 import { Game, GuessedLetter } from "@/types";
 
@@ -34,8 +30,6 @@ export default function Home() {
   const [games, setGames] = useState<Game[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [possibleGuesses, setPossibleGuesses] = useState<string[]>([]);
-
-  const [subtitle, setSubtitle] = useState<string>("");
 
   const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -125,27 +119,6 @@ export default function Home() {
       setEnterPressed(true);
     }
   }, [currentEnteredWord]);
-
-  /* set random subtitle */
-
-  useEffect(() => {
-    setSubtitle(
-      randomElement([
-        `Always solve on the first guess`,
-        `Save over 2,000 days of your time`,
-        `Every wordle everywhere all at once`,
-        `It's your fault if something crashes`,
-        `Never worry about missing a day again`,
-        `It's the same thing every day`,
-        `"basically re-type the wordle word list with an increasingly unuseable UI"`,
-        `"oh it gets worse 200 words in"`,
-        `"NONONONONOONO, get it away from me!"`,
-        `"increasingly onerous"`,
-        `"wonderfully stupid"`,
-        `"made me feel slightly queasy"`,
-      ]),
-    );
-  }, []);
 
   const [size, setSize] = useState<number>(2);
   const [typeInKeyboard, setTypeInKeyboard] = useState<boolean>(false);
@@ -688,10 +661,16 @@ export default function Home() {
       </div>
 
       <div className="px-8 pt-40 pb-16 md:pt-16">
-        <h1 className="text-6xl font-black md:text-7xl">Everydle</h1>
-        <h2 className="mt-2 mb-10 text-base font-medium text-pretty text-gray-700 italic md:mb-16 md:text-lg">
-          {subtitle}
-        </h2>
+        <div className="mb-12 flex items-center justify-center gap-4 md:mb-16 md:gap-5">
+          <Image
+            src="/everydle.png"
+            alt="Everydle logo"
+            width="100"
+            height="100"
+            className="w-12 md:w-15"
+          />
+          <h1 className="text-5xl font-black md:text-6xl">Everydle</h1>
+        </div>
 
         <GameGrid
           games={games}
