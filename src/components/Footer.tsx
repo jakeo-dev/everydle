@@ -39,6 +39,7 @@ function Footer() {
           {shuffle(quotes).map((quote, i) => {
             return (
               <span
+                key={i}
                 className={`-ml-4.5 px-8 py-8 text-base italic md:text-lg ${i % 2 ? "slanted-highlight-dark text-white" : "slanted-highlight-light"}`}
               >
                 {quote}
