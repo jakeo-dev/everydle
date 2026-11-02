@@ -6,7 +6,6 @@ import Head from "next/head";
 import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
-import Alert from "@/components/Alert"
 import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,11 +22,16 @@ import {
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
-import { getLetterColor, removeDuplicates, shuffle, createAlert } from "@/utility";
+import {
+  getLetterColor,
+  removeDuplicates,
+  shuffle,
+  createAlert,
+} from "@/utility";
 
 import { Game, GuessedLetter } from "@/types";
 
-export default function Home() {
+export default function Play() {
   const [games, setGames] = useState<Game[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [possibleGuesses, setPossibleGuesses] = useState<string[]>([]);
@@ -205,7 +209,10 @@ export default function Home() {
       const updatedGuessedWords = [...guessedWords, currentEnteredWord];
       if (updatedGuessedWords.length >= MAX_GUESSES) {
         setAnswersVisible(true);
-        createAlert("Better luck next time! All answers are now visible.", "gray");
+        createAlert(
+          "Better luck next time! All answers are now visible.",
+          "gray",
+        );
       }
       if (updatedGuessedWords.length <= MAX_GUESSES) {
         setGuessedWords(updatedGuessedWords);
@@ -276,7 +283,8 @@ export default function Home() {
           if (solvedCount >= newGames.length) {
             setAnswersVisible(true);
             createAlert(
-              "Congratulations! You just solved every possible wordle game! Now go do something better with your time.", "green"
+              "Congratulations! You just solved every possible wordle game! Now go do something better with your time.",
+              "green",
             );
           }
 
