@@ -6,6 +6,7 @@ import Head from "next/head";
 import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
+import Alert from "@/components/Alert"
 import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,7 +23,7 @@ import {
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
-import { getLetterColor, removeDuplicates, shuffle } from "@/utility";
+import { getLetterColor, removeDuplicates, shuffle, createAlert } from "@/utility";
 
 import { Game, GuessedLetter } from "@/types";
 
@@ -183,16 +184,16 @@ export default function Home() {
     if (!enterPressed) return;
 
     if (currentEnteredWord.length != 5) {
-      alert("Entered word must be five letters long");
+      createAlert("Entered word must be five letters long", "red");
     } else if (!possibleGuesses.includes(currentEnteredWord)) {
-      alert("Entered word is not in word list");
+      createAlert("Entered word is not in word list", "red");
     } else if (guessedWords.includes(currentEnteredWord)) {
-      alert("Entered word has already been guessed");
+      createAlert("Entered word has already been guessed", "red");
     } else {
       /* const updatedGuessedWords = (prev: string[]) => {
           if (prev.length == MAX_GUESSES - 1) {
             setAnswersVisible(true);
-            alert("Better luck next time! All answers are now visible.");
+            createAlert("Better luck next time! All answers are now visible.", "gray");
           }
           if (prev.length < MAX_GUESSES) {
             return [...prev, currentEnteredWord];
@@ -204,7 +205,7 @@ export default function Home() {
       const updatedGuessedWords = [...guessedWords, currentEnteredWord];
       if (updatedGuessedWords.length >= MAX_GUESSES) {
         setAnswersVisible(true);
-        alert("Better luck next time! All answers are now visible.");
+        createAlert("Better luck next time! All answers are now visible.", "gray");
       }
       if (updatedGuessedWords.length <= MAX_GUESSES) {
         setGuessedWords(updatedGuessedWords);
@@ -274,8 +275,8 @@ export default function Home() {
           const solvedCount = newGames.filter((g) => g.solved).length;
           if (solvedCount >= newGames.length) {
             setAnswersVisible(true);
-            alert(
-              "Congratulations! You just solved every possible wordle game! Now go do something better with your time.",
+            createAlert(
+              "Congratulations! You just solved every possible wordle game! Now go do something better with your time.", "green"
             );
           }
 
@@ -454,7 +455,7 @@ export default function Home() {
                     games.map((game) => (game.solved ? "✅" : "⬜")).join("");
 
                   navigator.clipboard.writeText(text);
-                  alert("Copied current results to clipboard!");
+                  createAlert("Copied current results to clipboard!", "gray");
                 }}
                 className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
                 ref={menuButtonRef}
@@ -688,6 +689,9 @@ export default function Home() {
       </div>
 
       <div className="sticky right-0 bottom-0 left-0">
+        <div id="alertRoot">
+          {/* <Alert id="alert" text="Entered word has already been guessed" color="red" /> */}
+        </div>
         {/* keyboard */}
         <div className="mx-auto w-full rounded-t-xl bg-gray-100 p-2 shadow-sm sm:p-3 md:w-[26rem]">
           <div

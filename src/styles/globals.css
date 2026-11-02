@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@keyframes alert-fade-out {
+  90% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 @layer components {
   .off-toggle {
     @apply cursor-pointer bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50;

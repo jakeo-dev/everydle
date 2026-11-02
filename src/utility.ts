@@ -1,3 +1,12 @@
+import { createElement } from 'react';
+import { createRoot, type Root } from 'react-dom/client'
+import Alert from "@/components/Alert"
+
+let root: Root | null = null;
+let timer: ReturnType<typeof setTimeout>;
+let rootContainer: HTMLElement | null = null;
+let alertId = 0;
+
 /**
  * Gets the color of a letter
  *
@@ -170,4 +179,20 @@ export function duplicateLetterCount(word: string): number {
   const finalCounts = Object.values(counts);
 
   return Math.max(...finalCounts);
+}
+
+export function createAlert(text: string, color: string | null){
+  const container = document.getElementById("alertRoot")
+  if (!container) return;
+  clearTimeout(timer);
+  if (container !== rootContainer) {
+    root = createRoot(container);
+    rootContainer = container;
+  }
+  root?.render(createElement(Alert, {
+    key: ++alertId,
+    text,
+    color: color ?? "gray",
+  }));
+  timer = setTimeout(() => root?.render(null), 3000);
 }
