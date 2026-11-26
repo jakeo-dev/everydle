@@ -130,6 +130,7 @@ export default function Play() {
   const [compactMode, setCompactMode] = useState<boolean>(false);
   const [moveSolved, setMoveSolved] = useState<boolean>(false);
   const [answersVisible, setAnswersVisible] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(true);
 
   const firstKeyRef = useRef<HTMLButtonElement>(null);
   const [keyWidth, setKeyWidth] = useState(0);
@@ -384,6 +385,12 @@ export default function Play() {
     } else {
       setAnswersVisible(false);
     }
+
+    if (options && JSON.parse(options).showKeyboard !== undefined) {
+      setShowKeyboard(JSON.parse(options).showKeyboard);
+    } else {
+      setShowKeyboard(false);
+    }
   }, [dataLoaded]);
 
   /* keyboard letters */
@@ -531,6 +538,12 @@ export default function Play() {
                 disabled={compactMode}
                 text="Show solved letters"
                 subtext="Show solved letters in input line below each game"
+              />
+              <Toggle
+                state={showKeyboard}
+                setState={setShowKeyboard}
+                text="Show keyboard"
+                subtext="Show digital keyboard at the bottom of the screen"
               />
               <Toggle
                 state={typeInKeyboard}
@@ -701,94 +714,98 @@ export default function Play() {
             </span>
           </div>
 
-          {/* letters */}
-          <div className="flex w-full flex-col items-center gap-y-1 sm:gap-y-1.5">
-            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
-              {keyboardRow1.map((letter, i) => (
-                <Button
-                  key={i}
-                  onClick={() => {
-                    setCurrentEnteredWord((prev) => {
-                      if (prev.length < 5) {
-                        return prev + letter;
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="h-11 min-w-0 flex-1 pt-2"
-                  ref={firstKeyRef}
-                >
-                  <span className="text-lg">{letter}</span>
-                </Button>
-              ))}
-            </div>
-            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
-              {keyboardRow2.map((letter, i) => (
-                <Button
-                  key={i}
-                  onClick={() => {
-                    setCurrentEnteredWord((prev) => {
-                      if (prev.length < 5) {
-                        return prev + letter;
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="h-11 min-w-0 pt-2"
-                  style={{
-                    width: `${keyWidth}px`,
-                  }}
-                >
-                  <span className="text-lg">{letter}</span>
-                </Button>
-              ))}
-            </div>
-            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
-              {keyboardRow3.map((letter, i) => (
-                <Button
-                  key={i}
-                  onClick={() => {
-                    setCurrentEnteredWord((prev) => {
-                      if (prev.length < 5) {
-                        return prev + letter;
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="h-11 min-w-0 pt-2"
-                  style={{
-                    width: `${keyWidth}px`,
-                  }}
-                >
-                  <span className="text-lg">{letter}</span>
-                </Button>
-              ))}
-            </div>
-          </div>
+          {showKeyboard && (
+            <div className="mb-2 sm:mb-3">
+              {/* letters */}
+              <div className="flex w-full flex-col items-center gap-y-1 sm:gap-y-1.5">
+                <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
+                  {keyboardRow1.map((letter, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        setCurrentEnteredWord((prev) => {
+                          if (prev.length < 5) {
+                            return prev + letter;
+                          }
+                          return prev;
+                        });
+                      }}
+                      className="h-11 min-w-0 flex-1 pt-2"
+                      ref={firstKeyRef}
+                    >
+                      <span className="text-lg">{letter}</span>
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
+                  {keyboardRow2.map((letter, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        setCurrentEnteredWord((prev) => {
+                          if (prev.length < 5) {
+                            return prev + letter;
+                          }
+                          return prev;
+                        });
+                      }}
+                      className="h-11 min-w-0 pt-2"
+                      style={{
+                        width: `${keyWidth}px`,
+                      }}
+                    >
+                      <span className="text-lg">{letter}</span>
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
+                  {keyboardRow3.map((letter, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        setCurrentEnteredWord((prev) => {
+                          if (prev.length < 5) {
+                            return prev + letter;
+                          }
+                          return prev;
+                        });
+                      }}
+                      className="h-11 min-w-0 pt-2"
+                      style={{
+                        width: `${keyWidth}px`,
+                      }}
+                    >
+                      <span className="text-lg">{letter}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
 
-          {/* enter & backspace */}
-          <div className="mt-2 flex gap-1 sm:mt-3 sm:gap-1.5">
-            <Button
-              onClick={() => {
-                setCurrentEnteredWord((prev) => prev.slice(0, -1));
-              }}
-              className="w-full items-center"
-            >
-              <FontAwesomeIcon icon={faDeleteLeft} className="mr-1.5" />
-              <span className="text-sm">Backspace</span>
-            </Button>
-            <Button
-              onClick={() => {
-                setEnterPressed(true);
-              }}
-              className="w-full items-center"
-            >
-              <span className="text-sm">Enter</span>
-              <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
-            </Button>
-          </div>
+              {/* enter & backspace */}
+              <div className="mt-2 flex gap-1 sm:mt-3 sm:gap-1.5">
+                <Button
+                  onClick={() => {
+                    setCurrentEnteredWord((prev) => prev.slice(0, -1));
+                  }}
+                  className="w-full items-center"
+                >
+                  <FontAwesomeIcon icon={faDeleteLeft} className="mr-1.5" />
+                  <span className="text-sm">Backspace</span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    setEnterPressed(true);
+                  }}
+                  className="w-full items-center"
+                >
+                  <span className="text-sm">Enter</span>
+                  <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
+                </Button>
+              </div>
+            </div>
+          )}
 
-          <div className="mt-2 flex justify-center text-xs sm:mt-3">
+          <div className="flex justify-center text-xs">
             <a
               className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
               href="https://jakeo.dev"
