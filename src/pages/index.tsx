@@ -5,9 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
-
 export default function Home() {
   return (
     <>
@@ -67,15 +64,15 @@ export default function Home() {
           />
 
           <h1 className="mt-2 text-5xl font-black md:text-8xl">Everydle</h1>
-          <h2 className="mt-4 text-lg font-medium text-pretty text-gray-800 md:text-2xl">
+          <h2 className="mt-4 text-lg font-medium text-pretty text-neutral-800 md:text-2xl">
             The unoriginal 5-letter word-guessing game
           </h2>
-          {/* <h3 className="mt-2 text-base font-medium text-pretty text-gray-700 italic md:text-lg">
+          {/* <h3 className="mt-2 text-base font-medium text-pretty text-neutral-700 italic md:text-lg">
             {subtitle}
           </h3> */}
 
           <Link
-            className="mx-auto mt-8 block w-4/5 rounded-full bg-gray-900 px-4 py-2 text-lg text-gray-100 transition hover:bg-gray-700 active:bg-gray-800 md:w-2/3 md:py-3 md:text-xl"
+            className="mx-auto mt-8 block w-4/5 rounded-full bg-neutral-900 px-4 py-2 text-lg text-neutral-100 transition hover:bg-neutral-700 active:bg-neutral-800 md:w-2/3 md:py-3 md:text-xl"
             href="/play"
           >
             Play
@@ -83,22 +80,32 @@ export default function Home() {
 
           <div className="mt-8 flex items-center justify-center text-sm">
             <a
-              className="transition hover:drop-shadow-md active:drop-shadow-none"
+              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
               href="https://jakeo.dev"
               target="_blank"
+              rel="noopener"
             >
               <img
-                src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
-                className="w-[3.75rem]"
+                src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
+                className="w-11 md:w-13"
               />
+            </a>
+            <span className="mx-2.5">•</span>
+            <a
+              className="transition hover:text-blue-600"
+              href="https://buymeacoffee.com/jakeorchanian"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>Buy me a cookie</span>
             </a>
             <span className="mx-2.5">•</span>
             <a
               className="transition hover:text-blue-600"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
+              rel="noopener"
             >
-              <FontAwesomeIcon icon={faGithub} className="mr-1" aria-hidden />
               <span>GitHub</span>
             </a>
           </div>
