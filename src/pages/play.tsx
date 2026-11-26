@@ -9,7 +9,6 @@ import Toggle from "@/components/Toggle";
 import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
   faArrowRotateRight,
@@ -445,41 +444,53 @@ export default function Play() {
           dataLoaded ? "invisible-fade" : "visible-fade"
         } absolute top-1/2 left-1/2 z-99 -translate-x-1/2 -translate-y-1/2 transform rounded-xl bg-gradient-to-br from-yellow-50/80 to-green-50/80 px-6 py-4 shadow-md transition`}
       >
-        <p className="text-center text-xl font-medium text-gray-700">
+        <p className="text-center text-xl font-medium text-neutral-700">
           Loading several thousand games of Wordle...
         </p>
       </div>
 
-      <div className="sticky top-4 z-90 flex w-full justify-end">
+      <div className="sticky top-0 z-90 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
-          <div className="absolute right-4 flex flex-col items-end">
-            <div className="flex gap-3 md:gap-4">
-              <button
-                onClick={() => {
-                  const text =
-                    "#everydle\nhttps://everydle.jakeo.dev\n" +
-                    `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
-                    `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
-                    games.map((game) => (game.solved ? "✅" : "⬜")).join("");
-
-                  navigator.clipboard.writeText(text);
-                  createAlert("Copied current results to clipboard!", "gray");
-                }}
-                className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
-                ref={menuButtonRef}
-              >
-                <FontAwesomeIcon
-                  icon={faShareNodes}
-                  className="mr-2"
-                  aria-hidden
-                />
-                Share
-              </button>
+          <div className="absolute right-0 flex flex-col items-end lg:right-4">
+            <div className="rounded-md bg-neutral-100/70 py-2 pr-4 pl-3 text-center text-xs shadow-sm backdrop-blur-lg transition">
+              <div className="flex justify-end">
+                <a
+                  className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
+                  href="https://jakeo.dev"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <img
+                    src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
+                    className="w-9 md:w-11"
+                  />
+                </a>
+                <span className="mx-2">•</span>
+                <a
+                  className="transition hover:text-blue-600"
+                  href="https://buymeacoffee.com/jakeorchanian"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span>Buy me a cookie</span>
+                </a>
+                <span className="mx-2">•</span>
+                <a
+                  className="transition hover:text-blue-600"
+                  href="https://github.com/jakeo-dev/everydle"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span>GitHub</span>
+                </a>
+              </div>
+            </div>
+            <div className="mt-3 flex gap-3 md:mt-4 md:gap-4">
               <button
                 onClick={() => {
                   setShowOptions(!showOptions);
                 }}
-                className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
+                className="w-fit cursor-pointer rounded-md rounded-tr-none bg-neutral-100/70 px-4 py-2 text-sm shadow-sm backdrop-blur-lg transition hover:bg-neutral-200/70 active:bg-neutral-300/70 md:text-base lg:rounded-md"
                 ref={menuButtonRef}
               >
                 <FontAwesomeIcon
@@ -492,40 +503,13 @@ export default function Play() {
                 Options
               </button>
             </div>
-            <div className="mt-3 rounded-md bg-gray-100 px-4 py-2 text-center text-xs shadow-sm transition md:mt-4">
-              <div className="flex justify-end">
-                <a
-                  className="transition hover:drop-shadow-md active:drop-shadow-none"
-                  href="https://jakeo.dev"
-                  target="_blank"
-                >
-                  <img
-                    src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
-                    className="w-[3.25rem]"
-                  />
-                </a>
-                <span className="mx-2.5">•</span>
-                <a
-                  className="transition hover:text-blue-600"
-                  href="https://github.com/jakeo-dev/everydle"
-                  target="_blank"
-                >
-                  <FontAwesomeIcon
-                    icon={faGithub}
-                    className="mr-1"
-                    aria-hidden
-                  />
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
           </div>
 
           <div className="relative">
             <div
               className={`${
                 showOptions ? "visible-fade" : "invisible-fade"
-              } absolute top-12 right-4 w-60 rounded-md bg-gray-200 p-4 shadow-sm`}
+              } absolute top-12 right-4 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg`}
               ref={menuRef}
             >
               <div className="flex items-center">
@@ -637,32 +621,70 @@ export default function Play() {
         </div>
       </div>
 
-      <div className="sticky top-4 z-80 flex w-full justify-end">
+      <div className="sticky top-0 z-80 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
-          <div className="absolute left-4 flex flex-col items-start gap-4">
+          <div className="absolute left-0 flex flex-col items-start gap-4 lg:left-4">
             <div
               className={`${
                 games.filter((game) => game.solved).length >= games.length &&
                 games.filter((game) => game.solved).length > 0
-                  ? "bg-green-200"
-                  : "bg-gray-100"
-              } items-center justify-center rounded-md px-4 py-2.5 shadow-sm transition`}
+                  ? "bg-green-200/70"
+                  : "bg-neutral-100/70"
+              } items-center justify-center rounded-md rounded-tl-none px-4 py-2.5 shadow-sm backdrop-blur-lg transition lg:rounded-md`}
             >
               <div className="text-left text-xs md:text-sm">
-                <h3>
+                <h3 className="inline">
                   <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
                   of {MAX_GUESSES}
                 </h3>
-                <h4>guesses used</h4>
+                <h4 className="ml-1.5 inline text-neutral-500">guesses used</h4>
               </div>
-              <div className="mt-2 border-t border-gray-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
-                <h3>
+              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
+                <h3 className="inline">
                   <b className="text-sm md:text-base">
                     {games.filter((game) => game.solved).length}
                   </b>{" "}
                   of {games.length}
                 </h3>
-                <h4>words solved</h4>
+                <h4 className="ml-1.5 inline text-neutral-500">words solved</h4>
+              </div>
+
+              <div className="mt-1 flex items-center gap-2">
+                <div className="h-max w-full overflow-hidden rounded-full">
+                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-300/50">
+                    <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
+                      <div
+                        className={`h-full rounded-r-full bg-linear-to-tr from-green-400/50 to-yellow-400/50`}
+                        style={{
+                          width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="off-toggle min-h-6 min-w-6 rounded-md transition"
+                  onClick={() => {
+                    const text =
+                      "#everydle\nhttps://everydle.jakeo.dev\n" +
+                      `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
+                      `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
+                      games.map((game) => (game.solved ? "✅" : "⬜")).join("");
+
+                    navigator.clipboard.writeText(text);
+                    createAlert(
+                      "Copied current results to clipboard!",
+                      "neutral",
+                    );
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faShareNodes}
+                    className="text-sm"
+                    aria-label="Share results"
+                    title="Share results"
+                  />
+                </button>
               </div>
             </div>
           </div>
