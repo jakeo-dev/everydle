@@ -35,7 +35,7 @@ function Toggle(props: {
         <span
           className={`${
             props.disabled
-              ? "cursor-not-allowed text-gray-500"
+              ? "cursor-not-allowed text-neutral-500"
               : "cursor-pointer"
           } pl-2 text-sm text-pretty`}
           id={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
@@ -45,7 +45,7 @@ function Toggle(props: {
       </button>
       <label
         className={`${
-          props.disabled ? "text-gray-400" : "text-gray-600"
+          props.disabled ? "text-neutral-400" : "text-neutral-600"
         } block pl-8 text-left text-[0.65rem] text-pretty md:text-xs`}
       >
         {props.subtext}

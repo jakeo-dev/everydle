@@ -196,7 +196,7 @@ export default function Play() {
       /* const updatedGuessedWords = (prev: string[]) => {
           if (prev.length == MAX_GUESSES - 1) {
             setAnswersVisible(true);
-            createAlert("Better luck next time! All answers are now visible.", "gray");
+            createAlert("Better luck next time! All answers are now visible.", "neutral");
           }
           if (prev.length < MAX_GUESSES) {
             return [...prev, currentEnteredWord];
@@ -210,7 +210,7 @@ export default function Play() {
         setAnswersVisible(true);
         createAlert(
           "Better luck next time! All answers are now visible.",
-          "gray",
+          "neutral",
         );
       }
       if (updatedGuessedWords.length <= MAX_GUESSES) {
@@ -723,11 +723,11 @@ export default function Play() {
           {/* <Alert id="alert" text="Entered word has already been guessed" color="red" /> */}
         </div>
         {/* keyboard */}
-        <div className="mx-auto w-full rounded-t-xl bg-gray-100 p-2 shadow-sm sm:p-3 md:w-[26rem]">
+        <div className="mx-auto w-full rounded-t-xl bg-neutral-100/70 p-2 shadow-sm backdrop-blur-lg sm:p-3 md:w-[26rem]">
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
-            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-gray-200 sm:mb-3 sm:h-11`}
+            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-neutral-300/60 sm:mb-3 sm:h-11`}
           >
             <span className="text-xl font-semibold tracking-wider md:text-2xl">
               {currentEnteredWord}
