@@ -541,8 +541,8 @@ export default function Play() {
               <Toggle
                 state={moveSolved}
                 setState={setMoveSolved}
-                text="Move solved to top"
-                subtext="Move solved games to the top of the grid"
+                text="Move solved to bottom"
+                subtext="Move solved games to the bottom of the grid"
               />
               {/* <Toggle
                 state={answersVisible}

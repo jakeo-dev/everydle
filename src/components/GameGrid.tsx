@@ -323,9 +323,9 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => setIsClient(true), []);
 
-  function moveSolvedToTop(a: Game, b: Game) {
+  function moveSolvedToBottom(a: Game, b: Game) {
     if (props.moveSolved) {
-      return Number(b.solved) - Number(a.solved);
+      return Number(a.solved) - Number(b.solved);
     } else {
       return 0;
     }
@@ -356,7 +356,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   return isClient ? (
     // virtualized grid
     <Masonry
-      items={[...props.games].sort(moveSolvedToTop)}
+      items={[...props.games].sort(moveSolvedToBottom)}
       columnGutter={25}
       columnWidth={colWidth}
       overscanBy={2.5}
