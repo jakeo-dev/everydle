@@ -452,40 +452,7 @@ export default function Play() {
       <div className="sticky top-0 z-90 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
           <div className="absolute right-0 flex flex-col items-end lg:right-4">
-            <div className="rounded-md bg-neutral-100/70 py-2 pr-4 pl-3 text-center text-xs shadow-sm backdrop-blur-lg transition">
-              <div className="flex justify-end">
-                <a
-                  className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
-                  href="https://jakeo.dev"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <img
-                    src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
-                    className="w-9 md:w-11"
-                  />
-                </a>
-                <span className="mx-2">•</span>
-                <a
-                  className="transition hover:text-blue-600"
-                  href="https://buymeacoffee.com/jakeorchanian"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span>Buy me a cookie</span>
-                </a>
-                <span className="mx-2">•</span>
-                <a
-                  className="transition hover:text-blue-600"
-                  href="https://github.com/jakeo-dev/everydle"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-3 md:mt-4 md:gap-4">
+            <div className="flex gap-3 md:gap-4">
               <button
                 onClick={() => {
                   setShowOptions(!showOptions);
@@ -819,6 +786,38 @@ export default function Play() {
               <span className="text-sm">Enter</span>
               <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
             </Button>
+          </div>
+
+          <div className="mt-2 flex justify-center text-xs sm:mt-3">
+            <a
+              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
+              href="https://jakeo.dev"
+              target="_blank"
+              rel="noopener"
+            >
+              <img
+                src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
+                className="w-11"
+              />
+            </a>
+            <span className="mx-2 text-neutral-400">•</span>
+            <a
+              className="transition hover:text-blue-600"
+              href="https://buymeacoffee.com/jakeorchanian"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>Buy me a cookie</span>
+            </a>
+            <span className="mx-2 text-neutral-400">•</span>
+            <a
+              className="transition hover:text-blue-600"
+              href="https://github.com/jakeo-dev/everydle"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>GitHub</span>
+            </a>
           </div>
         </div>
       </div>
