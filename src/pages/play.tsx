@@ -544,12 +544,12 @@ export default function Play() {
                 text="Move solved to top"
                 subtext="Move solved games to the top of the grid"
               />
-              <Toggle
+              {/* <Toggle
                 state={answersVisible}
                 setState={setAnswersVisible}
                 text="Reveal answers"
                 subtext="Show answers for all games"
-              />
+              /> */}
               <div className="mt-2 flex items-center md:mt-3">
                 <button
                   className="off-toggle h-6 w-6 rounded-md transition"
