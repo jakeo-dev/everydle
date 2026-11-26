@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
-export default function Home() {
+export default function Landing() {
   return (
     <>
       <Head>
@@ -90,7 +90,7 @@ export default function Home() {
                 className="w-11 md:w-13"
               />
             </a>
-            <span className="mx-2.5">•</span>
+            <span className="mx-2.5 text-neutral-400">•</span>
             <a
               className="transition hover:text-blue-600"
               href="https://buymeacoffee.com/jakeorchanian"
@@ -99,7 +99,7 @@ export default function Home() {
             >
               <span>Buy me a cookie</span>
             </a>
-            <span className="mx-2.5">•</span>
+            <span className="mx-2.5 text-neutral-400">•</span>
             <a
               className="transition hover:text-blue-600"
               href="https://github.com/jakeo-dev/everydle"

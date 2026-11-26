@@ -651,10 +651,10 @@ export default function Play() {
 
               <div className="mt-1 flex items-center gap-2">
                 <div className="h-max w-full overflow-hidden rounded-full">
-                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-300/50">
+                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
                     <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
                       <div
-                        className={`h-full rounded-r-full bg-linear-to-tr from-green-400/50 to-yellow-400/50`}
+                        className={`h-full rounded-r-full bg-linear-to-tr from-green-400/70 to-yellow-400/70`}
                         style={{
                           width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
                         }}
@@ -727,7 +727,7 @@ export default function Play() {
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
-            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-neutral-300/60 sm:mb-3 sm:h-11`}
+            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-neutral-400/30 sm:mb-3 sm:h-11`}
           >
             <span className="text-xl font-semibold tracking-wider md:text-2xl">
               {currentEnteredWord}
