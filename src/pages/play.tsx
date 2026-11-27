@@ -634,7 +634,7 @@ export default function Play() {
                   <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
                     <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
                       <div
-                        className={`h-full rounded-r-full bg-linear-to-tr from-green-400/70 to-yellow-400/70`}
+                        className={`h-full rounded-r-full bg-linear-to-tr from-yellow-400/70 to-green-400/70`}
                         style={{
                           width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
                         }}
