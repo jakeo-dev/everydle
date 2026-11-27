@@ -337,6 +337,7 @@ export default function Play() {
       typeInKeyboard,
       moveSolved,
       answersVisible,
+      showKeyboard,
     };
     localStorage.setItem("options", JSON.stringify(options));
   }, [
