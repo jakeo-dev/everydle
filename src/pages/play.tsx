@@ -547,13 +547,29 @@ export default function Play() {
                 </label>
               </div>
               <Toggle
+                state={useDark}
+                setState={setUseDark}
+                onClick={() => {
+                  if (localStorage.getItem("theme") === "dark") {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("theme", "light");
+                  } else {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("theme", "dark");
+                  }
+                }}
+                text="Use dark theme"
+                subtext=""
+              />
+              <div className="mt-2 border-t border-neutral-300 md:mt-3 dark:border-neutral-700" />
+              <Toggle
                 state={compactMode}
                 setState={setCompactMode}
                 onClick={() => {
                   if (!compactMode) setShowPhantoms(true);
                 }}
                 text="Use compact mode"
-                subtext="Reduce size of each game tile"
+                subtext="Reduce size of each game tile; may improve performance"
               />
               <Toggle
                 state={showPhantoms}
@@ -562,17 +578,18 @@ export default function Play() {
                 text="Show solved letters"
                 subtext="Show solved letters in input line below each game"
               />
+              <div className="mt-2 border-t border-neutral-300 md:mt-3 dark:border-neutral-700" />
               <Toggle
                 state={showKeyboard}
                 setState={setShowKeyboard}
-                text="Show keyboard"
-                subtext="Show digital keyboard at the bottom of the screen"
+                text="Show virtual keyboard"
+                subtext=""
               />
               <Toggle
                 state={typeInKeyboard}
                 setState={setTypeInKeyboard}
-                text="Switch input mode"
-                subtext="Input letters above keyboard instead of below each game"
+                text="Use single input mode"
+                subtext="Input letters above keyboard instead of below each game; may improve performance"
               />
               <Toggle
                 state={moveSolved}
@@ -586,21 +603,6 @@ export default function Play() {
                 text="Reveal answers"
                 subtext="Show answers for all games"
               /> */}
-              <Toggle
-                state={useDark}
-                setState={setUseDark}
-                onClick={() => {
-                  if (localStorage.getItem("theme") === "dark") {
-                    document.documentElement.classList.remove("dark");
-                    localStorage.setItem("theme", "light");
-                  } else {
-                    document.documentElement.classList.add("dark");
-                    localStorage.setItem("theme", "dark");
-                  }
-                }}
-                text="Use dark mode"
-                subtext=""
-              />
               <div className="mt-2 flex items-center md:mt-3">
                 <button
                   className="off-toggle h-6 w-6 rounded-md transition"
@@ -631,7 +633,7 @@ export default function Play() {
                   className="cursor-default pl-2 text-sm dark:text-neutral-200"
                   id="restartLabel"
                 >
-                  Restart game
+                  Restart all games
                 </label>
               </div>
             </div>
@@ -653,7 +655,7 @@ export default function Play() {
                   guesses used
                 </h4>
               </div>
-              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
+              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm dark:border-neutral-700">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">
                     {games.filter((game) => game.solved).length}

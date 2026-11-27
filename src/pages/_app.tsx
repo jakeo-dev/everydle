@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <main
-      className={`${chivo.className} bg-linear-to-br from-yellow-300/40 to-green-300/40 dark:from-yellow-950/50 dark:to-green-950/50`}
+      className={`${chivo.className} bg-linear-to-br from-yellow-300/40 to-green-300/40 dark:from-yellow-500/10 dark:to-green-500/10`}
     >
       <Component {...pageProps} />
       <Analytics />
