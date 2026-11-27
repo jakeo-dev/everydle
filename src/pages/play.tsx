@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import Head from "next/head";
+import CommonHead from "@/components/CommonHead";
 import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
@@ -408,50 +408,7 @@ export default function Play() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Everydle - Play every Wordle at once</title>
-
-        <meta
-          name="keywords"
-          content="everydle, wordle, word game, wordle unlimited, wordle of the day, wordle hint, dordle, quordle, octordle, sedecordle, duotrigordle, sexaginta-quattordle, sexagintaquattordle, polydle, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
-        />
-        <meta
-          property="description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-
-        <meta
-          property="og:title"
-          content="Everydle - Play every Wordle at once"
-        />
-        <meta
-          property="og:description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-        <meta name="theme-color" content="#00c951" />
-        <meta property="og:url" content="https://everydle.jakeo.dev" />
-        <meta
-          property="og:image"
-          content="https://jakeo.dev/images/everydle-ss-1.png"
-        />
-
-        <meta
-          name="twitter:title"
-          content="Everydle - Play every Wordle at once"
-        />
-        <meta
-          name="twitter:description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-        <meta name="twitter:url" content="https://everydle.jakeo.dev" />
-        <meta
-          name="twitter:image:src"
-          content="https://jakeo.dev/images/everydle-ss-1.png"
-        />
-        <meta property="twitter:card" content="summary_large_image" />
-      </Head>
+      <CommonHead />
 
       <div
         className={`${
