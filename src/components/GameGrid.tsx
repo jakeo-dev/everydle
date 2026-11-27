@@ -43,8 +43,8 @@ function GameTile(props: GameProps) {
     <div
       className={`${
         props.game.solved
-          ? "bg-green-400/30 opacity-60"
-          : "bg-gradient-to-b from-neutral-300/30 to-neutral-400/15"
+          ? "bg-green-400/30 opacity-60 dark:bg-green-600/30"
+          : "bg-linear-to-b from-neutral-300/30 to-neutral-400/15 dark:from-neutral-600/15 dark:to-neutral-600/30"
       } h-min w-min ${props.size <= 1 ? "p-2" : "p-3"} mx-auto mb-3 rounded-md`}
     >
       <div className="mb-2.5 flex items-center justify-between gap-2 px-1">
@@ -67,7 +67,7 @@ function GameTile(props: GameProps) {
               : props.size == 3
                 ? "text-xs"
                 : "text-sm"
-          } text-neutral-400`}
+          } text-neutral-400 dark:text-neutral-500`}
         >
           {(props.index + 1).toString().padStart(4, "0")}
         </span>
@@ -81,7 +81,7 @@ function GameTile(props: GameProps) {
               : props.size == 3
                 ? "text-xs"
                 : "text-sm"
-          } text-neutral-400`}
+          } text-neutral-400 dark:text-neutral-500`}
         />
       </div>
 
@@ -189,8 +189,8 @@ function GameTile(props: GameProps) {
                                   k,
                                   props.game.answer,
                                 ) == "neutral"
-                              ? "bg-neutral-400/60"
-                              : "bg-neutral-400/60"
+                              ? "bg-neutral-400/60 dark:bg-neutral-600/60"
+                              : "bg-neutral-400/60 dark:bg-neutral-600/60"
                       }
                     />
                   );
@@ -287,7 +287,7 @@ function GameTile(props: GameProps) {
                   {letter.pos == -2 ? (
                     <div
                       key={i}
-                      className={`flex items-center justify-center bg-neutral-400/60 select-none ${
+                      className={`flex items-center justify-center bg-neutral-400/60 select-none dark:bg-neutral-600/60 dark:text-neutral-200 ${
                         props.size < 2
                           ? "h-3 w-3 rounded-xs pl-[0.125rem]"
                           : props.size == 2
@@ -311,7 +311,7 @@ function GameTile(props: GameProps) {
       <span
         className={`${
           props.answersVisible ? "mt-2 block" : "hidden"
-        } text-sm tracking-widest text-neutral-600 italic`}
+        } text-sm tracking-widest text-neutral-600 italic dark:text-neutral-400`}
       >
         {props.game.answer}
       </span>

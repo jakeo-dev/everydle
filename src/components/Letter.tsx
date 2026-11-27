@@ -19,7 +19,7 @@ function Letter(props: {
         props.guessedWordsLength > 0
           ? "border-transparent"
           : props.letter === "" || props.phantom
-            ? "border-neutral-400/50"
+            ? "border-neutral-400/50 dark:border-neutral-600/50"
             : props.guessed
               ? "border-transparent"
               : "border-neutral-500/50"
@@ -28,7 +28,7 @@ function Letter(props: {
       } flex items-center justify-center font-semibold select-none`}
     >
       <span
-        className={`${props.phantom ? "text-green-700/60" : ""} ${props.size >= 3 ? "-mb-[0.09rem]" : ""}`}
+        className={`${props.phantom ? "text-green-700/60 dark:text-green-300/60" : "dark:text-neutral-200"} ${props.size >= 3 ? "-mb-[0.09rem]" : ""}`}
       >
         {props.letter}
       </span>

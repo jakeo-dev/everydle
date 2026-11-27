@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @keyframes alert-fade-out {
   90% {
     opacity: 1;
@@ -11,11 +13,11 @@
 
 @layer components {
   .off-toggle {
-    @apply cursor-pointer bg-neutral-400/30 group-active:bg-neutral-400/50 active:bg-neutral-400/50 md:group-hover:bg-neutral-400/40 md:group-active:bg-neutral-400/50 md:hover:bg-neutral-400/40 md:active:bg-neutral-400/50;
+    @apply cursor-pointer bg-neutral-400/30 group-active:bg-neutral-400/50 active:bg-neutral-400/50 md:group-hover:bg-neutral-400/40 md:group-active:bg-neutral-400/50 md:hover:bg-neutral-400/40 md:active:bg-neutral-400/50 dark:text-neutral-200;
   }
 
   .on-toggle {
-    @apply cursor-pointer bg-green-600/60 group-active:bg-green-600/40 md:group-hover:bg-green-600/50 md:group-active:bg-green-600/40;
+    @apply cursor-pointer bg-green-600/60 group-active:bg-green-600/40 md:group-hover:bg-green-600/50 md:group-active:bg-green-600/40 dark:text-neutral-200;
   }
 
   .off-toggle-disabled {

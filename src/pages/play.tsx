@@ -133,6 +133,7 @@ export default function Play() {
   const [moveSolved, setMoveSolved] = useState<boolean>(false);
   const [answersVisible, setAnswersVisible] = useState<boolean>(false);
   const [showKeyboard, setShowKeyboard] = useState<boolean>(true);
+  const [useDark, setUseDark] = useState<boolean>(false);
 
   const firstKeyRef = useRef<HTMLButtonElement>(null);
   const [keyWidth, setKeyWidth] = useState(0);
@@ -339,6 +340,7 @@ export default function Play() {
       moveSolved,
       answersVisible,
       showKeyboard,
+      useDark,
     };
     localStorage.setItem("options", JSON.stringify(options));
   }, [
@@ -349,6 +351,7 @@ export default function Play() {
     moveSolved,
     answersVisible,
     showKeyboard,
+    useDark,
   ]);
 
   useEffect(() => {
@@ -397,6 +400,12 @@ export default function Play() {
     } else {
       setShowKeyboard(true);
     }
+
+    if (options && JSON.parse(options).useDark !== undefined) {
+      setUseDark(JSON.parse(options).useDark);
+    } else {
+      setUseDark(false);
+    }
   }, [dataLoaded]);
 
   /* keyboard letters */
@@ -412,22 +421,69 @@ export default function Play() {
       <div
         className={`${
           dataLoaded ? "invisible-fade" : "visible-fade"
-        } absolute top-1/2 left-1/2 z-99 -translate-x-1/2 -translate-y-1/2 transform rounded-xl bg-gradient-to-br from-yellow-50/80 to-green-50/80 px-6 py-4 shadow-md transition`}
+        } absolute top-1/2 left-1/2 z-99 -translate-x-1/2 -translate-y-1/2 transform rounded-xl bg-linear-to-br from-yellow-50/80 to-green-50/80 px-6 py-4 shadow-md transition dark:shadow-white/10`}
       >
         <p className="text-center text-xl font-medium text-neutral-700">
           Loading several thousand games of Wordle...
         </p>
       </div>
 
+      {/* options button floater */}
       <div className="sticky top-2 z-90 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
           <div className="absolute right-2 flex flex-col items-end lg:right-4">
+            {/* <div className="mb-2 rounded-md bg-neutral-100/70 px-4 py-2 text-center text-xs shadow-sm transition lg:mb-4">
+              <div className="flex justify-end">
+                <a
+                  className="-mr-1.5 opacity-70 transition hover:opacity-80 hover:drop-shadow-md active:drop-shadow-none"
+                  href="https://jakeo.dev"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <img
+                    src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
+                    className="w-11"
+                  />
+                </a>
+                <span className="mx-2 text-neutral-400">•</span>
+                <a
+                  className="group text-neutral-600 transition hover:text-blue-600"
+                  href="https://buymeacoffee.com/jakeorchanian"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <div className="mr-1 inline">
+                    <FontAwesomeIcon
+                      icon={faCookieBite}
+                      className="visible text-neutral-400 group-hover:invisible group-hover:w-0"
+                      aria-hidden
+                    />
+                    <FontAwesomeIcon
+                      icon={faCookie}
+                      className="invisible w-0 text-blue-500 group-hover:visible group-hover:w-auto"
+                      aria-hidden
+                    />
+                  </div>
+                  <span>Buy me a cookie</span>
+                </a>
+                <span className="mx-2 text-neutral-400">•</span>
+                <a
+                  className="group text-neutral-600 transition hover:text-blue-600"
+                  href="https://github.com/jakeo-dev/everydle"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span>GitHub</span>
+                </a>
+              </div>
+            </div> */}
+
             <div className="flex gap-3 md:gap-4">
               <button
                 onClick={() => {
                   setShowOptions(!showOptions);
                 }}
-                className="w-fit cursor-pointer rounded-md bg-neutral-100/70 px-4 py-2 text-sm shadow-sm backdrop-blur-lg transition hover:bg-neutral-200/70 active:bg-neutral-300/70 md:text-base"
+                className="w-fit cursor-pointer rounded-md bg-neutral-100/70 px-4 py-2 text-sm shadow-sm backdrop-blur-lg transition hover:bg-neutral-200/70 active:bg-neutral-300/70 md:text-base dark:bg-neutral-800/70 dark:text-neutral-200 dark:hover:bg-neutral-700/70 dark:active:bg-neutral-600/70"
                 ref={menuButtonRef}
               >
                 <FontAwesomeIcon
@@ -442,11 +498,12 @@ export default function Play() {
             </div>
           </div>
 
+          {/* options toggles */}
           <div className="relative">
             <div
               className={`${
                 showOptions ? "visible-fade" : "invisible-fade"
-              } absolute top-10 right-2 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg lg:top-12 lg:right-4`}
+              } absolute top-10 right-2 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg lg:top-12 lg:right-4 dark:bg-neutral-800/70`}
               ref={menuRef}
             >
               <div className="flex items-center">
@@ -482,18 +539,37 @@ export default function Play() {
                     aria-hidden
                   />
                 </button>
-                <label className="cursor-default pl-2 text-sm" aria-hidden>
+                <label
+                  className="cursor-default pl-2 text-sm dark:text-neutral-200"
+                  aria-hidden
+                >
                   Change size
                 </label>
               </div>
+              <Toggle
+                state={useDark}
+                setState={setUseDark}
+                onClick={() => {
+                  if (localStorage.getItem("theme") === "dark") {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("theme", "light");
+                  } else {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("theme", "dark");
+                  }
+                }}
+                text="Use dark theme"
+                subtext=""
+              />
+              <div className="mt-2 border-t border-neutral-300 md:mt-3 dark:border-neutral-700" />
               <Toggle
                 state={compactMode}
                 setState={setCompactMode}
                 onClick={() => {
                   if (!compactMode) setShowPhantoms(true);
                 }}
-                text="Enable compact mode"
-                subtext="Reduce size of each game tile"
+                text="Use compact mode"
+                subtext="Reduce size of each game tile; may improve performance"
               />
               <Toggle
                 state={showPhantoms}
@@ -502,17 +578,18 @@ export default function Play() {
                 text="Show solved letters"
                 subtext="Show solved letters in input line below each game"
               />
+              <div className="mt-2 border-t border-neutral-300 md:mt-3 dark:border-neutral-700" />
               <Toggle
                 state={showKeyboard}
                 setState={setShowKeyboard}
-                text="Show keyboard"
-                subtext="Show digital keyboard at the bottom of the screen"
+                text="Show virtual keyboard"
+                subtext=""
               />
               <Toggle
                 state={typeInKeyboard}
                 setState={setTypeInKeyboard}
-                text="Switch input mode"
-                subtext="Input letters above keyboard instead of below each game"
+                text="Use single input mode"
+                subtext="Input letters above keyboard instead of below each game; may improve performance"
               />
               <Toggle
                 state={moveSolved}
@@ -553,10 +630,10 @@ export default function Play() {
                   />
                 </button>
                 <label
-                  className="cursor-default pl-2 text-sm"
+                  className="cursor-default pl-2 text-sm dark:text-neutral-200"
                   id="restartLabel"
                 >
-                  Restart game
+                  Restart all games
                 </label>
               </div>
             </div>
@@ -567,35 +644,41 @@ export default function Play() {
       <div className="sticky top-2 z-80 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
           <div className="absolute left-2 flex flex-col items-start gap-4 lg:left-4">
-            <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition">
+            {/* statistics info floater */}
+            <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
                   of {MAX_GUESSES}
                 </h3>
-                <h4 className="ml-1.5 inline text-neutral-500">guesses used</h4>
+                <h4 className="ml-1.5 inline text-neutral-500 dark:text-neutral-400">
+                  guesses used
+                </h4>
               </div>
-              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
+              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm dark:border-neutral-700">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">
                     {games.filter((game) => game.solved).length}
                   </b>{" "}
                   of {games.length}
                 </h3>
-                <h4 className="ml-1.5 inline text-neutral-500">words solved</h4>
+                <h4 className="ml-1.5 inline text-neutral-500 dark:text-neutral-400">
+                  words solved
+                </h4>
               </div>
 
               <div className="mt-1 flex items-center gap-2">
+                {/* words solved progress bar */}
                 <div className="h-max w-full overflow-hidden rounded-full">
-                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
+                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30 dark:bg-neutral-600/30">
                     <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
                       <div
                         className={`h-full rounded-r-full bg-linear-to-br ${
                           games.filter((game) => game.solved).length >=
                             games.length &&
                           games.filter((game) => game.solved).length > 0
-                            ? "from-green-400/70 to-green-600/70"
-                            : "from-neutral-400/70 to-neutral-600/70"
+                            ? "from-green-400/70 to-green-600/70 dark:from-green-600/70 dark:to-green-400/70"
+                            : "from-neutral-400/70 to-neutral-600/70 dark:from-neutral-600/70 dark:to-neutral-400/70"
                         } `}
                         style={{
                           width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
@@ -604,6 +687,7 @@ export default function Play() {
                     </div>
                   </div>
                 </div>
+                {/* share results button */}
                 <button
                   className="off-toggle min-h-6 min-w-6 rounded-md transition"
                   onClick={() => {
@@ -643,7 +727,9 @@ export default function Play() {
             height="100"
             className="w-12 md:w-15"
           />
-          <h1 className="text-5xl font-black md:text-6xl">Everydle</h1>
+          <h1 className="text-5xl font-black md:text-6xl dark:text-neutral-200">
+            Everydle
+          </h1>
         </div>
 
         <GameGrid
@@ -666,7 +752,7 @@ export default function Play() {
           {/* <Alert id="alert" text="Entered word has already been guessed" color="red" /> */}
         </div>
         {/* keyboard */}
-        <div className="mx-auto w-full rounded-t-xl bg-neutral-100/70 p-2 shadow-sm backdrop-blur-lg sm:p-3 md:w-[26rem]">
+        <div className="mx-auto w-full rounded-t-xl bg-neutral-100/70 p-2 shadow-sm backdrop-blur-lg sm:p-3 md:w-[26rem] dark:bg-neutral-800/70">
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
@@ -745,7 +831,7 @@ export default function Play() {
               </div>
 
               {/* enter & backspace */}
-              <div className="mt-2 flex gap-1 sm:mt-3 sm:gap-1.5">
+              <div className="mt-1 flex gap-1 sm:mt-1.5 sm:gap-1.5">
                 <Button
                   onClick={() => {
                     setCurrentEnteredWord((prev) => prev.slice(0, -1));
@@ -770,19 +856,29 @@ export default function Play() {
 
           <div className="flex justify-center text-xs">
             <a
-              className="-mr-1.5 opacity-70 transition hover:opacity-80 hover:drop-shadow-md active:drop-shadow-none"
+              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none dark:drop-shadow-white/20"
               href="https://jakeo.dev"
               target="_blank"
               rel="noopener"
             >
-              <img
+              <Image
                 src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
-                className="w-11"
+                className="w-11 opacity-70 hover:opacity-80 dark:hidden"
+                alt="JakeO.dev logo"
+                width={764}
+                height={310}
+              />
+              <Image
+                src="https://www.jakeo.dev/logos/jakeo-wordmark-light.png"
+                className="hidden w-11 opacity-50 hover:opacity-90 dark:inline"
+                alt="JakeO.dev logo"
+                width={764}
+                height={310}
               />
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="group text-neutral-600 transition hover:text-blue-600"
+              className="group text-neutral-600 transition hover:text-blue-600 dark:text-neutral-400 dark:hover:text-blue-400"
               href="https://buymeacoffee.com/jakeorchanian"
               target="_blank"
               rel="noopener"
@@ -790,7 +886,7 @@ export default function Play() {
               <div className="mr-1 inline">
                 <FontAwesomeIcon
                   icon={faCookieBite}
-                  className="visible text-neutral-400 group-hover:invisible group-hover:w-0"
+                  className="visible text-neutral-400 group-hover:invisible group-hover:w-0 dark:text-neutral-600"
                   aria-hidden
                 />
                 <FontAwesomeIcon
@@ -803,7 +899,7 @@ export default function Play() {
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="group text-neutral-600 transition hover:text-blue-600"
+              className="group text-neutral-600 transition hover:text-blue-600 dark:text-neutral-400 dark:hover:text-blue-400"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
               rel="noopener"
