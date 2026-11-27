@@ -343,6 +343,7 @@ export default function Play() {
     typeInKeyboard,
     moveSolved,
     answersVisible,
+    showKeyboard,
   ]);
 
   useEffect(() => {
@@ -389,7 +390,7 @@ export default function Play() {
     if (options && JSON.parse(options).showKeyboard !== undefined) {
       setShowKeyboard(JSON.parse(options).showKeyboard);
     } else {
-      setShowKeyboard(false);
+      setShowKeyboard(true);
     }
   }, [dataLoaded]);
 
