@@ -611,14 +611,7 @@ export default function Play() {
       <div className="sticky top-0 z-80 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
           <div className="absolute left-0 flex flex-col items-start gap-4 lg:left-4">
-            <div
-              className={`${
-                games.filter((game) => game.solved).length >= games.length &&
-                games.filter((game) => game.solved).length > 0
-                  ? "bg-green-200/70"
-                  : "bg-neutral-100/70"
-              } items-center justify-center rounded-md rounded-tl-none px-4 py-2.5 shadow-sm backdrop-blur-lg transition lg:rounded-md`}
-            >
+            <div className="items-center justify-center rounded-md rounded-tl-none bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition lg:rounded-md">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
@@ -641,7 +634,13 @@ export default function Play() {
                   <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
                     <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
                       <div
-                        className={`h-full rounded-r-full border-r-2 border-green-900/20 bg-linear-to-tr from-yellow-400/70 to-green-400/70`}
+                        className={`h-full rounded-r-full bg-linear-to-br ${
+                          games.filter((game) => game.solved).length >=
+                            games.length &&
+                          games.filter((game) => game.solved).length > 0
+                            ? "from-green-400/70 to-green-600/70"
+                            : "from-neutral-400/70 to-neutral-600/70"
+                        } `}
                         style={{
                           width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
                         }}
