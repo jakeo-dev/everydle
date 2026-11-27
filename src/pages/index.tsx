@@ -23,8 +23,10 @@ export default function Landing() {
             className="mx-auto w-16 md:w-28"
           />
 
-          <h1 className="mt-2 text-5xl font-black md:text-8xl">Everydle</h1>
-          <h2 className="mt-4 text-lg font-medium text-pretty text-neutral-800 md:text-2xl">
+          <h1 className="mt-2 text-5xl font-black md:text-8xl dark:text-neutral-200">
+            Everydle
+          </h1>
+          <h2 className="mt-4 text-lg font-medium text-pretty text-neutral-700 md:text-2xl dark:text-neutral-300">
             The unoriginal 5-letter word-guessing game
           </h2>
           {/* <h3 className="mt-2 text-base font-medium text-pretty text-neutral-700 italic md:text-lg">
@@ -32,7 +34,7 @@ export default function Landing() {
           </h3> */}
 
           <Link
-            className="mx-auto mt-8 block w-4/5 rounded-full bg-neutral-900 px-4 py-2 text-lg text-neutral-100 transition hover:bg-neutral-700 active:bg-neutral-800 md:w-2/3 md:py-3 md:text-xl"
+            className="mx-auto mt-8 block w-4/5 rounded-full bg-neutral-900 px-4 py-2 text-lg text-neutral-100 transition hover:bg-neutral-700 active:bg-neutral-800 md:w-2/3 md:py-3 md:text-xl dark:bg-neutral-100 dark:text-black dark:hover:bg-neutral-300 dark:active:bg-neutral-200"
             href="/play"
           >
             Play
@@ -40,19 +42,29 @@ export default function Landing() {
 
           <div className="mt-8 flex items-center justify-center text-sm">
             <a
-              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
+              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none dark:drop-shadow-white/20"
               href="https://jakeo.dev"
               target="_blank"
               rel="noopener"
             >
-              <img
+              <Image
                 src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
-                className="w-13"
+                className="w-13 opacity-70 hover:opacity-80 dark:hidden"
+                alt="JakeO.dev logo"
+                width={764}
+                height={310}
+              />
+              <Image
+                src="https://www.jakeo.dev/logos/jakeo-wordmark-light.png"
+                className="hidden w-13 opacity-50 hover:opacity-90 dark:inline"
+                alt="JakeO.dev logo"
+                width={764}
+                height={310}
               />
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="group transition hover:text-blue-600"
+              className="group text-neutral-600 transition hover:text-blue-600 dark:text-neutral-400 dark:hover:text-blue-400"
               href="https://buymeacoffee.com/jakeorchanian"
               target="_blank"
               rel="noopener"
@@ -60,12 +72,12 @@ export default function Landing() {
               <div className="mr-1 inline">
                 <FontAwesomeIcon
                   icon={faCookieBite}
-                  className="visible text-neutral-500 group-hover:invisible group-hover:w-0"
+                  className="visible text-neutral-400 group-hover:invisible group-hover:w-0 dark:text-neutral-600"
                   aria-hidden
                 />
                 <FontAwesomeIcon
                   icon={faCookie}
-                  className="invisible w-0 text-blue-400 group-hover:visible group-hover:w-auto"
+                  className="invisible w-0 text-blue-500 group-hover:visible group-hover:w-auto"
                   aria-hidden
                 />
               </div>
@@ -73,7 +85,7 @@ export default function Landing() {
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="group transition hover:text-blue-600"
+              className="group text-neutral-600 transition hover:text-blue-600 dark:text-neutral-400 dark:hover:text-blue-400"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
               rel="noopener"
