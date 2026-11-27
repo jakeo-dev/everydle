@@ -5,6 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCookie, faCookieBite } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+
 export default function Landing() {
   return (
     <>
@@ -87,25 +91,43 @@ export default function Landing() {
             >
               <img
                 src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
-                className="w-11 md:w-13"
+                className="w-13"
               />
             </a>
-            <span className="mx-2.5 text-neutral-400">•</span>
+            <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="transition hover:text-blue-600"
+              className="group transition hover:text-blue-600"
               href="https://buymeacoffee.com/jakeorchanian"
               target="_blank"
               rel="noopener"
             >
+              <div className="mr-1 inline">
+                <FontAwesomeIcon
+                  icon={faCookieBite}
+                  className="visible text-neutral-500 group-hover:invisible group-hover:w-0"
+                  aria-hidden
+                />
+                <FontAwesomeIcon
+                  icon={faCookie}
+                  className="invisible w-0 text-blue-400 group-hover:visible group-hover:w-auto"
+                  aria-hidden
+                />
+              </div>
               <span>Buy me a cookie</span>
             </a>
-            <span className="mx-2.5 text-neutral-400">•</span>
+            <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="transition hover:text-blue-600"
+              className="group transition hover:text-blue-600"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
               rel="noopener"
             >
+              <FontAwesomeIcon
+                icon={faGithub}
+                className="mr-1 text-neutral-500 group-hover:text-blue-400"
+                aria-hidden
+              />
+
               <span>GitHub</span>
             </a>
           </div>

@@ -13,11 +13,14 @@ import {
   faArrowRight,
   faArrowRotateRight,
   faChevronDown,
+  faCookie,
+  faCookieBite,
   faDeleteLeft,
   faMinus,
   faPlus,
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
@@ -635,7 +638,7 @@ export default function Play() {
                   <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
                     <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
                       <div
-                        className={`h-full rounded-r-full bg-linear-to-tr from-yellow-400/70 to-green-400/70`}
+                        className={`h-full rounded-r-full border-r-2 border-green-900/20 bg-linear-to-tr from-yellow-400/70 to-green-400/70`}
                         style={{
                           width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
                         }}
@@ -820,20 +823,38 @@ export default function Play() {
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="transition hover:text-blue-600"
+              className="group transition hover:text-blue-600"
               href="https://buymeacoffee.com/jakeorchanian"
               target="_blank"
               rel="noopener"
             >
+              <div className="mr-1 inline">
+                <FontAwesomeIcon
+                  icon={faCookieBite}
+                  className="visible text-neutral-500 group-hover:invisible group-hover:w-0"
+                  aria-hidden
+                />
+                <FontAwesomeIcon
+                  icon={faCookie}
+                  className="invisible w-0 text-blue-400 group-hover:visible group-hover:w-auto"
+                  aria-hidden
+                />
+              </div>
               <span>Buy me a cookie</span>
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="transition hover:text-blue-600"
+              className="group transition hover:text-blue-600"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
               rel="noopener"
             >
+              <FontAwesomeIcon
+                icon={faGithub}
+                className="mr-1 text-neutral-500 group-hover:text-blue-400"
+                aria-hidden
+              />
+
               <span>GitHub</span>
             </a>
           </div>
