@@ -44,7 +44,7 @@ function GameTile(props: GameProps) {
       className={`${
         props.game.solved
           ? "bg-green-400/30 opacity-60 dark:bg-green-600/30"
-          : "bg-linear-to-b from-neutral-300/30 to-neutral-400/15 dark:from-neutral-500/10 dark:to-neutral-500/25"
+          : "bg-linear-to-b from-neutral-300/30 to-neutral-400/15 dark:from-neutral-600/15 dark:to-neutral-600/30"
       } h-min w-min ${props.size <= 1 ? "p-2" : "p-3"} mx-auto mb-3 rounded-md`}
     >
       <div className="mb-2.5 flex items-center justify-between gap-2 px-1">

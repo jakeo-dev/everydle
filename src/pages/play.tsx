@@ -428,6 +428,7 @@ export default function Play() {
         </p>
       </div>
 
+      {/* options button floater */}
       <div className="sticky top-2 z-90 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
           <div className="absolute right-2 flex flex-col items-end lg:right-4">
@@ -497,6 +498,7 @@ export default function Play() {
             </div>
           </div>
 
+          {/* options toggles */}
           <div className="relative">
             <div
               className={`${
@@ -640,6 +642,7 @@ export default function Play() {
       <div className="sticky top-2 z-80 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
           <div className="absolute left-2 flex flex-col items-start gap-4 lg:left-4">
+            {/* statistics info floater */}
             <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
@@ -663,16 +666,17 @@ export default function Play() {
               </div>
 
               <div className="mt-1 flex items-center gap-2">
+                {/* words solved progress bar */}
                 <div className="h-max w-full overflow-hidden rounded-full">
-                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
+                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30 dark:bg-neutral-600/30">
                     <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
                       <div
                         className={`h-full rounded-r-full bg-linear-to-br ${
                           games.filter((game) => game.solved).length >=
                             games.length &&
                           games.filter((game) => game.solved).length > 0
-                            ? "from-green-400/70 to-green-600/70"
-                            : "from-neutral-400/70 to-neutral-600/70"
+                            ? "from-green-400/70 to-green-600/70 dark:from-green-600/70 dark:to-green-400/70"
+                            : "from-neutral-400/70 to-neutral-600/70 dark:from-neutral-600/70 dark:to-neutral-400/70"
                         } `}
                         style={{
                           width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
@@ -681,6 +685,7 @@ export default function Play() {
                     </div>
                   </div>
                 </div>
+                {/* share results button */}
                 <button
                   className="off-toggle min-h-6 min-w-6 rounded-md transition"
                   onClick={() => {
