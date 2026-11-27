@@ -191,11 +191,11 @@ export default function Play() {
     if (!enterPressed) return;
 
     if (currentEnteredWord.length != 5) {
-      createAlert("Entered word must be five letters long", "red");
+      createAlert("Entered word must be five letters long", "red", "short");
     } else if (!possibleGuesses.includes(currentEnteredWord)) {
-      createAlert("Entered word is not in word list", "red");
+      createAlert("Entered word is not in word list", "red", "short");
     } else if (guessedWords.includes(currentEnteredWord)) {
-      createAlert("Entered word has already been guessed", "red");
+      createAlert("Entered word has already been guessed", "red", "short");
     } else {
       /* const updatedGuessedWords = (prev: string[]) => {
           if (prev.length == MAX_GUESSES - 1) {
@@ -215,6 +215,7 @@ export default function Play() {
         createAlert(
           "Better luck next time! All answers are now visible.",
           "neutral",
+          "short",
         );
       }
       if (updatedGuessedWords.length <= MAX_GUESSES) {
@@ -288,6 +289,7 @@ export default function Play() {
             createAlert(
               "Congratulations! You just solved every possible wordle game! Now go do something better with your time.",
               "green",
+              "long",
             );
           }
 
@@ -660,6 +662,7 @@ export default function Play() {
                     createAlert(
                       "Copied current results to clipboard!",
                       "neutral",
+                      "short",
                     );
                   }}
                 >

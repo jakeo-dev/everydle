@@ -181,7 +181,11 @@ export function duplicateLetterCount(word: string): number {
   return Math.max(...finalCounts);
 }
 
-export function createAlert(text: string, color: string | null) {
+export function createAlert(
+  text: string,
+  color: "neutral" | "red" | "green" | null,
+  length: "short" | "long" | null,
+) {
   const container = document.getElementById("alertRoot");
   if (!container) return;
   clearTimeout(timer);
@@ -194,7 +198,8 @@ export function createAlert(text: string, color: string | null) {
       key: ++alertId,
       text,
       color: color ?? "neutral",
+      length: length ?? "short",
     }),
   );
-  timer = setTimeout(() => root?.render(null), 3000);
+  timer = setTimeout(() => root?.render(null), length === "long" ? 8000 : 3000);
 }
