@@ -429,10 +429,10 @@ export default function Play() {
       </div>
 
       {/* options button floater */}
-      <div className="sticky top-2 z-90 flex w-full justify-end lg:top-4">
+      <div className="sticky top-2 z-90 flex w-full justify-end md:top-4">
         <div className="relative w-full">
-          <div className="absolute right-2 flex flex-col items-end lg:right-4">
-            {/* <div className="mb-2 rounded-md bg-neutral-100/70 px-4 py-2 text-center text-xs shadow-sm transition lg:mb-4">
+          <div className="absolute right-2 flex flex-col items-end md:right-4">
+            {/* <div className="mb-2 rounded-md bg-neutral-100/70 px-4 py-2 text-center text-xs shadow-sm transition md:mb-4">
               <div className="flex justify-end">
                 <a
                   className="-mr-1.5 opacity-70 transition hover:opacity-80 hover:drop-shadow-md active:drop-shadow-none"
@@ -503,7 +503,7 @@ export default function Play() {
             <div
               className={`${
                 showOptions ? "visible-fade" : "invisible-fade"
-              } absolute top-10 right-2 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg lg:top-12 lg:right-4 dark:bg-neutral-800/70`}
+              } absolute top-10 right-2 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg md:top-12 md:right-4 dark:bg-neutral-800/70`}
               ref={menuRef}
             >
               <div className="flex items-center">
@@ -641,9 +641,9 @@ export default function Play() {
         </div>
       </div>
 
-      <div className="sticky top-2 z-80 flex w-full justify-end lg:top-4">
+      <div className="sticky top-2 z-80 flex w-full justify-end md:top-4">
         <div className="relative w-full">
-          <div className="absolute left-2 flex flex-col items-start gap-4 lg:left-4">
+          <div className="absolute left-2 flex flex-col items-start gap-4 md:left-4">
             {/* statistics info floater */}
             <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
               <div className="text-left text-xs md:text-sm">
@@ -756,7 +756,7 @@ export default function Play() {
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
-            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-neutral-400/30 sm:mb-3 sm:h-11`}
+            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-neutral-400/30 sm:mb-3 sm:h-11 dark:bg-neutral-600/30 dark:text-neutral-200`}
           >
             <span className="text-xl font-semibold tracking-wider md:text-2xl">
               {currentEnteredWord}
