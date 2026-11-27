@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCookie, faCookieBite } from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 export default function Landing() {
   return (

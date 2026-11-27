@@ -20,7 +20,6 @@ import {
   faPlus,
   faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import { compressToUTF16, decompressFromUTF16 } from "lz-string";
 
