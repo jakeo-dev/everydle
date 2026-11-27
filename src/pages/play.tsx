@@ -420,15 +420,15 @@ export default function Play() {
         </p>
       </div>
 
-      <div className="sticky top-0 z-90 flex w-full justify-end lg:top-4">
+      <div className="sticky top-2 z-90 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
-          <div className="absolute right-0 flex flex-col items-end lg:right-4">
+          <div className="absolute right-2 flex flex-col items-end lg:right-4">
             <div className="flex gap-3 md:gap-4">
               <button
                 onClick={() => {
                   setShowOptions(!showOptions);
                 }}
-                className="w-fit cursor-pointer rounded-md rounded-tr-none bg-neutral-100/70 px-4 py-2 text-sm shadow-sm backdrop-blur-lg transition hover:bg-neutral-200/70 active:bg-neutral-300/70 md:text-base lg:rounded-md"
+                className="w-fit cursor-pointer rounded-md bg-neutral-100/70 px-4 py-2 text-sm shadow-sm backdrop-blur-lg transition hover:bg-neutral-200/70 active:bg-neutral-300/70 md:text-base"
                 ref={menuButtonRef}
               >
                 <FontAwesomeIcon
@@ -447,7 +447,7 @@ export default function Play() {
             <div
               className={`${
                 showOptions ? "visible-fade" : "invisible-fade"
-              } absolute top-12 right-4 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg`}
+              } absolute top-10 right-2 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg lg:top-12 lg:right-4`}
               ref={menuRef}
             >
               <div className="flex items-center">
@@ -565,10 +565,10 @@ export default function Play() {
         </div>
       </div>
 
-      <div className="sticky top-0 z-80 flex w-full justify-end lg:top-4">
+      <div className="sticky top-2 z-80 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
-          <div className="absolute left-0 flex flex-col items-start gap-4 lg:left-4">
-            <div className="items-center justify-center rounded-md rounded-tl-none bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition lg:rounded-md">
+          <div className="absolute left-2 flex flex-col items-start gap-4 lg:left-4">
+            <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
@@ -751,7 +751,7 @@ export default function Play() {
                   onClick={() => {
                     setCurrentEnteredWord((prev) => prev.slice(0, -1));
                   }}
-                  className="w-full items-center"
+                  className="w-full items-center py-2"
                 >
                   <FontAwesomeIcon icon={faDeleteLeft} className="mr-1.5" />
                   <span className="text-sm">Backspace</span>
@@ -760,7 +760,7 @@ export default function Play() {
                   onClick={() => {
                     setEnterPressed(true);
                   }}
-                  className="w-full items-center"
+                  className="w-full items-center py-2"
                 >
                   <span className="text-sm">Enter</span>
                   <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
@@ -771,7 +771,7 @@ export default function Play() {
 
           <div className="flex justify-center text-xs">
             <a
-              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
+              className="-mr-1.5 opacity-70 transition hover:opacity-80 hover:drop-shadow-md active:drop-shadow-none"
               href="https://jakeo.dev"
               target="_blank"
               rel="noopener"
@@ -783,7 +783,7 @@ export default function Play() {
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="group transition hover:text-blue-600"
+              className="group text-neutral-600 transition hover:text-blue-600"
               href="https://buymeacoffee.com/jakeorchanian"
               target="_blank"
               rel="noopener"
@@ -791,12 +791,12 @@ export default function Play() {
               <div className="mr-1 inline">
                 <FontAwesomeIcon
                   icon={faCookieBite}
-                  className="visible text-neutral-500 group-hover:invisible group-hover:w-0"
+                  className="visible text-neutral-400 group-hover:invisible group-hover:w-0"
                   aria-hidden
                 />
                 <FontAwesomeIcon
                   icon={faCookie}
-                  className="invisible w-0 text-blue-400 group-hover:visible group-hover:w-auto"
+                  className="invisible w-0 text-blue-500 group-hover:visible group-hover:w-auto"
                   aria-hidden
                 />
               </div>
@@ -804,17 +804,11 @@ export default function Play() {
             </a>
             <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="group transition hover:text-blue-600"
+              className="group text-neutral-600 transition hover:text-blue-600"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
               rel="noopener"
             >
-              <FontAwesomeIcon
-                icon={faGithub}
-                className="mr-1 text-neutral-500 group-hover:text-blue-400"
-                aria-hidden
-              />
-
               <span>GitHub</span>
             </a>
           </div>

@@ -16,7 +16,7 @@ function Toggle(props: {
           if (props.onClick) props.onClick();
         }}
         disabled={props.disabled}
-        className="mt-2 flex items-center md:mt-3"
+        className="group mt-2 flex items-center md:mt-3"
         aria-labelledby={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
         aria-pressed={props.state}
       >
@@ -46,7 +46,7 @@ function Toggle(props: {
       <label
         className={`${
           props.disabled ? "text-neutral-400" : "text-neutral-600"
-        } block pl-8 text-left text-[0.65rem] text-pretty md:text-xs`}
+        } block pl-8 text-left text-[0.65rem] leading-3.5 text-pretty md:text-xs md:leading-4`}
       >
         {props.subtext}
       </label>

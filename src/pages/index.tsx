@@ -79,12 +79,6 @@ export default function Landing() {
               target="_blank"
               rel="noopener"
             >
-              <FontAwesomeIcon
-                icon={faGithub}
-                className="mr-1 text-neutral-500 group-hover:text-blue-400"
-                aria-hidden
-              />
-
               <span>GitHub</span>
             </a>
           </div>
