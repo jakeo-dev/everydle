@@ -2,18 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import Head from "next/head";
+import CommonHead from "@/components/CommonHead";
 import GameGrid from "@/components/GameGrid";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Image from "next/image";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faArrowRight,
   faArrowRotateRight,
   faChevronDown,
+  faCookie,
+  faCookieBite,
   faDeleteLeft,
   faMinus,
   faPlus,
@@ -131,6 +132,7 @@ export default function Play() {
   const [compactMode, setCompactMode] = useState<boolean>(false);
   const [moveSolved, setMoveSolved] = useState<boolean>(false);
   const [answersVisible, setAnswersVisible] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(true);
 
   const firstKeyRef = useRef<HTMLButtonElement>(null);
   const [keyWidth, setKeyWidth] = useState(0);
@@ -188,16 +190,16 @@ export default function Play() {
     if (!enterPressed) return;
 
     if (currentEnteredWord.length != 5) {
-      createAlert("Entered word must be five letters long", "red");
+      createAlert("Entered word must be five letters long", "red", "short");
     } else if (!possibleGuesses.includes(currentEnteredWord)) {
-      createAlert("Entered word is not in word list", "red");
+      createAlert("Entered word is not in word list", "red", "short");
     } else if (guessedWords.includes(currentEnteredWord)) {
-      createAlert("Entered word has already been guessed", "red");
+      createAlert("Entered word has already been guessed", "red", "short");
     } else {
       /* const updatedGuessedWords = (prev: string[]) => {
           if (prev.length == MAX_GUESSES - 1) {
             setAnswersVisible(true);
-            createAlert("Better luck next time! All answers are now visible.", "gray");
+            createAlert("Better luck next time! All answers are now visible.", "neutral");
           }
           if (prev.length < MAX_GUESSES) {
             return [...prev, currentEnteredWord];
@@ -211,7 +213,8 @@ export default function Play() {
         setAnswersVisible(true);
         createAlert(
           "Better luck next time! All answers are now visible.",
-          "gray",
+          "neutral",
+          "short",
         );
       }
       if (updatedGuessedWords.length <= MAX_GUESSES) {
@@ -285,6 +288,7 @@ export default function Play() {
             createAlert(
               "Congratulations! You just solved every possible wordle game! Now go do something better with your time.",
               "green",
+              "long",
             );
           }
 
@@ -334,6 +338,7 @@ export default function Play() {
       typeInKeyboard,
       moveSolved,
       answersVisible,
+      showKeyboard,
     };
     localStorage.setItem("options", JSON.stringify(options));
   }, [
@@ -343,6 +348,7 @@ export default function Play() {
     typeInKeyboard,
     moveSolved,
     answersVisible,
+    showKeyboard,
   ]);
 
   useEffect(() => {
@@ -385,6 +391,12 @@ export default function Play() {
     } else {
       setAnswersVisible(false);
     }
+
+    if (options && JSON.parse(options).showKeyboard !== undefined) {
+      setShowKeyboard(JSON.parse(options).showKeyboard);
+    } else {
+      setShowKeyboard(true);
+    }
   }, [dataLoaded]);
 
   /* keyboard letters */
@@ -395,91 +407,27 @@ export default function Play() {
 
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Everydle - Play every Wordle at once</title>
-
-        <meta
-          name="keywords"
-          content="everydle, wordle, word game, wordle unlimited, wordle of the day, wordle hint, dordle, quordle, octordle, sedecordle, duotrigordle, sexaginta-quattordle, sexagintaquattordle, polydle, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
-        />
-        <meta
-          property="description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-
-        <meta
-          property="og:title"
-          content="Everydle - Play every Wordle at once"
-        />
-        <meta
-          property="og:description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-        <meta name="theme-color" content="#00c951" />
-        <meta property="og:url" content="https://everydle.jakeo.dev" />
-        <meta
-          property="og:image"
-          content="https://jakeo.dev/images/everydle-ss-1.png"
-        />
-
-        <meta
-          name="twitter:title"
-          content="Everydle - Play every Wordle at once"
-        />
-        <meta
-          name="twitter:description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-        <meta name="twitter:url" content="https://everydle.jakeo.dev" />
-        <meta
-          name="twitter:image:src"
-          content="https://jakeo.dev/images/everydle-ss-1.png"
-        />
-        <meta property="twitter:card" content="summary_large_image" />
-      </Head>
+      <CommonHead />
 
       <div
         className={`${
           dataLoaded ? "invisible-fade" : "visible-fade"
         } absolute top-1/2 left-1/2 z-99 -translate-x-1/2 -translate-y-1/2 transform rounded-xl bg-gradient-to-br from-yellow-50/80 to-green-50/80 px-6 py-4 shadow-md transition`}
       >
-        <p className="text-center text-xl font-medium text-gray-700">
+        <p className="text-center text-xl font-medium text-neutral-700">
           Loading several thousand games of Wordle...
         </p>
       </div>
 
-      <div className="sticky top-4 z-90 flex w-full justify-end">
+      <div className="sticky top-2 z-90 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
-          <div className="absolute right-4 flex flex-col items-end">
+          <div className="absolute right-2 flex flex-col items-end lg:right-4">
             <div className="flex gap-3 md:gap-4">
-              <button
-                onClick={() => {
-                  const text =
-                    "#everydle\nhttps://everydle.jakeo.dev\n" +
-                    `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
-                    `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
-                    games.map((game) => (game.solved ? "✅" : "⬜")).join("");
-
-                  navigator.clipboard.writeText(text);
-                  createAlert("Copied current results to clipboard!", "gray");
-                }}
-                className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
-                ref={menuButtonRef}
-              >
-                <FontAwesomeIcon
-                  icon={faShareNodes}
-                  className="mr-2"
-                  aria-hidden
-                />
-                Share
-              </button>
               <button
                 onClick={() => {
                   setShowOptions(!showOptions);
                 }}
-                className="w-fit cursor-pointer rounded-md bg-gray-100 px-4 py-2 text-sm shadow-sm transition hover:bg-gray-200 md:text-base"
+                className="w-fit cursor-pointer rounded-md bg-neutral-100/70 px-4 py-2 text-sm shadow-sm backdrop-blur-lg transition hover:bg-neutral-200/70 active:bg-neutral-300/70 md:text-base"
                 ref={menuButtonRef}
               >
                 <FontAwesomeIcon
@@ -492,40 +440,13 @@ export default function Play() {
                 Options
               </button>
             </div>
-            <div className="mt-3 rounded-md bg-gray-100 px-4 py-2 text-center text-xs shadow-sm transition md:mt-4">
-              <div className="flex justify-end">
-                <a
-                  className="transition hover:drop-shadow-md active:drop-shadow-none"
-                  href="https://jakeo.dev"
-                  target="_blank"
-                >
-                  <img
-                    src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
-                    className="w-[3.25rem]"
-                  />
-                </a>
-                <span className="mx-2.5">•</span>
-                <a
-                  className="transition hover:text-blue-600"
-                  href="https://github.com/jakeo-dev/everydle"
-                  target="_blank"
-                >
-                  <FontAwesomeIcon
-                    icon={faGithub}
-                    className="mr-1"
-                    aria-hidden
-                  />
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
           </div>
 
           <div className="relative">
             <div
               className={`${
                 showOptions ? "visible-fade" : "invisible-fade"
-              } absolute top-12 right-4 w-60 rounded-md bg-gray-200 p-4 shadow-sm`}
+              } absolute top-10 right-2 w-60 rounded-md bg-neutral-100/70 p-4 shadow-sm backdrop-blur-lg lg:top-12 lg:right-4`}
               ref={menuRef}
             >
               <div className="flex items-center">
@@ -582,6 +503,12 @@ export default function Play() {
                 subtext="Show solved letters in input line below each game"
               />
               <Toggle
+                state={showKeyboard}
+                setState={setShowKeyboard}
+                text="Show keyboard"
+                subtext="Show digital keyboard at the bottom of the screen"
+              />
+              <Toggle
                 state={typeInKeyboard}
                 setState={setTypeInKeyboard}
                 text="Switch input mode"
@@ -590,15 +517,15 @@ export default function Play() {
               <Toggle
                 state={moveSolved}
                 setState={setMoveSolved}
-                text="Move solved to top"
-                subtext="Move solved games to the top of the grid"
+                text="Move solved to bottom"
+                subtext="Move solved games to the bottom of the grid"
               />
-              <Toggle
+              {/* <Toggle
                 state={answersVisible}
                 setState={setAnswersVisible}
                 text="Reveal answers"
                 subtext="Show answers for all games"
-              />
+              /> */}
               <div className="mt-2 flex items-center md:mt-3">
                 <button
                   className="off-toggle h-6 w-6 rounded-md transition"
@@ -637,32 +564,70 @@ export default function Play() {
         </div>
       </div>
 
-      <div className="sticky top-4 z-80 flex w-full justify-end">
+      <div className="sticky top-2 z-80 flex w-full justify-end lg:top-4">
         <div className="relative w-full">
-          <div className="absolute left-4 flex flex-col items-start gap-4">
-            <div
-              className={`${
-                games.filter((game) => game.solved).length >= games.length &&
-                games.filter((game) => game.solved).length > 0
-                  ? "bg-green-200"
-                  : "bg-gray-100"
-              } items-center justify-center rounded-md px-4 py-2.5 shadow-sm transition`}
-            >
+          <div className="absolute left-2 flex flex-col items-start gap-4 lg:left-4">
+            <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition">
               <div className="text-left text-xs md:text-sm">
-                <h3>
+                <h3 className="inline">
                   <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
                   of {MAX_GUESSES}
                 </h3>
-                <h4>guesses used</h4>
+                <h4 className="ml-1.5 inline text-neutral-500">guesses used</h4>
               </div>
-              <div className="mt-2 border-t border-gray-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
-                <h3>
+              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm">
+                <h3 className="inline">
                   <b className="text-sm md:text-base">
                     {games.filter((game) => game.solved).length}
                   </b>{" "}
                   of {games.length}
                 </h3>
-                <h4>words solved</h4>
+                <h4 className="ml-1.5 inline text-neutral-500">words solved</h4>
+              </div>
+
+              <div className="mt-1 flex items-center gap-2">
+                <div className="h-max w-full overflow-hidden rounded-full">
+                  <div className="relative flex h-4 w-full items-center justify-center bg-neutral-400/30">
+                    <div className="absolute inset-0 h-full w-full overflow-hidden bg-transparent">
+                      <div
+                        className={`h-full rounded-r-full bg-linear-to-br ${
+                          games.filter((game) => game.solved).length >=
+                            games.length &&
+                          games.filter((game) => game.solved).length > 0
+                            ? "from-green-400/70 to-green-600/70"
+                            : "from-neutral-400/70 to-neutral-600/70"
+                        } `}
+                        style={{
+                          width: `${(games.filter((game) => game.solved).length / games.length) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="off-toggle min-h-6 min-w-6 rounded-md transition"
+                  onClick={() => {
+                    const text =
+                      "#everydle\nhttps://everydle.jakeo.dev\n" +
+                      `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
+                      `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
+                      games.map((game) => (game.solved ? "✅" : "⬜")).join("");
+
+                    navigator.clipboard.writeText(text);
+                    createAlert(
+                      "Copied current results to clipboard!",
+                      "neutral",
+                      "short",
+                    );
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faShareNodes}
+                    className="text-sm"
+                    aria-label="Share results"
+                    title="Share results"
+                  />
+                </button>
               </div>
             </div>
           </div>
@@ -701,102 +666,150 @@ export default function Play() {
           {/* <Alert id="alert" text="Entered word has already been guessed" color="red" /> */}
         </div>
         {/* keyboard */}
-        <div className="mx-auto w-full rounded-t-xl bg-gray-100 p-2 shadow-sm sm:p-3 md:w-[26rem]">
+        <div className="mx-auto w-full rounded-t-xl bg-neutral-100/70 p-2 shadow-sm backdrop-blur-lg sm:p-3 md:w-[26rem]">
           <div
             className={`${
               typeInKeyboard ? "" : "hidden"
-            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-gray-200 sm:mb-3 sm:h-11`}
+            } mb-2 flex h-9 w-full items-center justify-center rounded-lg bg-neutral-400/30 sm:mb-3 sm:h-11`}
           >
             <span className="text-xl font-semibold tracking-wider md:text-2xl">
               {currentEnteredWord}
             </span>
           </div>
 
-          {/* letters */}
-          <div className="flex w-full flex-col items-center gap-y-1 sm:gap-y-1.5">
-            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
-              {keyboardRow1.map((letter, i) => (
-                <Button
-                  key={i}
-                  onClick={() => {
-                    setCurrentEnteredWord((prev) => {
-                      if (prev.length < 5) {
-                        return prev + letter;
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="h-11 min-w-0 flex-1 pt-2"
-                  ref={firstKeyRef}
-                >
-                  <span className="text-lg">{letter}</span>
-                </Button>
-              ))}
-            </div>
-            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
-              {keyboardRow2.map((letter, i) => (
-                <Button
-                  key={i}
-                  onClick={() => {
-                    setCurrentEnteredWord((prev) => {
-                      if (prev.length < 5) {
-                        return prev + letter;
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="h-11 min-w-0 pt-2"
-                  style={{
-                    width: `${keyWidth}px`,
-                  }}
-                >
-                  <span className="text-lg">{letter}</span>
-                </Button>
-              ))}
-            </div>
-            <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
-              {keyboardRow3.map((letter, i) => (
-                <Button
-                  key={i}
-                  onClick={() => {
-                    setCurrentEnteredWord((prev) => {
-                      if (prev.length < 5) {
-                        return prev + letter;
-                      }
-                      return prev;
-                    });
-                  }}
-                  className="h-11 min-w-0 pt-2"
-                  style={{
-                    width: `${keyWidth}px`,
-                  }}
-                >
-                  <span className="text-lg">{letter}</span>
-                </Button>
-              ))}
-            </div>
-          </div>
+          {showKeyboard && (
+            <div className="mb-2 sm:mb-3">
+              {/* letters */}
+              <div className="flex w-full flex-col items-center gap-y-1 sm:gap-y-1.5">
+                <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
+                  {keyboardRow1.map((letter, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        setCurrentEnteredWord((prev) => {
+                          if (prev.length < 5) {
+                            return prev + letter;
+                          }
+                          return prev;
+                        });
+                      }}
+                      className="h-11 min-w-0 flex-1 pt-2"
+                      ref={firstKeyRef}
+                    >
+                      <span className="text-lg">{letter}</span>
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
+                  {keyboardRow2.map((letter, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        setCurrentEnteredWord((prev) => {
+                          if (prev.length < 5) {
+                            return prev + letter;
+                          }
+                          return prev;
+                        });
+                      }}
+                      className="h-11 min-w-0 pt-2"
+                      style={{
+                        width: `${keyWidth}px`,
+                      }}
+                    >
+                      <span className="text-lg">{letter}</span>
+                    </Button>
+                  ))}
+                </div>
+                <div className="flex w-full justify-center gap-x-1 sm:gap-x-1.5">
+                  {keyboardRow3.map((letter, i) => (
+                    <Button
+                      key={i}
+                      onClick={() => {
+                        setCurrentEnteredWord((prev) => {
+                          if (prev.length < 5) {
+                            return prev + letter;
+                          }
+                          return prev;
+                        });
+                      }}
+                      className="h-11 min-w-0 pt-2"
+                      style={{
+                        width: `${keyWidth}px`,
+                      }}
+                    >
+                      <span className="text-lg">{letter}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
 
-          {/* enter & backspace */}
-          <div className="mt-2 flex gap-1 sm:mt-3 sm:gap-1.5">
-            <Button
-              onClick={() => {
-                setCurrentEnteredWord((prev) => prev.slice(0, -1));
-              }}
-              className="w-full items-center"
+              {/* enter & backspace */}
+              <div className="mt-2 flex gap-1 sm:mt-3 sm:gap-1.5">
+                <Button
+                  onClick={() => {
+                    setCurrentEnteredWord((prev) => prev.slice(0, -1));
+                  }}
+                  className="w-full items-center py-2"
+                >
+                  <FontAwesomeIcon icon={faDeleteLeft} className="mr-1.5" />
+                  <span className="text-sm">Backspace</span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    setEnterPressed(true);
+                  }}
+                  className="w-full items-center py-2"
+                >
+                  <span className="text-sm">Enter</span>
+                  <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-center text-xs">
+            <a
+              className="-mr-1.5 opacity-70 transition hover:opacity-80 hover:drop-shadow-md active:drop-shadow-none"
+              href="https://jakeo.dev"
+              target="_blank"
+              rel="noopener"
             >
-              <FontAwesomeIcon icon={faDeleteLeft} className="mr-1.5" />
-              <span className="text-sm">Backspace</span>
-            </Button>
-            <Button
-              onClick={() => {
-                setEnterPressed(true);
-              }}
-              className="w-full items-center"
+              <img
+                src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
+                className="w-11"
+              />
+            </a>
+            <span className="mx-2 text-neutral-400">•</span>
+            <a
+              className="group text-neutral-600 transition hover:text-blue-600"
+              href="https://buymeacoffee.com/jakeorchanian"
+              target="_blank"
+              rel="noopener"
             >
-              <span className="text-sm">Enter</span>
-              <FontAwesomeIcon icon={faArrowRight} className="ml-1.5" />
-            </Button>
+              <div className="mr-1 inline">
+                <FontAwesomeIcon
+                  icon={faCookieBite}
+                  className="visible text-neutral-400 group-hover:invisible group-hover:w-0"
+                  aria-hidden
+                />
+                <FontAwesomeIcon
+                  icon={faCookie}
+                  className="invisible w-0 text-blue-500 group-hover:visible group-hover:w-auto"
+                  aria-hidden
+                />
+              </div>
+              <span>Buy me a cookie</span>
+            </a>
+            <span className="mx-2 text-neutral-400">•</span>
+            <a
+              className="group text-neutral-600 transition hover:text-blue-600"
+              href="https://github.com/jakeo-dev/everydle"
+              target="_blank"
+              rel="noopener"
+            >
+              <span>GitHub</span>
+            </a>
           </div>
         </div>
       </div>

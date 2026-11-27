@@ -19,10 +19,10 @@ function Letter(props: {
         props.guessedWordsLength > 0
           ? "border-transparent"
           : props.letter === "" || props.phantom
-            ? "border-gray-400/50"
+            ? "border-neutral-400/50"
             : props.guessed
               ? "border-transparent"
-              : "border-gray-500/50"
+              : "border-neutral-500/50"
       } ${getSizeClass(props.size)} ${
         props.className
       } flex items-center justify-center font-semibold select-none`}

@@ -11,19 +11,19 @@
 
 @layer components {
   .off-toggle {
-    @apply cursor-pointer bg-gray-400/30 hover:bg-gray-400/40 active:hover:bg-gray-400/50;
+    @apply cursor-pointer bg-neutral-400/30 group-active:bg-neutral-400/50 active:bg-neutral-400/50 md:group-hover:bg-neutral-400/40 md:group-active:bg-neutral-400/50 md:hover:bg-neutral-400/40 md:active:bg-neutral-400/50;
   }
 
   .on-toggle {
-    @apply cursor-pointer bg-green-600/60 hover:bg-green-600/50 active:bg-green-600/40;
+    @apply cursor-pointer bg-green-600/60 group-active:bg-green-600/40 md:group-hover:bg-green-600/50 md:group-active:bg-green-600/40;
   }
 
   .off-toggle-disabled {
-    @apply cursor-not-allowed bg-gray-500/10 text-gray-800/80;
+    @apply cursor-not-allowed bg-neutral-500/10 text-neutral-800/80;
   }
 
   .on-toggle-disabled {
-    @apply cursor-not-allowed bg-green-700/30 text-gray-800/80;
+    @apply cursor-not-allowed bg-green-700/30 text-neutral-800/80;
   }
 
   .invisible-fade {
@@ -56,7 +56,7 @@
 
 .slanted-highlight-dark {
   /* https://pepelsbey.dev/articles/skewed-highlight/ */
-  --mark-color: #1e2939; /* gray-800 */
+  --mark-color: #1e2939; /* neutral-800 */
   --mark-skew: 1em;
   --mark-height: 2.5em;
   --mark-overlap: 0.3em;

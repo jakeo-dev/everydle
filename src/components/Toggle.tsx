@@ -16,7 +16,7 @@ function Toggle(props: {
           if (props.onClick) props.onClick();
         }}
         disabled={props.disabled}
-        className="mt-2 flex items-center md:mt-3"
+        className="group mt-2 flex items-center md:mt-3"
         aria-labelledby={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
         aria-pressed={props.state}
       >
@@ -35,7 +35,7 @@ function Toggle(props: {
         <span
           className={`${
             props.disabled
-              ? "cursor-not-allowed text-gray-500"
+              ? "cursor-not-allowed text-neutral-500"
               : "cursor-pointer"
           } pl-2 text-sm text-pretty`}
           id={`${props.text.replace(/\s+/g, "").toLowerCase()}Label`}
@@ -45,8 +45,8 @@ function Toggle(props: {
       </button>
       <label
         className={`${
-          props.disabled ? "text-gray-400" : "text-gray-600"
-        } block pl-8 text-left text-[0.65rem] text-pretty md:text-xs`}
+          props.disabled ? "text-neutral-400" : "text-neutral-600"
+        } block pl-8 text-left text-[0.65rem] leading-3.5 text-pretty md:text-xs md:leading-4`}
       >
         {props.subtext}
       </label>

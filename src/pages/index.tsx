@@ -1,60 +1,17 @@
 "use client";
 
-import Head from "next/head";
+import CommonHead from "@/components/CommonHead";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faCookie, faCookieBite } from "@fortawesome/free-solid-svg-icons";
 
-export default function Home() {
+export default function Landing() {
   return (
     <>
-      <Head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Everydle - Play every Wordle at once</title>
-
-        <meta
-          name="keywords"
-          content="everydle, wordle, word game, wordle unlimited, wordle of the day, wordle hint, dordle, quordle, octordle, sedecordle, duotrigordle, sexaginta-quattordle, sexagintaquattordle, polydle, puzzle game, game, daily, wordle variant, every wordle, wordle alternative, daily game, daily wordle, wordle spinoff, daily puzzle, puzzle game, wordle clone, nyt puzzle, nyt game, browser game"
-        />
-        <meta
-          property="description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-
-        <meta
-          property="og:title"
-          content="Everydle - Play every Wordle at once"
-        />
-        <meta
-          property="og:description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-        <meta name="theme-color" content="#00c951" />
-        <meta property="og:url" content="https://everydle.jakeo.dev" />
-        <meta
-          property="og:image"
-          content="https://jakeo.dev/images/everydle-ss-1.png"
-        />
-
-        <meta
-          name="twitter:title"
-          content="Everydle - Play every Wordle at once"
-        />
-        <meta
-          name="twitter:description"
-          content="Play every Wordle at once in one extremely long sitting, and never worry about missing a day again."
-        />
-        <meta name="twitter:url" content="https://everydle.jakeo.dev" />
-        <meta
-          name="twitter:image:src"
-          content="https://jakeo.dev/images/everydle-ss-1.png"
-        />
-        <meta property="twitter:card" content="summary_large_image" />
-      </Head>
+      <CommonHead />
 
       <div className="flex h-screen items-center justify-center px-8">
         <div>
@@ -67,15 +24,15 @@ export default function Home() {
           />
 
           <h1 className="mt-2 text-5xl font-black md:text-8xl">Everydle</h1>
-          <h2 className="mt-4 text-lg font-medium text-pretty text-gray-800 md:text-2xl">
+          <h2 className="mt-4 text-lg font-medium text-pretty text-neutral-800 md:text-2xl">
             The unoriginal 5-letter word-guessing game
           </h2>
-          {/* <h3 className="mt-2 text-base font-medium text-pretty text-gray-700 italic md:text-lg">
+          {/* <h3 className="mt-2 text-base font-medium text-pretty text-neutral-700 italic md:text-lg">
             {subtitle}
           </h3> */}
 
           <Link
-            className="mx-auto mt-8 block w-4/5 rounded-full bg-gray-900 px-4 py-2 text-lg text-gray-100 transition hover:bg-gray-700 active:bg-gray-800 md:w-2/3 md:py-3 md:text-xl"
+            className="mx-auto mt-8 block w-4/5 rounded-full bg-neutral-900 px-4 py-2 text-lg text-neutral-100 transition hover:bg-neutral-700 active:bg-neutral-800 md:w-2/3 md:py-3 md:text-xl"
             href="/play"
           >
             Play
@@ -83,22 +40,44 @@ export default function Home() {
 
           <div className="mt-8 flex items-center justify-center text-sm">
             <a
-              className="transition hover:drop-shadow-md active:drop-shadow-none"
+              className="-mr-1.5 transition hover:drop-shadow-md active:drop-shadow-none"
               href="https://jakeo.dev"
               target="_blank"
+              rel="noopener"
             >
               <img
-                src="https://www.jakeo.dev/logos/bunny-jakeo-wordmark.png"
-                className="w-[3.75rem]"
+                src="https://www.jakeo.dev/logos/jakeo-wordmark.png"
+                className="w-13"
               />
             </a>
-            <span className="mx-2.5">•</span>
+            <span className="mx-2 text-neutral-400">•</span>
             <a
-              className="transition hover:text-blue-600"
+              className="group transition hover:text-blue-600"
+              href="https://buymeacoffee.com/jakeorchanian"
+              target="_blank"
+              rel="noopener"
+            >
+              <div className="mr-1 inline">
+                <FontAwesomeIcon
+                  icon={faCookieBite}
+                  className="visible text-neutral-500 group-hover:invisible group-hover:w-0"
+                  aria-hidden
+                />
+                <FontAwesomeIcon
+                  icon={faCookie}
+                  className="invisible w-0 text-blue-400 group-hover:visible group-hover:w-auto"
+                  aria-hidden
+                />
+              </div>
+              <span>Buy me a cookie</span>
+            </a>
+            <span className="mx-2 text-neutral-400">•</span>
+            <a
+              className="group transition hover:text-blue-600"
               href="https://github.com/jakeo-dev/everydle"
               target="_blank"
+              rel="noopener"
             >
-              <FontAwesomeIcon icon={faGithub} className="mr-1" aria-hidden />
               <span>GitHub</span>
             </a>
           </div>

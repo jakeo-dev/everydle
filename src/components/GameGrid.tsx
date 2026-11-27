@@ -44,7 +44,7 @@ function GameTile(props: GameProps) {
       className={`${
         props.game.solved
           ? "bg-green-400/30 opacity-60"
-          : "bg-gradient-to-b from-gray-300/30 to-gray-400/15"
+          : "bg-gradient-to-b from-neutral-300/30 to-neutral-400/15"
       } h-min w-min ${props.size <= 1 ? "p-2" : "p-3"} mx-auto mb-3 rounded-md`}
     >
       <div className="mb-2.5 flex items-center justify-between gap-2 px-1">
@@ -67,7 +67,7 @@ function GameTile(props: GameProps) {
               : props.size == 3
                 ? "text-xs"
                 : "text-sm"
-          } text-gray-400`}
+          } text-neutral-400`}
         >
           {(props.index + 1).toString().padStart(4, "0")}
         </span>
@@ -81,7 +81,7 @@ function GameTile(props: GameProps) {
               : props.size == 3
                 ? "text-xs"
                 : "text-sm"
-          } text-gray-400`}
+          } text-neutral-400`}
         />
       </div>
 
@@ -188,9 +188,9 @@ function GameTile(props: GameProps) {
                                   char,
                                   k,
                                   props.game.answer,
-                                ) == "gray"
-                              ? "bg-gray-400/60"
-                              : "bg-gray-400/60"
+                                ) == "neutral"
+                              ? "bg-neutral-400/60"
+                              : "bg-neutral-400/60"
                       }
                     />
                   );
@@ -254,7 +254,7 @@ function GameTile(props: GameProps) {
           : null}
       </div>
 
-      {/* gray letters for compact mode */}
+      {/* neutral letters for compact mode */}
       {props.compactMode &&
       props.game.guessedLetters.filter((g) => g.pos === -2).length > 0 ? (
         <div
@@ -287,7 +287,7 @@ function GameTile(props: GameProps) {
                   {letter.pos == -2 ? (
                     <div
                       key={i}
-                      className={`flex items-center justify-center bg-gray-400/60 select-none ${
+                      className={`flex items-center justify-center bg-neutral-400/60 select-none ${
                         props.size < 2
                           ? "h-3 w-3 rounded-xs pl-[0.125rem]"
                           : props.size == 2
@@ -311,7 +311,7 @@ function GameTile(props: GameProps) {
       <span
         className={`${
           props.answersVisible ? "mt-2 block" : "hidden"
-        } text-sm tracking-widest text-gray-600 italic`}
+        } text-sm tracking-widest text-neutral-600 italic`}
       >
         {props.game.answer}
       </span>
@@ -323,9 +323,9 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => setIsClient(true), []);
 
-  function moveSolvedToTop(a: Game, b: Game) {
+  function moveSolvedToBottom(a: Game, b: Game) {
     if (props.moveSolved) {
-      return Number(b.solved) - Number(a.solved);
+      return Number(a.solved) - Number(b.solved);
     } else {
       return 0;
     }
@@ -356,7 +356,7 @@ const GameGrid = React.memo(function Grid(props: GameGridProps) {
   return isClient ? (
     // virtualized grid
     <Masonry
-      items={[...props.games].sort(moveSolvedToTop)}
+      items={[...props.games].sort(moveSolvedToBottom)}
       columnGutter={25}
       columnWidth={colWidth}
       overscanBy={2.5}

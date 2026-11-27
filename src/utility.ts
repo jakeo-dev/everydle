@@ -1,6 +1,6 @@
-import { createElement } from 'react';
-import { createRoot, type Root } from 'react-dom/client'
-import Alert from "@/components/Alert"
+import { createElement } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import Alert from "@/components/Alert";
 
 let root: Root | null = null;
 let timer: ReturnType<typeof setTimeout>;
@@ -14,7 +14,7 @@ let alertId = 0;
  * @param {string} char - Character in entered word
  * @param {number} pos - Position of the character in the entered word
  * @param {string} gameAnswer - Game answer
- * @returns {string} - Name of the color: green, yellow, or gray
+ * @returns {string} - Name of the color: green, yellow, or neutral
  */
 export function getLetterColor(
   enteredWord: string,
@@ -46,7 +46,7 @@ export function getLetterColor(
     ).length > 1
   )
     return "yellow";
-  else return "gray";
+  else return "neutral";
 }
 
 /**
@@ -181,18 +181,25 @@ export function duplicateLetterCount(word: string): number {
   return Math.max(...finalCounts);
 }
 
-export function createAlert(text: string, color: string | null){
-  const container = document.getElementById("alertRoot")
+export function createAlert(
+  text: string,
+  color: "neutral" | "red" | "green" | null,
+  length: "short" | "long" | null,
+) {
+  const container = document.getElementById("alertRoot");
   if (!container) return;
   clearTimeout(timer);
   if (container !== rootContainer) {
     root = createRoot(container);
     rootContainer = container;
   }
-  root?.render(createElement(Alert, {
-    key: ++alertId,
-    text,
-    color: color ?? "gray",
-  }));
-  timer = setTimeout(() => root?.render(null), 3000);
+  root?.render(
+    createElement(Alert, {
+      key: ++alertId,
+      text,
+      color: color ?? "neutral",
+      length: length ?? "short",
+    }),
+  );
+  timer = setTimeout(() => root?.render(null), length === "long" ? 8000 : 3000);
 }
