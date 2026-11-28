@@ -99,8 +99,6 @@ export default function Play() {
   const [guessedWords, setGuessedWords] = useState<string[]>([]);
   const [currentEnteredWord, setCurrentEnteredWord] = useState<string>("");
 
-  const [enterPressed, setEnterPressed] = useState(false);
-
   useEffect(() => {
     // after data is loaded, set guessedWords to whats saved in local storage (EXCEPT the last word)
     // set current word to the last entered word in guessed words in local storage
@@ -125,7 +123,7 @@ export default function Play() {
         ] &&
       currentEnteredWord.length == 5
     ) {
-      setEnterPressed(true);
+      handleEnterPress(currentEnteredWord);
     }
   }, [currentEnteredWord]);
 
@@ -179,7 +177,7 @@ export default function Play() {
       if (event.key === "Backspace")
         setCurrentEnteredWord((prev) => prev.slice(0, -1));
 
-      if (event.key === "Enter") setEnterPressed(true);
+      if (event.key === "Enter") handleEnterPress(currentEnteredWord);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -187,18 +185,16 @@ export default function Play() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [currentEnteredWord]);
 
   /* handle submitting entered word */
 
-  useEffect(() => {
-    if (!enterPressed) return;
-
-    if (currentEnteredWord.length != 5) {
+  function handleEnterPress(word: string) {
+    if (word.length != 5) {
       createAlert("Entered word must be five letters long", "red", "short");
-    } else if (!possibleGuesses.includes(currentEnteredWord)) {
+    } else if (!possibleGuesses.includes(word)) {
       createAlert("Entered word is not in word list", "red", "short");
-    } else if (guessedWords.includes(currentEnteredWord)) {
+    } else if (guessedWords.includes(word)) {
       createAlert("Entered word has already been guessed", "red", "short");
     } else {
       /* const updatedGuessedWords = (prev: string[]) => {
@@ -207,13 +203,13 @@ export default function Play() {
             createAlert("Better luck next time! All answers are now visible.", "neutral");
           }
           if (prev.length < MAX_GUESSES) {
-            return [...prev, currentEnteredWord];
+            return [...prev, word];
           }
           return prev;
         };
         setGuessedWords(updatedGuessedWords); */
 
-      const updatedGuessedWords = [...guessedWords, currentEnteredWord];
+      const updatedGuessedWords = [...guessedWords, word];
       if (updatedGuessedWords.length >= MAX_GUESSES) {
         setAnswersVisible(true);
         createAlert(
@@ -285,7 +281,7 @@ export default function Play() {
 
             // set solved to true entered answer or all green letters complete the answer
             if (
-              currentEnteredWord === game.answer ||
+              word === game.answer ||
               game.guessedLetters.filter((letter) => letter.pos >= 0).length ===
                 5
             )
@@ -311,9 +307,7 @@ export default function Play() {
 
       setCurrentEnteredWord("");
     }
-
-    setEnterPressed(false);
-  }, [enterPressed]);
+  }
 
   /* options */
 
@@ -732,15 +726,12 @@ export default function Play() {
             <Tooltip
               anchorSelect=".my-anchor-element"
               place="top"
-              defaultIsOpen={tooltipSeen === false && !enterPressed}
+              defaultIsOpen={tooltipSeen === false}
               className={
-                tooltipSeen || enterPressed
-                  ? "hidden"
-                  : "block max-w-64 text-left md:max-w-80"
+                tooltipSeen ? "hidden" : "block max-w-64 text-left md:max-w-80"
               }
             >
-              {`Games are now automatically marked as "solved" when all green
-              letters are found.`}
+              {`Games are now automatically marked as "solved" when all green letters are found.`}
             </Tooltip>
           </div>
         </div>
@@ -880,7 +871,7 @@ export default function Play() {
                 </Button>
                 <Button
                   onClick={() => {
-                    setEnterPressed(true);
+                    handleEnterPress(currentEnteredWord);
                   }}
                   className="w-full items-center py-2"
                 >
