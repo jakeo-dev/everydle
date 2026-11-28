@@ -86,6 +86,7 @@ function GameTile(props: GameProps) {
       </div>
 
       {props.compactMode ? (
+        // compact mode tile
         <>
           <div className="flex w-full items-end justify-between gap-1">
             {/* compact yellow letters */}
@@ -154,49 +155,78 @@ function GameTile(props: GameProps) {
           </div>
         </>
       ) : (
+        // regular, non-compact mode tile
         <>
-          {/* entered words rows */}
-          {props.guessedWords
-            .slice(
-              0,
-              props.game.solved
-                ? props.guessedWords.indexOf(props.game.answer) + 1
-                : props.guessedWords.length,
-            )
-            .map((word, j) => (
-              <div className="mb-1 flex gap-x-1" key={j}>
-                {[...word].slice(0, 5).map((char, k) => {
-                  return (
-                    <Letter
-                      key={k}
-                      letter={char}
-                      size={props.size}
-                      guessed={true}
-                      phantom={false}
-                      typeInKeyboard={props.typeInKeyboard}
-                      compactMode={props.compactMode}
-                      guessedWordsLength={props.guessedWords.length}
-                      className={
-                        getLetterColor(word, char, k, props.game.answer) ==
-                        "green"
-                          ? "bg-green-500/60"
-                          : getLetterColor(word, char, k, props.game.answer) ==
-                              "yellow"
-                            ? "bg-yellow-500/60"
-                            : getLetterColor(
-                                  word,
-                                  char,
-                                  k,
-                                  props.game.answer,
-                                ) == "neutral"
-                              ? "bg-neutral-400/60 dark:bg-neutral-600/60"
-                              : "bg-neutral-400/60 dark:bg-neutral-600/60"
-                      }
-                    />
-                  );
-                })}
-              </div>
-            ))}
+          {(() => {
+            let solvedWordIndex = props.guessedWords.length;
+
+            // if game is solved, find solvedWordIndex by looking through each letter of previous words (else the most recent guessed word by default)
+            const greenLetters = new Set<number>();
+            for (let i = 0; i < props.guessedWords.length; i++) {
+              const currentGuessedWordLetters = props.guessedWords[i].split("");
+
+              for (let j = 0; j < currentGuessedWordLetters.length; j++) {
+                if (
+                  getLetterColor(
+                    props.guessedWords[i],
+                    currentGuessedWordLetters[j],
+                    j,
+                    props.game.answer,
+                  ) === "green"
+                )
+                  greenLetters.add(j);
+              }
+
+              if (greenLetters.size >= 5) {
+                solvedWordIndex = i + 1;
+                break;
+              }
+            }
+
+            return (
+              <>
+                {/* entered words rows */}
+                {props.guessedWords.slice(0, solvedWordIndex).map((word, j) => (
+                  <div className="mb-1 flex gap-x-1" key={j}>
+                    {[...word].slice(0, 5).map((char, k) => {
+                      return (
+                        <Letter
+                          key={k}
+                          letter={char}
+                          size={props.size}
+                          guessed={true}
+                          phantom={false}
+                          typeInKeyboard={props.typeInKeyboard}
+                          compactMode={props.compactMode}
+                          guessedWordsLength={props.guessedWords.length}
+                          className={
+                            getLetterColor(word, char, k, props.game.answer) ==
+                            "green"
+                              ? "bg-green-500/60"
+                              : getLetterColor(
+                                    word,
+                                    char,
+                                    k,
+                                    props.game.answer,
+                                  ) == "yellow"
+                                ? "bg-yellow-500/60"
+                                : getLetterColor(
+                                      word,
+                                      char,
+                                      k,
+                                      props.game.answer,
+                                    ) == "neutral"
+                                  ? "bg-neutral-400/60 dark:bg-neutral-600/60"
+                                  : "bg-neutral-400/60 dark:bg-neutral-600/60"
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+              </>
+            );
+          })()}
         </>
       )}
 
@@ -280,6 +310,7 @@ function GameTile(props: GameProps) {
                   index,
               )
               .sort((a, b) => {
+                // sort alphabetically
                 return a.char.localeCompare(b.char);
               })
               .map((letter, i) => (

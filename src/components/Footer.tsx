@@ -5,7 +5,7 @@ import { shuffle } from "@/utility";
 function Footer() {
   // number of quotes must be even to make the marquee correct coloring
   const quotes = [
-    `"basically 're-type the wordle word list with an increasingly unuseable UI'"`,
+    //`"basically 're-type the wordle word list with an increasingly unuseable UI'"`,
     `"oh it gets worse 200 words in"`,
     `"NONONONONOONO, get it away from me!"`,
     `"increasingly onerous"`,

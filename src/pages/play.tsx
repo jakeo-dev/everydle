@@ -8,6 +8,9 @@ import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Image from "next/image";
 
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
@@ -153,23 +156,24 @@ export default function Play() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const MAX_GUESSES = games.length + 5;
+  const MAX_GUESSES = Number.MAX_SAFE_INTEGER;
 
   /* handle clicking letters */
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.key.length === 1 &&
-        event.key.match(/[a-zA-Z]/) &&
-        guessedWords.length < MAX_GUESSES
-      ) {
-        setCurrentEnteredWord((prev) => {
-          if (prev.length < 5) {
-            return (prev + event.key).toUpperCase();
-          }
-          return prev;
-        });
+      if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+        localStorage.setItem("tooltipSeen", "true");
+        setTooltipSeen(true);
+
+        if (guessedWords.length < MAX_GUESSES) {
+          setCurrentEnteredWord((prev) => {
+            if (prev.length < 5) {
+              return (prev + event.key).toUpperCase();
+            }
+            return prev;
+          });
+        }
       }
 
       if (event.key === "Backspace")
@@ -230,14 +234,15 @@ export default function Play() {
 
           for (let i = 0; i < newGames.length; i++) {
             const game = newGames[i];
+            if (game.solved) continue;
             const updatedGuessedLetters: GuessedLetter[] = [];
 
             // if the game is solved, dont add letters that have been guessed after it was solved
-            const indexOfSolvedWord = updatedGuessedWords.indexOf(game.answer);
+            const solvedWordIndex = updatedGuessedWords.indexOf(game.answer);
             const guessedWordsLimit =
-              indexOfSolvedWord == -1
+              solvedWordIndex == -1
                 ? updatedGuessedWords.length
-                : indexOfSolvedWord + 1;
+                : solvedWordIndex + 1;
 
             // add each guessed letter (up until the solved word if the game is solved)
             for (let j = 0; j < guessedWordsLimit; j++) {
@@ -249,7 +254,7 @@ export default function Play() {
 
                 updatedGuessedLetters.push({
                   char: char,
-                  pos: color == "green" ? k : color == "yellow" ? -1 : -2,
+                  pos: color === "green" ? k : color === "yellow" ? -1 : -2,
                   setPos: k,
                 });
               }
@@ -278,8 +283,13 @@ export default function Play() {
 
             game.guessedLetters = removeDuplicates(finalLetters);
 
-            // set solved to true if solved
-            if (currentEnteredWord === game.answer) game.solved = true;
+            // set solved to true entered answer or all green letters complete the answer
+            if (
+              currentEnteredWord === game.answer ||
+              game.guessedLetters.filter((letter) => letter.pos >= 0).length ===
+                5
+            )
+              game.solved = true;
           }
 
           // check if all are solved
@@ -307,6 +317,7 @@ export default function Play() {
 
   /* options */
 
+  const [tooltipSeen, setTooltipSeen] = useState<boolean | null>(null);
   const [showOptions, setShowOptions] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -405,6 +416,12 @@ export default function Play() {
       setUseDark(JSON.parse(options).useDark);
     } else {
       setUseDark(false);
+    }
+
+    const storedTooltipSeen = localStorage.getItem("tooltipSeen") === "true";
+    setTooltipSeen(storedTooltipSeen);
+    if (!storedTooltipSeen) {
+      localStorage.setItem("tooltipSeen", "true");
     }
   }, [dataLoaded]);
 
@@ -645,17 +662,16 @@ export default function Play() {
         <div className="relative w-full">
           <div className="absolute left-2 flex flex-col items-start gap-4 md:left-4">
             {/* statistics info floater */}
-            <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
+            <div className="my-anchor-element items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
-                  <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
-                  of {MAX_GUESSES}
+                  <b className="text-sm md:text-base">{guessedWords.length}</b>
                 </h3>
                 <h4 className="ml-1.5 inline text-neutral-500 dark:text-neutral-400">
-                  guesses used
+                  guesses
                 </h4>
               </div>
-              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm dark:border-neutral-700">
+              <div className="mt-0.5 text-left text-xs md:mt-1 md:text-sm dark:border-neutral-700">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">
                     {games.filter((game) => game.solved).length}
@@ -693,9 +709,8 @@ export default function Play() {
                   onClick={() => {
                     const text =
                       "#everydle\nhttps://everydle.jakeo.dev\n" +
-                      `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
-                      `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
-                      games.map((game) => (game.solved ? "✅" : "⬜")).join("");
+                      `${games.filter((game) => game.solved).length} of ${games.length} Wordles solved in ${guessedWords.length} guesses\n`;
+                    //+ games.map((game) => (game.solved ? "✅" : "⬜")).join("");
 
                     navigator.clipboard.writeText(text);
                     createAlert(
@@ -714,6 +729,19 @@ export default function Play() {
                 </button>
               </div>
             </div>
+            <Tooltip
+              anchorSelect=".my-anchor-element"
+              place="top"
+              defaultIsOpen={tooltipSeen === false && !enterPressed}
+              className={
+                tooltipSeen || enterPressed
+                  ? "hidden"
+                  : "block max-w-64 text-left md:max-w-80"
+              }
+            >
+              {`Games are now automatically marked as "solved" when all green
+              letters are found.`}
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -772,6 +800,9 @@ export default function Play() {
                     <Button
                       key={i}
                       onClick={() => {
+                        localStorage.setItem("tooltipSeen", "true");
+                        setTooltipSeen(true);
+
                         setCurrentEnteredWord((prev) => {
                           if (prev.length < 5) {
                             return prev + letter;
@@ -791,6 +822,9 @@ export default function Play() {
                     <Button
                       key={i}
                       onClick={() => {
+                        localStorage.setItem("tooltipSeen", "true");
+                        setTooltipSeen(true);
+
                         setCurrentEnteredWord((prev) => {
                           if (prev.length < 5) {
                             return prev + letter;
@@ -812,6 +846,9 @@ export default function Play() {
                     <Button
                       key={i}
                       onClick={() => {
+                        localStorage.setItem("tooltipSeen", "true");
+                        setTooltipSeen(true);
+
                         setCurrentEnteredWord((prev) => {
                           if (prev.length < 5) {
                             return prev + letter;
