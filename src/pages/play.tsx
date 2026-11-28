@@ -8,6 +8,9 @@ import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Image from "next/image";
 
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
@@ -159,17 +162,18 @@ export default function Play() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.key.length === 1 &&
-        event.key.match(/[a-zA-Z]/) &&
-        guessedWords.length < MAX_GUESSES
-      ) {
-        setCurrentEnteredWord((prev) => {
-          if (prev.length < 5) {
-            return (prev + event.key).toUpperCase();
-          }
-          return prev;
-        });
+      if (event.key.length === 1 && event.key.match(/[a-zA-Z]/)) {
+        localStorage.setItem("tooltipSeen", "true");
+        setTooltipSeen(true);
+
+        if (guessedWords.length < MAX_GUESSES) {
+          setCurrentEnteredWord((prev) => {
+            if (prev.length < 5) {
+              return (prev + event.key).toUpperCase();
+            }
+            return prev;
+          });
+        }
       }
 
       if (event.key === "Backspace")
@@ -313,6 +317,7 @@ export default function Play() {
 
   /* options */
 
+  const [tooltipSeen, setTooltipSeen] = useState<boolean | null>(null);
   const [showOptions, setShowOptions] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -411,6 +416,12 @@ export default function Play() {
       setUseDark(JSON.parse(options).useDark);
     } else {
       setUseDark(false);
+    }
+
+    const storedTooltipSeen = localStorage.getItem("tooltipSeen") === "true";
+    setTooltipSeen(storedTooltipSeen);
+    if (!storedTooltipSeen) {
+      localStorage.setItem("tooltipSeen", "true");
     }
   }, [dataLoaded]);
 
@@ -651,7 +662,7 @@ export default function Play() {
         <div className="relative w-full">
           <div className="absolute left-2 flex flex-col items-start gap-4 md:left-4">
             {/* statistics info floater */}
-            <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
+            <div className="my-anchor-element items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">{guessedWords.length}</b>
@@ -718,6 +729,19 @@ export default function Play() {
                 </button>
               </div>
             </div>
+            <Tooltip
+              anchorSelect=".my-anchor-element"
+              place="top"
+              defaultIsOpen={tooltipSeen === false && !enterPressed}
+              className={
+                tooltipSeen || enterPressed
+                  ? "hidden"
+                  : "block max-w-64 text-left md:max-w-80"
+              }
+            >
+              Games are now automatically marked as "solved" when all green
+              letters are found.
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -776,6 +800,9 @@ export default function Play() {
                     <Button
                       key={i}
                       onClick={() => {
+                        localStorage.setItem("tooltipSeen", "true");
+                        setTooltipSeen(true);
+
                         setCurrentEnteredWord((prev) => {
                           if (prev.length < 5) {
                             return prev + letter;
@@ -795,6 +822,9 @@ export default function Play() {
                     <Button
                       key={i}
                       onClick={() => {
+                        localStorage.setItem("tooltipSeen", "true");
+                        setTooltipSeen(true);
+
                         setCurrentEnteredWord((prev) => {
                           if (prev.length < 5) {
                             return prev + letter;
@@ -816,6 +846,9 @@ export default function Play() {
                     <Button
                       key={i}
                       onClick={() => {
+                        localStorage.setItem("tooltipSeen", "true");
+                        setTooltipSeen(true);
+
                         setCurrentEnteredWord((prev) => {
                           if (prev.length < 5) {
                             return prev + letter;
