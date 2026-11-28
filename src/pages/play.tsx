@@ -739,8 +739,8 @@ export default function Play() {
                   : "block max-w-64 text-left md:max-w-80"
               }
             >
-              Games are now automatically marked as "solved" when all green
-              letters are found.
+              {`Games are now automatically marked as "solved" when all green
+              letters are found.`}
             </Tooltip>
           </div>
         </div>

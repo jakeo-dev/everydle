@@ -6,7 +6,7 @@ import React from "react";
 
 import { getLetterColor, getSizeClass } from "@/utility";
 
-import { Game, GuessedLetter } from "@/types";
+import { Game } from "@/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { faCircle } from "@fortawesome/free-regular-svg-icons";
