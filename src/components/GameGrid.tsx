@@ -158,94 +158,30 @@ function GameTile(props: GameProps) {
         // regular, non-compact mode tile
         <>
           {(() => {
-            // if game is solved, get the index of the word at which the game was solved, else the most recent guessed word
-            let solvedWordIndex = props.game.solved
-              ? props.guessedWords.indexOf(props.game.answer) + 1
-              : props.guessedWords.length;
+            let solvedWordIndex = props.guessedWords.length;
 
-            const greenLetters: GuessedLetter[] = [];
-
-            // if game was solved implicity (from green letters), find solvedWordIndex by looking through each letter of previous words
-            // THIS IS VERY INEFFICIENT AND SHOULD BE CHANGED!!!!!!!!!!!!!!
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //////////////////
+            // if game is solved, find solvedWordIndex by looking through each letter of previous words (else the most recent guessed word by default)
+            const greenLetters = new Set<number>();
             for (let i = 0; i < props.guessedWords.length; i++) {
               const currentGuessedWordLetters = props.guessedWords[i].split("");
 
               for (let j = 0; j < currentGuessedWordLetters.length; j++) {
-                const color = getLetterColor(
-                  props.guessedWords[i],
-                  currentGuessedWordLetters[j],
-                  j,
-                  props.game.answer,
-                );
-                if (color === "green") {
-                  const letterToAdd = {
-                    char: currentGuessedWordLetters[j],
-                    pos: color === "green" ? j : color === "yellow" ? -1 : -2,
-                    setPos: j,
-                  };
-                  if (
-                    !greenLetters.some(
-                      (letter) => letter.pos === letterToAdd.pos,
-                    )
-                  ) {
-                    greenLetters.push({
-                      char: currentGuessedWordLetters[j],
-                      pos: color === "green" ? j : color === "yellow" ? -1 : -2,
-                      setPos: j,
-                    });
-                  }
-                }
+                if (
+                  getLetterColor(
+                    props.guessedWords[i],
+                    currentGuessedWordLetters[j],
+                    j,
+                    props.game.answer,
+                  ) === "green"
+                )
+                  greenLetters.add(j);
               }
 
-              if (greenLetters.length >= 5) {
+              if (greenLetters.size >= 5) {
                 solvedWordIndex = i + 1;
                 break;
               }
             }
-            //////////////////
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
-            //
 
             return (
               <>
