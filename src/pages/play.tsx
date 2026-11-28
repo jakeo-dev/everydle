@@ -230,14 +230,15 @@ export default function Play() {
 
           for (let i = 0; i < newGames.length; i++) {
             const game = newGames[i];
+            if (game.solved) continue;
             const updatedGuessedLetters: GuessedLetter[] = [];
 
             // if the game is solved, dont add letters that have been guessed after it was solved
-            const indexOfSolvedWord = updatedGuessedWords.indexOf(game.answer);
+            const solvedWordIndex = updatedGuessedWords.indexOf(game.answer);
             const guessedWordsLimit =
-              indexOfSolvedWord == -1
+              solvedWordIndex == -1
                 ? updatedGuessedWords.length
-                : indexOfSolvedWord + 1;
+                : solvedWordIndex + 1;
 
             // add each guessed letter (up until the solved word if the game is solved)
             for (let j = 0; j < guessedWordsLimit; j++) {
@@ -249,7 +250,7 @@ export default function Play() {
 
                 updatedGuessedLetters.push({
                   char: char,
-                  pos: color == "green" ? k : color == "yellow" ? -1 : -2,
+                  pos: color === "green" ? k : color === "yellow" ? -1 : -2,
                   setPos: k,
                 });
               }
@@ -278,8 +279,13 @@ export default function Play() {
 
             game.guessedLetters = removeDuplicates(finalLetters);
 
-            // set solved to true if solved
-            if (currentEnteredWord === game.answer) game.solved = true;
+            // set solved to true entered answer or all green letters complete the answer
+            if (
+              currentEnteredWord === game.answer ||
+              game.guessedLetters.filter((letter) => letter.pos >= 0).length ===
+                5
+            )
+              game.solved = true;
           }
 
           // check if all are solved
