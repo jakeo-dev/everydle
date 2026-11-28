@@ -153,7 +153,7 @@ export default function Play() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const MAX_GUESSES = games.length + 5;
+  const MAX_GUESSES = Number.MAX_SAFE_INTEGER;
 
   /* handle clicking letters */
 
@@ -654,14 +654,13 @@ export default function Play() {
             <div className="items-center justify-center rounded-md bg-neutral-100/70 px-4 py-2.5 shadow-sm backdrop-blur-lg transition dark:bg-neutral-800/70 dark:text-neutral-200">
               <div className="text-left text-xs md:text-sm">
                 <h3 className="inline">
-                  <b className="text-sm md:text-base">{guessedWords.length}</b>{" "}
-                  of {MAX_GUESSES}
+                  <b className="text-sm md:text-base">{guessedWords.length}</b>
                 </h3>
                 <h4 className="ml-1.5 inline text-neutral-500 dark:text-neutral-400">
-                  guesses used
+                  guesses
                 </h4>
               </div>
-              <div className="mt-2 border-t border-neutral-300 pt-2 text-left text-xs md:mt-2.5 md:pt-2.5 md:text-sm dark:border-neutral-700">
+              <div className="mt-0.5 text-left text-xs md:mt-1 md:text-sm dark:border-neutral-700">
                 <h3 className="inline">
                   <b className="text-sm md:text-base">
                     {games.filter((game) => game.solved).length}
@@ -699,9 +698,8 @@ export default function Play() {
                   onClick={() => {
                     const text =
                       "#everydle\nhttps://everydle.jakeo.dev\n" +
-                      `${guessedWords.length} of ${MAX_GUESSES} guesses used\n` +
-                      `${games.filter((game) => game.solved).length} of ${games.length} words solved\n` +
-                      games.map((game) => (game.solved ? "✅" : "⬜")).join("");
+                      `${games.filter((game) => game.solved).length} of ${games.length} Wordles solved in ${guessedWords.length} guesses\n`;
+                    //+ games.map((game) => (game.solved ? "✅" : "⬜")).join("");
 
                     navigator.clipboard.writeText(text);
                     createAlert(
